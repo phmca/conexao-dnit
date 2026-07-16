@@ -4,41 +4,40 @@
 
 class DNITDashboard {
   constructor() {
-    // Dados organizados por mês - ATUALIZADO COM A PLANILHA
+    // Dados organizados por mês
     this.data = {
       'Maio': [
-        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
-        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Acarape', data: '20/05 - 28/05', participantes: 'Jonas Campelo', alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Barreira', data: '20/05 - 28/05', participantes: 'Prof. Glória Maria e equipe pedagógica', alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
         { municipio: 'Mulungu', data: '21/05/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Junho': [
-        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando assinatura do convênio' },
         { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '12/06/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacoti', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Julho': [
-        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: '--', proxima: '--' },
-        { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: '--', proxima: '--' }
       ]
     };
 
-    this.currentMonth = 'Todos';
+    this.currentMonth = 'Todos'; // Inicia com "Todos"
     this.selectedCity = null;
     this.isDarkTheme = false;
-    this.currentSort = { field: 'data', order: 'asc' };
+    this.currentSort = { field: 'data', order: 'asc' }; // Ordenação padrão por data crescente
     this.currentFilter = null;
     this.searchTerm = '';
 
@@ -167,23 +166,13 @@ class DNITDashboard {
 
   getAllData() {
     let allData = [];
-    const meses = ['Maio', 'Junho', 'Julho'];
-    meses.forEach(month => {
-      if (this.data[month]) {
-        this.data[month].forEach(item => {
-          // Remove duplicatas (mesmo município e mesma data)
-          const exists = allData.some(existing => 
-            existing.municipio === item.municipio && 
-            existing.data === item.data
-          );
-          if (!exists) {
-            allData.push({
-              ...item,
-              mes: month
-            });
-          }
+    Object.keys(this.data).forEach(month => {
+      this.data[month].forEach(item => {
+        allData.push({
+          ...item,
+          mes: month
         });
-      }
+      });
     });
     return allData;
   }
@@ -206,15 +195,6 @@ class DNITDashboard {
     } else {
       data = this.data[month] || [];
     }
-
-    // Ordenar por data crescente (padrão)
-    this.currentSort = { field: 'data', order: 'asc' };
-    this.sortableHeaders.forEach(th => {
-      th.classList.remove('active', 'asc', 'desc');
-      if (th.dataset.sort === 'data') {
-        th.classList.add('active', 'asc');
-      }
-    });
 
     this.renderData(data);
     this.updateSummary(data);
@@ -299,12 +279,6 @@ class DNITDashboard {
     this.renderData(data);
   }
 
-  abbreviateText(text, maxLength = 20) {
-    if (!text) return '--';
-    if (text.length <= maxLength) return text;
-    return text.substring(0, maxLength) + '...';
-  }
-
   renderTable(data) {
     if (!this.tableBody) return;
 
@@ -323,23 +297,17 @@ class DNITDashboard {
     data.forEach((item, index) => {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
-      
-      const situacaoAbreviada = this.abbreviateText(item.situacao, 18);
-      const participantesAbreviado = this.abbreviateText(item.participantes, 20);
-      const proximaAbreviada = this.abbreviateText(item.proxima, 22);
-      
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.55rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-      
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.65rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
       html += `
         <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
           <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
-          <td style="white-space:nowrap;">${item.data}</td>
-          <td style="font-size:0.7rem; max-width:100px; word-break:break-word;">${participantesAbreviado}</td>
-          <td style="text-align:center;">${this.formatNumber(item.alunos)}</td>
-          <td style="text-align:center;">${this.formatNumber(item.professores)}</td>
-          <td style="text-align:center;">${this.formatNumber(item.escolas)}</td>
-          <td><span class="status-badge ${statusClass}" style="font-size:0.65rem; white-space:nowrap;">${situacaoAbreviada}</span></td>
-          <td style="font-size:0.7rem; max-width:120px; word-break:break-word;">${proximaAbreviada}</td>
+          <td>${item.data}</td>
+          <td style="font-size:0.8rem;">${item.participantes}</td>
+          <td>${this.formatNumber(item.alunos)}</td>
+          <td>${this.formatNumber(item.professores)}</td>
+          <td>${this.formatNumber(item.escolas)}</td>
+          <td><span class="status-badge ${statusClass}">${item.situacao}</span></td>
+          <td style="font-size:0.8rem;">${item.proxima}</td>
         </tr>
       `;
     });
@@ -403,7 +371,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
-        <span class="detail-value" style="font-size:0.75rem; text-align:right;">${item.participantes}</span>
+        <span class="detail-value" style="font-size:0.85rem;">${item.participantes}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
@@ -423,7 +391,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
-        <span class="detail-value" style="font-size:0.75rem; text-align:right;">${item.proxima}</span>
+        <span class="detail-value" style="font-size:0.85rem;">${item.proxima}</span>
       </div>
     `;
   }
@@ -439,12 +407,12 @@ class DNITDashboard {
   }
 
   updateSummary(data) {
-    const uniqueMunicipios = new Set(data.map(item => item.municipio));
+    const totalMunicipios = data.length;
     const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
     const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
     const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-    this.totalMunicipios.textContent = uniqueMunicipios.size;
+    this.totalMunicipios.textContent = totalMunicipios;
     this.totalAlunos.textContent = this.formatNumber(totalAlunos);
     this.totalProfessores.textContent = this.formatNumber(totalProfessores);
     this.totalEscolas.textContent = this.formatNumber(totalEscolas);
@@ -600,6 +568,7 @@ class DNITDashboard {
   }
 }
 
+// Inicializar
 let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
   dashboard = new DNITDashboard();
