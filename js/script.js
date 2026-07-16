@@ -4,33 +4,34 @@
 
 class DNITDashboard {
   constructor() {
-    // Dados organizados por mês
+    // Dados organizados por mês - ATUALIZADO COM A PLANILHA
     this.data = {
       'Maio': [
+        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
+        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Acarape', data: '20/05 - 28/05', participantes: 'Jonas Campelo', alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Barreira', data: '20/05 - 28/05', participantes: 'Prof. Glória Maria e equipe pedagógica', alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
         { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
+        { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
         { municipio: 'Mulungu', data: '21/05/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
-        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Junho': [
         { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-        { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Implantação realizada' },
-        { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Implantação realizada' },
+        { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '12/06/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Implantação realizada' },
-        { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Implantação realizada' },
+        { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacoti', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Julho': [
-        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: '--', proxima: '--' }
+        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: '--', proxima: '--' },
+        { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ]
     };
 
@@ -298,7 +299,6 @@ class DNITDashboard {
     this.renderData(data);
   }
 
-  // Função para abreviar textos longos
   abbreviateText(text, maxLength = 20) {
     if (!text) return '--';
     if (text.length <= maxLength) return text;
@@ -324,7 +324,6 @@ class DNITDashboard {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
       
-      // Abreviar textos longos
       const situacaoAbreviada = this.abbreviateText(item.situacao, 18);
       const participantesAbreviado = this.abbreviateText(item.participantes, 20);
       const proximaAbreviada = this.abbreviateText(item.proxima, 22);
