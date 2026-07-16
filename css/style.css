@@ -745,3 +745,72 @@ tbody tr.hidden {
     padding: 1rem;
   }
 }
+/* ============================================
+   CORREÇÃO PARA TEXTOS LONGOS NA TABELA
+   ============================================ */
+
+/* Ajuste de largura das colunas */
+th:nth-child(1) { min-width: 80px; max-width: 120px; }  /* Município */
+th:nth-child(2) { min-width: 80px; max-width: 100px; }  /* Data */
+th:nth-child(3) { min-width: 80px; max-width: 140px; }  /* Participantes */
+th:nth-child(4) { min-width: 50px; max-width: 70px; }   /* Alunos */
+th:nth-child(5) { min-width: 50px; max-width: 70px; }   /* Professores */
+th:nth-child(6) { min-width: 50px; max-width: 70px; }   /* Escolas */
+th:nth-child(7) { min-width: 80px; max-width: 120px; }  /* Situação */
+th:nth-child(8) { min-width: 80px; max-width: 140px; }  /* Próxima Etapa */
+
+/* Badge de status com tamanho fixo */
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border-radius: 30px;
+  font-size: 0.6rem !important;
+  font-weight: 500;
+  white-space: nowrap;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+  th:nth-child(3) { min-width: 60px; max-width: 80px; }
+  th:nth-child(7) { min-width: 60px; max-width: 80px; }
+  th:nth-child(8) { min-width: 60px; max-width: 80px; }
+  
+  td {
+    font-size: 0.6rem !important;
+  }
+  
+  td:nth-child(3),
+  td:nth-child(8) {
+    font-size: 0.55rem !important;
+  }
+  
+  .status-badge {
+    font-size: 0.5rem !important;
+    padding: 0.1rem 0.3rem;
+  }
+}
+
+/* Tooltip para textos abreviados */
+td[title]:hover {
+  position: relative;
+}
+
+td[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-hover);
+  font-size: 0.7rem;
+  z-index: 10;
+  white-space: nowrap;
+  top: -25px;
+  left: 0;
+  transform: translateY(-100%);
+}
