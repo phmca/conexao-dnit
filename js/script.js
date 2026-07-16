@@ -34,10 +34,10 @@ class DNITDashboard {
       ]
     };
 
-    this.currentMonth = 'Todos'; // Inicia com "Todos"
+    this.currentMonth = 'Todos';
     this.selectedCity = null;
     this.isDarkTheme = false;
-    this.currentSort = { field: 'data', order: 'asc' }; // Ordenação padrão por data crescente
+    this.currentSort = { field: 'data', order: 'asc' };
     this.currentFilter = null;
     this.searchTerm = '';
 
@@ -166,13 +166,23 @@ class DNITDashboard {
 
   getAllData() {
     let allData = [];
-    Object.keys(this.data).forEach(month => {
-      this.data[month].forEach(item => {
-        allData.push({
-          ...item,
-          mes: month
+    const meses = ['Maio', 'Junho', 'Julho'];
+    meses.forEach(month => {
+      if (this.data[month]) {
+        this.data[month].forEach(item => {
+          // Verifica se já existe um item com mesmo município e mesma data (evita duplicatas)
+          const exists = allData.some(existing => 
+            existing.municipio === item.municipio && 
+            existing.data === item.data
+          );
+          if (!exists) {
+            allData.push({
+              ...item,
+              mes: month
+            });
+          }
         });
-      });
+      }
     });
     return allData;
   }
@@ -195,6 +205,16 @@ class DNITDashboard {
     } else {
       data = this.data[month] || [];
     }
+
+    // Ordenar por data crescente (padrão)
+    this.currentSort = { field: 'data', order: 'asc' };
+    // Atualizar indicadores visuais
+    this.sortableHeaders.forEach(th => {
+      th.classList.remove('active', 'asc', 'desc');
+      if (th.dataset.sort === 'data') {
+        th.classList.add('active', 'asc');
+      }
+    });
 
     this.renderData(data);
     this.updateSummary(data);
@@ -297,17 +317,17 @@ class DNITDashboard {
     data.forEach((item, index) => {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.65rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
       html += `
         <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
           <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
           <td>${item.data}</td>
-          <td style="font-size:0.8rem;">${item.participantes}</td>
+          <td style="font-size:0.75rem;">${item.participantes}</td>
           <td>${this.formatNumber(item.alunos)}</td>
           <td>${this.formatNumber(item.professores)}</td>
           <td>${this.formatNumber(item.escolas)}</td>
           <td><span class="status-badge ${statusClass}">${item.situacao}</span></td>
-          <td style="font-size:0.8rem;">${item.proxima}</td>
+          <td style="font-size:0.75rem;">${item.proxima}</td>
         </tr>
       `;
     });
@@ -371,7 +391,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
-        <span class="detail-value" style="font-size:0.85rem;">${item.participantes}</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
@@ -391,7 +411,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
-        <span class="detail-value" style="font-size:0.85rem;">${item.proxima}</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
       </div>
     `;
   }
@@ -408,11 +428,13 @@ class DNITDashboard {
 
   updateSummary(data) {
     const totalMunicipios = data.length;
+    // Remove duplicatas para contar municípios únicos
+    const uniqueMunicipios = new Set(data.map(item => item.municipio));
     const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
     const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
     const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-    this.totalMunicipios.textContent = totalMunicipios;
+    this.totalMunicipios.textContent = uniqueMunicipios.size;
     this.totalAlunos.textContent = this.formatNumber(totalAlunos);
     this.totalProfessores.textContent = this.formatNumber(totalProfessores);
     this.totalEscolas.textContent = this.formatNumber(totalEscolas);
@@ -568,7 +590,6 @@ class DNITDashboard {
   }
 }
 
-// Inicializar
 let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
   dashboard = new DNITDashboard();
