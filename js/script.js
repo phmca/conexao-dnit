@@ -1,7 +1,7 @@
 // ============================================
 // Conexão DNIT · Educação No Trânsito - Dashboard
 // ============================================
-////
+
 class DNITDashboard {
   constructor() {
     // Dados organizados por mês
@@ -34,18 +34,10 @@ class DNITDashboard {
       ]
     };
 
-    // Mapeamento de meses para ordenação
-    this.monthOrder = {
-      'Maio': 1,
-      'Junho': 2,
-      'Julho': 3
-    };
-
-    this.currentMonth = 'Todos';
+    this.currentMonth = 'Todos'; // Inicia com "Todos"
     this.selectedCity = null;
     this.isDarkTheme = false;
-    // Ordenação padrão: data crescente
-    this.currentSort = { field: 'data', order: 'asc' };
+    this.currentSort = { field: 'data', order: 'asc' }; // Ordenação padrão por data crescente
     this.currentFilter = null;
     this.searchTerm = '';
 
@@ -172,14 +164,13 @@ class DNITDashboard {
     });
   }
 
-  // Função para obter todos os dados de todos os meses
   getAllData() {
     let allData = [];
     Object.keys(this.data).forEach(month => {
       this.data[month].forEach(item => {
         allData.push({
           ...item,
-          mes: month // Adiciona o mês como propriedade
+          mes: month
         });
       });
     });
@@ -201,12 +192,8 @@ class DNITDashboard {
     let data = [];
     if (month === 'Todos') {
       data = this.getAllData();
-      // Ordenar por data (crescente) por padrão
-      this.currentSort = { field: 'data', order: 'asc' };
     } else {
       data = this.data[month] || [];
-      // Ordenar por data (crescente) por padrão
-      this.currentSort = { field: 'data', order: 'asc' };
     }
 
     this.renderData(data);
@@ -246,41 +233,32 @@ class DNITDashboard {
       let valA = a[field];
       let valB = b[field];
       
-      // Para números
       if (typeof valA === 'number' && typeof valB === 'number') {
         return (valA - valB) * multiplier;
       }
       
-      // Para datas - tratamento especial
       if (field === 'data') {
         return this.compareDates(valA, valB) * multiplier;
       }
       
-      // Para strings
       valA = String(valA).toLowerCase();
       valB = String(valB).toLowerCase();
       return valA.localeCompare(valB) * multiplier;
     });
   }
 
-  // Função para comparar datas no formato DD/MM/YYYY ou DD/MM - DD/MM
   compareDates(dateA, dateB) {
-    // Tenta extrair a primeira data do formato "DD/MM - DD/MM"
     const extractDate = (dateStr) => {
       if (!dateStr) return new Date(0);
       
-      // Se for um intervalo "20/05 - 28/05", pega a primeira data
       if (dateStr.includes(' - ')) {
         dateStr = dateStr.split(' - ')[0];
       }
       
-      // Tenta converter DD/MM/YYYY ou DD/MM
       const parts = dateStr.split('/');
       if (parts.length === 3) {
-        // DD/MM/YYYY
         return new Date(parts[2], parts[1] - 1, parts[0]);
       } else if (parts.length === 2) {
-        // DD/MM (assume o ano atual)
         return new Date(2026, parts[1] - 1, parts[0]);
       }
       return new Date(0);
@@ -319,8 +297,7 @@ class DNITDashboard {
     data.forEach((item, index) => {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
-      // Mostra o mês se estiver no modo "Todos"
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.7rem; color:var(--text-secondary);">${item.mes}</span>` : '';
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.65rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
       html += `
         <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
           <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
@@ -591,6 +568,7 @@ class DNITDashboard {
   }
 }
 
+// Inicializar
 let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
   dashboard = new DNITDashboard();
