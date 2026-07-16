@@ -7,14 +7,14 @@ class DNITDashboard {
     // Dados organizados por mês
     this.data = {
       'Maio': [
-        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
-        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Acarape', data: '20/05 - 28/05', participantes: 'Jonas Campelo', alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Barreira', data: '20/05 - 28/05', participantes: 'Prof. Glória Maria e equipe pedagógica', alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
         { municipio: 'Mulungu', data: '21/05/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Junho': [
@@ -34,10 +34,18 @@ class DNITDashboard {
       ]
     };
 
-    this.currentMonth = 'Maio';
+    // Mapeamento de meses para ordenação
+    this.monthOrder = {
+      'Maio': 1,
+      'Junho': 2,
+      'Julho': 3
+    };
+
+    this.currentMonth = 'Todos';
     this.selectedCity = null;
     this.isDarkTheme = false;
-    this.currentSort = { field: 'municipio', order: 'asc' };
+    // Ordenação padrão: data crescente
+    this.currentSort = { field: 'data', order: 'asc' };
     this.currentFilter = null;
     this.searchTerm = '';
 
@@ -55,7 +63,6 @@ class DNITDashboard {
   }
 
   cacheElements() {
-    // Botões
     this.themeToggle = document.getElementById('themeToggle');
     this.refreshBtn = document.getElementById('refreshBtn');
     this.exportBtn = document.getElementById('exportBtn');
@@ -64,33 +71,26 @@ class DNITDashboard {
     this.filterPanel = document.getElementById('filterPanel');
     this.searchInput = document.getElementById('searchInput');
 
-    // Elementos de dados
     this.tableBody = document.getElementById('tableBody');
     this.detailContent = document.getElementById('detailContent');
     this.footerUpdate = document.getElementById('footerUpdate');
 
-    // Resumo
     this.totalMunicipios = document.getElementById('totalMunicipios');
     this.totalAlunos = document.getElementById('totalAlunos');
     this.totalProfessores = document.getElementById('totalProfessores');
     this.totalEscolas = document.getElementById('totalEscolas');
 
-    // Status
     this.statusImplantado = document.getElementById('statusImplantado');
     this.statusConvenio = document.getElementById('statusConvenio');
     this.statusAnalise = document.getElementById('statusAnalise');
     this.statusApresentacao = document.getElementById('statusApresentacao');
     this.statusSemInfo = document.getElementById('statusSemInfo');
 
-    // Info adicional
     this.totalMunicipiosGeralEl = document.getElementById('totalMunicipiosGeral');
     this.mediaAlunos = document.getElementById('mediaAlunos');
     this.ultimaAtualizacao = document.getElementById('ultimaAtualizacao');
 
-    // Status items clicáveis
     this.statusItems = document.querySelectorAll('.status-item.clickable');
-    
-    // Sortable headers
     this.sortableHeaders = document.querySelectorAll('th.sortable');
   }
 
@@ -101,16 +101,15 @@ class DNITDashboard {
     
     this.monthSelect.addEventListener('change', (e) => {
       this.loadMonth(e.target.value);
-      this.showNotification(`Mês alterado: ${e.target.value} 2026`);
+      const monthName = e.target.value === 'Todos' ? 'todos os meses' : `${e.target.value} 2026`;
+      this.showNotification(`Mês alterado: ${monthName}`);
     });
     
-    // Filtro toggle
     this.filterBtn.addEventListener('click', () => {
       this.filterPanel.classList.toggle('open');
       this.filterBtn.classList.toggle('active');
     });
 
-    // Opções de filtro
     document.querySelectorAll('.filter-option').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-option').forEach(b => b.classList.remove('active'));
@@ -121,7 +120,6 @@ class DNITDashboard {
         this.currentSort = { field: sort, order: order };
         this.applyFilters();
         
-        // Atualizar indicadores nos headers
         this.sortableHeaders.forEach(th => {
           th.classList.remove('active', 'asc', 'desc');
           if (th.dataset.sort === sort) {
@@ -133,13 +131,11 @@ class DNITDashboard {
       });
     });
 
-    // Busca
     this.searchInput.addEventListener('input', (e) => {
       this.searchTerm = e.target.value.toLowerCase();
       this.applyFilters();
     });
 
-    // Status clicáveis
     this.statusItems.forEach(item => {
       item.addEventListener('click', () => {
         const status = item.dataset.status;
@@ -157,14 +153,12 @@ class DNITDashboard {
       });
     });
 
-    // Sortable headers
     this.sortableHeaders.forEach(th => {
       th.addEventListener('click', () => {
         const field = th.dataset.sort;
         const currentOrder = this.currentSort.field === field && this.currentSort.order === 'asc' ? 'desc' : 'asc';
         this.currentSort = { field, order: currentOrder };
         
-        // Atualizar botões de filtro
         document.querySelectorAll('.filter-option').forEach(btn => {
           btn.classList.remove('active');
           if (btn.dataset.sort === field && btn.dataset.order === currentOrder) {
@@ -178,19 +172,42 @@ class DNITDashboard {
     });
   }
 
+  // Função para obter todos os dados de todos os meses
+  getAllData() {
+    let allData = [];
+    Object.keys(this.data).forEach(month => {
+      this.data[month].forEach(item => {
+        allData.push({
+          ...item,
+          mes: month // Adiciona o mês como propriedade
+        });
+      });
+    });
+    return allData;
+  }
+
   loadMonth(month) {
-    const data = this.data[month] || [];
     this.currentMonth = month;
     
     if (this.monthSelect) {
       this.monthSelect.value = month;
     }
 
-    // Resetar filtros
     this.currentFilter = null;
     this.statusItems.forEach(i => i.classList.remove('active'));
     this.searchTerm = '';
     if (this.searchInput) this.searchInput.value = '';
+
+    let data = [];
+    if (month === 'Todos') {
+      data = this.getAllData();
+      // Ordenar por data (crescente) por padrão
+      this.currentSort = { field: 'data', order: 'asc' };
+    } else {
+      data = this.data[month] || [];
+      // Ordenar por data (crescente) por padrão
+      this.currentSort = { field: 'data', order: 'asc' };
+    }
 
     this.renderData(data);
     this.updateSummary(data);
@@ -205,16 +222,13 @@ class DNITDashboard {
   }
 
   renderData(data) {
-    // Ordenar
     let sortedData = [...data];
     sortedData = this.sortData(sortedData);
     
-    // Filtrar por status
     if (this.currentFilter) {
       sortedData = sortedData.filter(item => item.situacao === this.currentFilter);
     }
     
-    // Filtrar por busca
     if (this.searchTerm) {
       sortedData = sortedData.filter(item => 
         item.municipio.toLowerCase().includes(this.searchTerm)
@@ -237,6 +251,11 @@ class DNITDashboard {
         return (valA - valB) * multiplier;
       }
       
+      // Para datas - tratamento especial
+      if (field === 'data') {
+        return this.compareDates(valA, valB) * multiplier;
+      }
+      
       // Para strings
       valA = String(valA).toLowerCase();
       valB = String(valB).toLowerCase();
@@ -244,8 +263,41 @@ class DNITDashboard {
     });
   }
 
+  // Função para comparar datas no formato DD/MM/YYYY ou DD/MM - DD/MM
+  compareDates(dateA, dateB) {
+    // Tenta extrair a primeira data do formato "DD/MM - DD/MM"
+    const extractDate = (dateStr) => {
+      if (!dateStr) return new Date(0);
+      
+      // Se for um intervalo "20/05 - 28/05", pega a primeira data
+      if (dateStr.includes(' - ')) {
+        dateStr = dateStr.split(' - ')[0];
+      }
+      
+      // Tenta converter DD/MM/YYYY ou DD/MM
+      const parts = dateStr.split('/');
+      if (parts.length === 3) {
+        // DD/MM/YYYY
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+      } else if (parts.length === 2) {
+        // DD/MM (assume o ano atual)
+        return new Date(2026, parts[1] - 1, parts[0]);
+      }
+      return new Date(0);
+    };
+
+    const dA = extractDate(dateA);
+    const dB = extractDate(dateB);
+    return dA - dB;
+  }
+
   applyFilters() {
-    const data = this.data[this.currentMonth] || [];
+    let data = [];
+    if (this.currentMonth === 'Todos') {
+      data = this.getAllData();
+    } else {
+      data = this.data[this.currentMonth] || [];
+    }
     this.renderData(data);
   }
 
@@ -267,9 +319,11 @@ class DNITDashboard {
     data.forEach((item, index) => {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
+      // Mostra o mês se estiver no modo "Todos"
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.7rem; color:var(--text-secondary);">${item.mes}</span>` : '';
       html += `
         <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
-          <td><strong>${item.municipio}</strong></td>
+          <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
           <td>${item.data}</td>
           <td style="font-size:0.8rem;">${item.participantes}</td>
           <td>${this.formatNumber(item.alunos)}</td>
@@ -283,7 +337,6 @@ class DNITDashboard {
 
     this.tableBody.innerHTML = html;
     
-    // Reaplicar seleção se existir
     if (this.selectedCity) {
       const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
       if (rows.length > 0) {
@@ -313,7 +366,13 @@ class DNITDashboard {
       rows[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    const data = this.data[this.currentMonth] || [];
+    let data = [];
+    if (this.currentMonth === 'Todos') {
+      data = this.getAllData();
+    } else {
+      data = this.data[this.currentMonth] || [];
+    }
+    
     const item = data.find(d => d.municipio === municipio);
     
     if (item) {
@@ -324,8 +383,11 @@ class DNITDashboard {
   renderDetail(item) {
     if (!this.detailContent) return;
 
+    const mesInfo = this.currentMonth === 'Todos' ? `<div class="detail-row"><span class="detail-label"><i class="fas fa-calendar"></i> Mês</span><span class="detail-value">${item.mes}</span></div>` : '';
+
     this.detailContent.innerHTML = `
       <div class="detail-municipio">${item.municipio}</div>
+      ${mesInfo}
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-calendar-day"></i> Data</span>
         <span class="detail-value">${item.data}</span>
@@ -446,7 +508,17 @@ class DNITDashboard {
   }
 
   exportData() {
-    const data = this.data[this.currentMonth] || [];
+    let data = [];
+    let fileName = '';
+    
+    if (this.currentMonth === 'Todos') {
+      data = this.getAllData();
+      fileName = 'todos_os_meses';
+    } else {
+      data = this.data[this.currentMonth] || [];
+      fileName = this.currentMonth.toLowerCase();
+    }
+
     const exportData = {
       mes: this.currentMonth,
       data_exportacao: new Date().toLocaleString('pt-BR'),
@@ -459,7 +531,7 @@ class DNITDashboard {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `conexao_dnit_${this.currentMonth.toLowerCase()}_${new Date().toISOString().slice(0,10)}.json`;
+    a.download = `conexao_dnit_${fileName}_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
     
@@ -519,7 +591,6 @@ class DNITDashboard {
   }
 }
 
-// Inicializar
 let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
   dashboard = new DNITDashboard();
