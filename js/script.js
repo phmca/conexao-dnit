@@ -1,4 +1,4 @@
-/* script.js - com substituição do status */
+/* script.js - com exportação PDF melhorada e centralizada */
 // ============================================
 // Conexão DNIT · Educação No Trânsito - Dashboard
 // ============================================
@@ -56,6 +56,21 @@ class DNITDashboard {
     this.loadSavedTheme();
     this.calculateGeneralStats();
     this.setupResizeHandler();
+    
+    this.loadJSPDF();
+  }
+
+  loadJSPDF() {
+    if (typeof window.jspdf === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      script.onload = () => {
+        const autoTableScript = document.createElement('script');
+        autoTableScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js';
+        document.head.appendChild(autoTableScript);
+      };
+      document.head.appendChild(script);
+    }
   }
 
   cacheElements() {
@@ -93,7 +108,7 @@ class DNITDashboard {
   bindEvents() {
     this.themeToggle.addEventListener('click', () => this.toggleTheme());
     this.refreshBtn.addEventListener('click', () => this.refreshData());
-    this.exportBtn.addEventListener('click', () => this.exportData());
+    this.exportBtn.addEventListener('click', () => this.exportToPDF());
     
     this.monthSelect.addEventListener('change', (e) => {
       this.loadMonth(e.target.value);
@@ -582,35 +597,183 @@ class DNITDashboard {
     }, 600);
   }
 
-  exportData() {
-    let data = [];
-    let fileName = '';
+  // ========== EXPORTAÇÃO PARA PDF MELHORADA ==========
+  exportToPDF() {
+    if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+      this.showNotification('Carregando biblioteca PDF... Aguarde e tente novamente');
+      this.loadJSPDF();
+      setTimeout(() => {
+        if (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined') {
+          this.generatePDF();
+        } else {
+          this.showNotification('Erro ao carregar PDF. Recarregue a página.');
+        }
+      }, 2000);
+      return;
+    }
+    this.generatePDF();
+  }
+
+  generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'mm', 'a4');
     
+    // Obtém os dados atuais
+    let data = [];
     if (this.currentMonth === 'Todos') {
       data = this.getAllData();
-      fileName = 'todos_os_meses';
     } else {
       data = this.data[this.currentMonth] || [];
-      fileName = this.currentMonth.toLowerCase();
     }
 
-    const exportData = {
-      mes: this.currentMonth,
-      data_exportacao: new Date().toLocaleString('pt-BR'),
-      total_municipios: data.length,
-      municipios: data
-    };
+    // Aplica filtros atuais
+    let filteredData = [...data];
+    if (this.currentFilter) {
+      filteredData = filteredData.filter(item => item.situacao === this.currentFilter);
+    }
+    if (this.searchTerm) {
+      filteredData = filteredData.filter(item => 
+        item.municipio.toLowerCase().includes(this.searchTerm)
+      );
+    }
 
-    const json = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `conexao_dnit_${fileName}_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // Ordena os dados
+    filteredData = this.sortData(filteredData);
+
+    // Define o título
+    const monthDisplay = this.currentMonth === 'Todos' ? 'Todos os Meses' : this.currentMonth;
+    const title = `Conexão DNIT - Educação No Trânsito`;
+    const subtitle = `Relatório de Municípios - ${monthDisplay}`;
+    const dateStr = new Date().toLocaleString('pt-BR');
+
+    // Configuração da página
+    const pageWidth = doc.internal.pageSize.width;
+    const marginLeft = 12;
+    const marginRight = 12;
+    const usableWidth = pageWidth - marginLeft - marginRight;
+
+    // ===== TÍTULO CENTRALIZADO =====
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, pageWidth / 2, 12, { align: 'center' });
     
-    this.showNotification('Dados exportados com sucesso!');
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
+    
+    // ===== INFORMAÇÕES DE RESUMO =====
+    const totalAlunos = filteredData.reduce((sum, item) => sum + (item.alunos || 0), 0);
+    const totalProfessores = filteredData.reduce((sum, item) => sum + (item.professores || 0), 0);
+    const totalEscolas = filteredData.reduce((sum, item) => sum + (item.escolas || 0), 0);
+    
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const summaryText = `Municípios: ${filteredData.length}  |  Alunos: ${this.formatNumber(totalAlunos)}  |  Professores: ${this.formatNumber(totalProfessores)}  |  Escolas: ${this.formatNumber(totalEscolas)}`;
+    doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
+    
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'italic');
+    doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
+
+    // ===== PREPARA OS DADOS PARA A TABELA =====
+    const tableData = filteredData.map(item => [
+      item.municipio,
+      item.data,
+      item.participantes,
+      this.formatNumber(item.alunos),
+      this.formatNumber(item.professores),
+      this.formatNumber(item.escolas),
+      item.situacao,
+      item.proxima
+    ]);
+
+    // ===== CABEÇALHOS =====
+    const headers = [
+      'Município',
+      'Data',
+      'Participantes',
+      'Alunos',
+      'Professores',
+      'Escolas',
+      'Situação',
+      'Próxima Etapa'
+    ];
+
+    // ===== LARGURAS DAS COLUNAS (distribuídas proporcionalmente) =====
+    // Distribuição uniforme com pesos
+    const colWeights = [1.6, 1.0, 2.2, 0.9, 1.0, 0.8, 1.6, 2.2];
+    const totalWeight = colWeights.reduce((a, b) => a + b, 0);
+    const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
+    
+    // Ajusta para caber na página
+    const adjustedWidths = colWidths.map(w => Math.max(w, 12));
+
+    // ===== GERA A TABELA COM CONFIGURAÇÃO MELHORADA =====
+    doc.autoTable({
+      head: [headers],
+      body: tableData,
+      startY: 34,
+      theme: 'striped',
+      styles: {
+        fontSize: 7,
+        cellPadding: { top: 1.8, bottom: 1.8, left: 2, right: 2 },
+        valign: 'middle',
+        halign: 'center',
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1
+      },
+      headStyles: {
+        fillColor: [44, 107, 158],
+        textColor: [255, 255, 255],
+        fontSize: 7.5,
+        fontStyle: 'bold',
+        halign: 'center',
+        valign: 'middle',
+        cellPadding: { top: 2.5, bottom: 2.5, left: 2, right: 2 }
+      },
+      bodyStyles: {
+        fontSize: 6.8,
+        halign: 'center',
+        valign: 'middle'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 248, 250]
+      },
+      columnStyles: {
+        0: { halign: 'left', cellWidth: adjustedWidths[0] },
+        1: { halign: 'center', cellWidth: adjustedWidths[1] },
+        2: { halign: 'left', cellWidth: adjustedWidths[2] },
+        3: { halign: 'right', cellWidth: adjustedWidths[3] },
+        4: { halign: 'right', cellWidth: adjustedWidths[4] },
+        5: { halign: 'right', cellWidth: adjustedWidths[5] },
+        6: { halign: 'center', cellWidth: adjustedWidths[6] },
+        7: { halign: 'left', cellWidth: adjustedWidths[7] }
+      },
+      margin: { left: marginLeft, right: marginRight },
+      tableWidth: 'auto',
+      didDrawPage: function(data) {
+        const pageCount = doc.internal.getNumberOfPages();
+        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+        
+        // Linha separadora no rodapé
+        const footerY = doc.internal.pageSize.height - 6;
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.2);
+        doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
+        
+        // Texto do rodapé
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'italic');
+        doc.text(`Página ${currentPage} de ${pageCount}`, marginLeft, footerY + 4);
+        doc.text('Conexão DNIT - Educação No Trânsito', pageWidth - marginRight, footerY + 4, { align: 'right' });
+      }
+    });
+
+    // ===== SALVA O PDF =====
+    const fileName = `conexao_dnit_${this.currentMonth.toLowerCase()}_${new Date().toISOString().slice(0,10)}.pdf`;
+    doc.save(fileName);
+    
+    this.showNotification('PDF exportado com sucesso!');
   }
 
   toggleTheme() {
