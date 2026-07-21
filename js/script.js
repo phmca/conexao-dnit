@@ -1,3 +1,4 @@
+/* script.js - com exportação PDF melhorada e centralizada */
 // ============================================
 // Conexão DNIT · Educação No Trânsito - Dashboard
 // ============================================
@@ -18,12 +19,12 @@ class DNITDashboard {
         { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Junho': [
-        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando assinatura do convênio' },
+        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
         { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '12/06/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Realizada apresentação do programa', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
         { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
@@ -34,12 +35,14 @@ class DNITDashboard {
       ]
     };
 
-    this.currentMonth = 'Todos'; // Inicia com "Todos"
+    this.currentMonth = 'Todos';
     this.selectedCity = null;
     this.isDarkTheme = false;
-    this.currentSort = { field: 'data', order: 'asc' }; // Ordenação padrão por data crescente
+    this.currentSort = { field: 'data', order: 'asc' };
     this.currentFilter = null;
     this.searchTerm = '';
+    this.isMobile = window.innerWidth <= 768;
+    this.touchTimeout = null;
 
     this.init();
   }
@@ -52,6 +55,22 @@ class DNITDashboard {
     setInterval(() => this.updateDateTime(), 60000);
     this.loadSavedTheme();
     this.calculateGeneralStats();
+    this.setupResizeHandler();
+    
+    this.loadJSPDF();
+  }
+
+  loadJSPDF() {
+    if (typeof window.jspdf === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+      script.onload = () => {
+        const autoTableScript = document.createElement('script');
+        autoTableScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js';
+        document.head.appendChild(autoTableScript);
+      };
+      document.head.appendChild(script);
+    }
   }
 
   cacheElements() {
@@ -89,7 +108,7 @@ class DNITDashboard {
   bindEvents() {
     this.themeToggle.addEventListener('click', () => this.toggleTheme());
     this.refreshBtn.addEventListener('click', () => this.refreshData());
-    this.exportBtn.addEventListener('click', () => this.exportData());
+    this.exportBtn.addEventListener('click', () => this.exportToPDF());
     
     this.monthSelect.addEventListener('change', (e) => {
       this.loadMonth(e.target.value);
@@ -97,13 +116,21 @@ class DNITDashboard {
       this.showNotification(`Mês alterado: ${monthName}`);
     });
     
-    this.filterBtn.addEventListener('click', () => {
+    this.filterBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.filterPanel.classList.toggle('open');
       this.filterBtn.classList.toggle('active');
+      
+      if (this.isMobile && this.filterPanel.classList.contains('open')) {
+        setTimeout(() => {
+          document.addEventListener('click', this.closeFilterOnOutsideClick.bind(this));
+        }, 10);
+      }
     });
 
     document.querySelectorAll('.filter-option').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         document.querySelectorAll('.filter-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         
@@ -120,6 +147,11 @@ class DNITDashboard {
         });
         
         this.showNotification(`Ordenado por ${sort} (${order === 'asc' ? 'crescente' : 'decrescente'})`);
+        
+        if (this.isMobile) {
+          this.filterPanel.classList.remove('open');
+          this.filterBtn.classList.remove('active');
+        }
       });
     });
 
@@ -142,6 +174,15 @@ class DNITDashboard {
           this.showNotification(`Filtrando: ${status}`);
         }
         this.applyFilters();
+        
+        if (this.isMobile) {
+          const tableCard = document.querySelector('.table-container');
+          if (tableCard) {
+            setTimeout(() => {
+              tableCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+          }
+        }
       });
     });
 
@@ -161,6 +202,38 @@ class DNITDashboard {
         this.applyFilters();
         this.showNotification(`Ordenado por ${field} (${currentOrder === 'asc' ? 'crescente' : 'decrescente'})`);
       });
+    });
+
+    if (this.tableBody) {
+      this.tableBody.addEventListener('touchstart', (e) => {
+        const row = e.target.closest('tr[data-municipio]');
+        if (row) {
+          row.style.backgroundColor = 'var(--accent-light)';
+          clearTimeout(this.touchTimeout);
+          this.touchTimeout = setTimeout(() => {
+            row.style.backgroundColor = '';
+          }, 300);
+        }
+      }, { passive: true });
+    }
+  }
+
+  closeFilterOnOutsideClick(e) {
+    if (!this.filterPanel.contains(e.target) && e.target !== this.filterBtn) {
+      this.filterPanel.classList.remove('open');
+      this.filterBtn.classList.remove('active');
+      document.removeEventListener('click', this.closeFilterOnOutsideClick);
+    }
+  }
+
+  setupResizeHandler() {
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        this.isMobile = window.innerWidth <= 768;
+        this.applyFilters();
+      }, 250);
     });
   }
 
@@ -285,8 +358,8 @@ class DNITDashboard {
     if (data.length === 0) {
       this.tableBody.innerHTML = `
         <tr>
-          <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-secondary);">
-            <i class="fas fa-info-circle"></i> Nenhum município encontrado com os filtros atuais
+          <td colspan="8" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
+            <i class="fas fa-info-circle"></i> Nenhum município encontrado
           </td>
         </tr>
       `;
@@ -297,19 +370,49 @@ class DNITDashboard {
     data.forEach((item, index) => {
       const statusClass = this.getStatusClass(item.situacao);
       const isEven = index % 2 === 0;
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.65rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-      html += `
-        <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
-          <td data-label="Município"><strong>${item.municipio}</strong> ${mesDisplay}</td>
-          <td data-label="Data">${item.data}</td>
-          <td data-label="Participantes" style="font-size:0.8rem;">${item.participantes}</td>
-          <td data-label="Alunos">${this.formatNumber(item.alunos)}</td>
-          <td data-label="Professores">${this.formatNumber(item.professores)}</td>
-          <td data-label="Escolas">${this.formatNumber(item.escolas)}</td>
-          <td data-label="Situação"><span class="status-badge ${statusClass}">${item.situacao}</span></td>
-          <td data-label="Próxima Etapa" style="font-size:0.8rem;">${item.proxima}</td>
-        </tr>
-      `;
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
+      
+      const labels = [
+        'municipio',
+        'data',
+        'participantes',
+        'alunos',
+        'professores',
+        'escolas',
+        'situacao',
+        'proxima'
+      ];
+      
+      const values = [
+        `${item.municipio} ${mesDisplay}`,
+        item.data,
+        item.participantes,
+        this.formatNumber(item.alunos),
+        this.formatNumber(item.professores),
+        this.formatNumber(item.escolas),
+        `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
+        item.proxima
+      ];
+
+      let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
+      
+      values.forEach((val, idx) => {
+        const label = labels[idx];
+        const labelMap = {
+          'municipio': '📍 Município',
+          'data': '📅 Data',
+          'participantes': '👤 Participantes',
+          'alunos': '🎓 Alunos',
+          'professores': '👨‍🏫 Professores',
+          'escolas': '🏫 Escolas',
+          'situacao': '📊 Situação',
+          'proxima': '➡️ Próxima Etapa'
+        };
+        rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
+      });
+      
+      rowHtml += '</tr>';
+      html += rowHtml;
     });
 
     this.tableBody.innerHTML = html;
@@ -340,7 +443,17 @@ class DNITDashboard {
     const rows = document.querySelectorAll(`tbody tr[data-municipio="${municipio}"]`);
     if (rows.length > 0) {
       rows[0].classList.add('selected');
-      rows[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      
+      if (this.isMobile) {
+        setTimeout(() => {
+          const detailCard = document.getElementById('cityDetail');
+          if (detailCard) {
+            detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 200);
+      } else {
+        rows[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
     }
 
     let data = [];
@@ -354,17 +467,6 @@ class DNITDashboard {
     
     if (item) {
       this.renderDetail(item);
-
-      // Em telas de celular, o painel de detalhes fica abaixo da lista;
-      // rola suavemente até ele para dar retorno imediato do toque.
-      if (window.innerWidth <= 1024) {
-        const detailCard = document.getElementById('cityDetail');
-        if (detailCard) {
-          setTimeout(() => {
-            detailCard.scrollIntoView({ block: 'start', behavior: 'smooth' });
-          }, 80);
-        }
-      }
     }
   }
 
@@ -382,7 +484,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
-        <span class="detail-value" style="font-size:0.85rem;">${item.participantes}</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
@@ -402,7 +504,7 @@ class DNITDashboard {
       </div>
       <div class="detail-row">
         <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
-        <span class="detail-value" style="font-size:0.85rem;">${item.proxima}</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
       </div>
     `;
   }
@@ -495,35 +597,183 @@ class DNITDashboard {
     }, 600);
   }
 
-  exportData() {
-    let data = [];
-    let fileName = '';
+  // ========== EXPORTAÇÃO PARA PDF MELHORADA ==========
+  exportToPDF() {
+    if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+      this.showNotification('Carregando biblioteca PDF... Aguarde e tente novamente');
+      this.loadJSPDF();
+      setTimeout(() => {
+        if (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined') {
+          this.generatePDF();
+        } else {
+          this.showNotification('Erro ao carregar PDF. Recarregue a página.');
+        }
+      }, 2000);
+      return;
+    }
+    this.generatePDF();
+  }
+
+  generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'mm', 'a4');
     
+    // Obtém os dados atuais
+    let data = [];
     if (this.currentMonth === 'Todos') {
       data = this.getAllData();
-      fileName = 'todos_os_meses';
     } else {
       data = this.data[this.currentMonth] || [];
-      fileName = this.currentMonth.toLowerCase();
     }
 
-    const exportData = {
-      mes: this.currentMonth,
-      data_exportacao: new Date().toLocaleString('pt-BR'),
-      total_municipios: data.length,
-      municipios: data
-    };
+    // Aplica filtros atuais
+    let filteredData = [...data];
+    if (this.currentFilter) {
+      filteredData = filteredData.filter(item => item.situacao === this.currentFilter);
+    }
+    if (this.searchTerm) {
+      filteredData = filteredData.filter(item => 
+        item.municipio.toLowerCase().includes(this.searchTerm)
+      );
+    }
 
-    const json = JSON.stringify(exportData, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `conexao_dnit_${fileName}_${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // Ordena os dados
+    filteredData = this.sortData(filteredData);
+
+    // Define o título
+    const monthDisplay = this.currentMonth === 'Todos' ? 'Todos os Meses' : this.currentMonth;
+    const title = `Conexão DNIT - Educação No Trânsito`;
+    const subtitle = `Relatório de Municípios - ${monthDisplay}`;
+    const dateStr = new Date().toLocaleString('pt-BR');
+
+    // Configuração da página
+    const pageWidth = doc.internal.pageSize.width;
+    const marginLeft = 12;
+    const marginRight = 12;
+    const usableWidth = pageWidth - marginLeft - marginRight;
+
+    // ===== TÍTULO CENTRALIZADO =====
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, pageWidth / 2, 12, { align: 'center' });
     
-    this.showNotification('Dados exportados com sucesso!');
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
+    
+    // ===== INFORMAÇÕES DE RESUMO =====
+    const totalAlunos = filteredData.reduce((sum, item) => sum + (item.alunos || 0), 0);
+    const totalProfessores = filteredData.reduce((sum, item) => sum + (item.professores || 0), 0);
+    const totalEscolas = filteredData.reduce((sum, item) => sum + (item.escolas || 0), 0);
+    
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    const summaryText = `Municípios: ${filteredData.length}  |  Alunos: ${this.formatNumber(totalAlunos)}  |  Professores: ${this.formatNumber(totalProfessores)}  |  Escolas: ${this.formatNumber(totalEscolas)}`;
+    doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
+    
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'italic');
+    doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
+
+    // ===== PREPARA OS DADOS PARA A TABELA =====
+    const tableData = filteredData.map(item => [
+      item.municipio,
+      item.data,
+      item.participantes,
+      this.formatNumber(item.alunos),
+      this.formatNumber(item.professores),
+      this.formatNumber(item.escolas),
+      item.situacao,
+      item.proxima
+    ]);
+
+    // ===== CABEÇALHOS =====
+    const headers = [
+      'Município',
+      'Data',
+      'Participantes',
+      'Alunos',
+      'Professores',
+      'Escolas',
+      'Situação',
+      'Próxima Etapa'
+    ];
+
+    // ===== LARGURAS DAS COLUNAS (distribuídas proporcionalmente) =====
+    // Distribuição uniforme com pesos
+    const colWeights = [1.6, 1.0, 2.2, 0.9, 1.0, 0.8, 1.6, 2.2];
+    const totalWeight = colWeights.reduce((a, b) => a + b, 0);
+    const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
+    
+    // Ajusta para caber na página
+    const adjustedWidths = colWidths.map(w => Math.max(w, 12));
+
+    // ===== GERA A TABELA COM CONFIGURAÇÃO MELHORADA =====
+    doc.autoTable({
+      head: [headers],
+      body: tableData,
+      startY: 34,
+      theme: 'striped',
+      styles: {
+        fontSize: 7,
+        cellPadding: { top: 1.8, bottom: 1.8, left: 2, right: 2 },
+        valign: 'middle',
+        halign: 'center',
+        lineColor: [200, 200, 200],
+        lineWidth: 0.1
+      },
+      headStyles: {
+        fillColor: [44, 107, 158],
+        textColor: [255, 255, 255],
+        fontSize: 7.5,
+        fontStyle: 'bold',
+        halign: 'center',
+        valign: 'middle',
+        cellPadding: { top: 2.5, bottom: 2.5, left: 2, right: 2 }
+      },
+      bodyStyles: {
+        fontSize: 6.8,
+        halign: 'center',
+        valign: 'middle'
+      },
+      alternateRowStyles: {
+        fillColor: [245, 248, 250]
+      },
+      columnStyles: {
+        0: { halign: 'left', cellWidth: adjustedWidths[0] },
+        1: { halign: 'center', cellWidth: adjustedWidths[1] },
+        2: { halign: 'left', cellWidth: adjustedWidths[2] },
+        3: { halign: 'right', cellWidth: adjustedWidths[3] },
+        4: { halign: 'right', cellWidth: adjustedWidths[4] },
+        5: { halign: 'right', cellWidth: adjustedWidths[5] },
+        6: { halign: 'center', cellWidth: adjustedWidths[6] },
+        7: { halign: 'left', cellWidth: adjustedWidths[7] }
+      },
+      margin: { left: marginLeft, right: marginRight },
+      tableWidth: 'auto',
+      didDrawPage: function(data) {
+        const pageCount = doc.internal.getNumberOfPages();
+        const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+        
+        // Linha separadora no rodapé
+        const footerY = doc.internal.pageSize.height - 6;
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.2);
+        doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
+        
+        // Texto do rodapé
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'italic');
+        doc.text(`Página ${currentPage} de ${pageCount}`, marginLeft, footerY + 4);
+        doc.text('Conexão DNIT - Educação No Trânsito', pageWidth - marginRight, footerY + 4, { align: 'right' });
+      }
+    });
+
+    // ===== SALVA O PDF =====
+    const fileName = `conexao_dnit_${this.currentMonth.toLowerCase()}_${new Date().toISOString().slice(0,10)}.pdf`;
+    doc.save(fileName);
+    
+    this.showNotification('PDF exportado com sucesso!');
   }
 
   toggleTheme() {
@@ -569,6 +819,12 @@ class DNITDashboard {
     toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
     
     document.body.appendChild(toast);
+    
+    if (this.isMobile) {
+      toast.style.left = '50%';
+      toast.style.transform = 'translateX(-50%)';
+      toast.style.bottom = '16px';
+    }
     
     setTimeout(() => {
       toast.style.opacity = '0';
