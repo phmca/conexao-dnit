@@ -1,4 +1,3 @@
-/* script.js - com exportação PDF melhorada e centralizada */
 // ============================================
 // Conexão DNIT · Educação No Trânsito - Dashboard
 // ============================================
@@ -30,7 +29,7 @@ class DNITDashboard {
         { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacoti', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
-       'Julho': [
+      'Julho': [
         { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
         { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' }
@@ -75,37 +74,37 @@ class DNITDashboard {
     }
   }
 
-  cacheElements() {
-    this.themeToggle = document.getElementById('themeToggle');
-    this.refreshBtn = document.getElementById('refreshBtn');
-    this.exportBtn = document.getElementById('exportBtn');
-    this.filterBtn = document.getElementById('filterBtn');
-    this.monthSelect = document.getElementById('monthSelect');
-    this.filterPanel = document.getElementById('filterPanel');
-    this.searchInput = document.getElementById('searchInput');
+cacheElements() {
+  this.themeToggle = document.getElementById('themeToggle');
+  this.refreshBtn = document.getElementById('refreshBtn');
+  this.exportBtn = document.getElementById('exportBtn');
+  this.filterBtn = document.getElementById('filterBtn');
+  this.monthSelect = document.getElementById('monthSelect');
+  this.filterPanel = document.getElementById('filterPanel');
+  this.searchInput = document.getElementById('searchInput');
 
-    this.tableBody = document.getElementById('tableBody');
-    this.detailContent = document.getElementById('detailContent');
-    this.footerUpdate = document.getElementById('footerUpdate');
+  this.tableBody = document.getElementById('tableBody');
+  this.detailContent = document.getElementById('detailContent');
+  this.footerUpdate = document.getElementById('footerUpdate');
 
-    this.totalMunicipios = document.getElementById('totalMunicipios');
-    this.totalAlunos = document.getElementById('totalAlunos');
-    this.totalProfessores = document.getElementById('totalProfessores');
-    this.totalEscolas = document.getElementById('totalEscolas');
+  this.totalMunicipios = document.getElementById('totalMunicipios');
+  this.totalAlunos = document.getElementById('totalAlunos');
+  this.totalProfessores = document.getElementById('totalProfessores');
+  this.totalEscolas = document.getElementById('totalEscolas');
 
-    this.statusImplantado = document.getElementById('statusImplantado');
-    this.statusConvenio = document.getElementById('statusConvenio');
-    this.statusAnalise = document.getElementById('statusAnalise');
-    this.statusApresentacao = document.getElementById('statusApresentacao');
-    this.statusSemInfo = document.getElementById('statusSemInfo');
+  this.statusImplantado = document.getElementById('statusImplantado');
+  this.statusConvenio = document.getElementById('statusConvenio');
+  this.statusAnalise = document.getElementById('statusAnalise');
+  this.statusApresentacao = document.getElementById('statusApresentacao');
+  // this.statusSemInfo = document.getElementById('statusSemInfo'); // REMOVA ESTA LINHA
 
-    this.totalMunicipiosGeralEl = document.getElementById('totalMunicipiosGeral');
-    this.mediaAlunos = document.getElementById('mediaAlunos');
-    this.ultimaAtualizacao = document.getElementById('ultimaAtualizacao');
+  this.totalMunicipiosGeralEl = document.getElementById('totalMunicipiosGeral');
+  this.mediaAlunos = document.getElementById('mediaAlunos');
+  this.periodoDados = document.getElementById('periodoDados');
 
-    this.statusItems = document.querySelectorAll('.status-item.clickable');
-    this.sortableHeaders = document.querySelectorAll('th.sortable');
-  }
+  this.statusItems = document.querySelectorAll('.status-item.clickable');
+  this.sortableHeaders = document.querySelectorAll('th.sortable');
+}
 
   bindEvents() {
     this.themeToggle.addEventListener('click', () => this.toggleTheme());
@@ -271,13 +270,36 @@ class DNITDashboard {
       data = this.data[month] || [];
     }
 
+    // ===== SEMPRE ORDENAR POR DATA AO CARREGAR =====
+    this.currentSort = { field: 'data', order: 'asc' };
+    
+    // Atualiza os indicadores visuais nos headers
+    this.sortableHeaders.forEach(th => {
+      th.classList.remove('active', 'asc', 'desc');
+      if (th.dataset.sort === 'data') {
+        th.classList.add('active', 'asc');
+      }
+    });
+    
+    // Atualiza os botões de filtro
+    document.querySelectorAll('.filter-option').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.dataset.sort === 'data' && btn.dataset.order === 'asc') {
+        btn.classList.add('active');
+      }
+    });
+
+    // Ordena os dados por data (crescente) ANTES de selecionar
+    const sortedData = this.sortData([...data]);
+
     this.renderData(data);
     this.updateSummary(data);
     this.updateStatusCounts(data);
     this.clearDetail();
 
-    if (data.length > 0) {
-      this.selectCity(data[0].municipio);
+    // ===== Seleciona a PRIMEIRA cidade cronologicamente (mais antiga) =====
+    if (sortedData.length > 0) {
+      this.selectCity(sortedData[0].municipio);
     }
 
     this.updateAdditionalInfo(data);
@@ -522,78 +544,100 @@ class DNITDashboard {
   }
 
   updateSummary(data) {
-  // Conta municípios únicos (remove duplicatas)
-  const uniqueMunicipios = new Set();
-  const uniqueEscolas = new Set();
-  
-  data.forEach(item => {
-    uniqueMunicipios.add(item.municipio);
-    // Se quiser contar escolas únicas também (opcional)
-    // uniqueEscolas.add(item.municipio + '-' + item.escolas);
-  });
-  
-  const totalMunicipios = uniqueMunicipios.size;
-  const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-  const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
-  const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
+    // Conta municípios únicos (remove duplicatas)
+    const uniqueMunicipios = new Set();
+    
+    data.forEach(item => {
+      uniqueMunicipios.add(item.municipio);
+    });
+    
+    const totalMunicipios = uniqueMunicipios.size;
+    const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+    const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
+    const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-  this.totalMunicipios.textContent = totalMunicipios;
-  this.totalAlunos.textContent = this.formatNumber(totalAlunos);
-  this.totalProfessores.textContent = this.formatNumber(totalProfessores);
-  this.totalEscolas.textContent = this.formatNumber(totalEscolas);
-}
+    this.totalMunicipios.textContent = totalMunicipios;
+    this.totalAlunos.textContent = this.formatNumber(totalAlunos);
+    this.totalProfessores.textContent = this.formatNumber(totalProfessores);
+    this.totalEscolas.textContent = this.formatNumber(totalEscolas);
+  }
 
   updateStatusCounts(data) {
-    const counts = {
-      implantado: 0,
-      convenio: 0,
-      analise: 0,
-      apresentacao: 0,
-      semInfo: 0
-    };
+  const counts = {
+    implantado: 0,
+    convenio: 0,
+    analise: 0,
+    apresentacao: 0
+    // semInfo: 0  // REMOVA ESTA LINHA
+  };
 
-    data.forEach(item => {
-      const situacao = item.situacao;
-      if (situacao.includes('Implantado')) counts.implantado++;
-      else if (situacao.includes('Convênio') || situacao.includes('convênio')) counts.convenio++;
-      else if (situacao.includes('análise') || situacao.includes('jurídica')) counts.analise++;
-      else if (situacao.includes('Apresentação') || situacao.includes('apresentação')) counts.apresentacao++;
-      else counts.semInfo++;
-    });
+  data.forEach(item => {
+    const situacao = item.situacao;
+    if (situacao.includes('Implantado')) counts.implantado++;
+    else if (situacao.includes('Convênio') || situacao.includes('convênio')) counts.convenio++;
+    else if (situacao.includes('análise') || situacao.includes('jurídica')) counts.analise++;
+    else if (situacao.includes('Apresentação') || situacao.includes('apresentação')) counts.apresentacao++;
+    // else counts.semInfo++; // REMOVA ESTA LINHA
+  });
 
-    this.statusImplantado.textContent = counts.implantado;
-    this.statusConvenio.textContent = counts.convenio;
-    this.statusAnalise.textContent = counts.analise;
-    this.statusApresentacao.textContent = counts.apresentacao;
-    this.statusSemInfo.textContent = counts.semInfo;
-  }
+  this.statusImplantado.textContent = counts.implantado;
+  this.statusConvenio.textContent = counts.convenio;
+  this.statusAnalise.textContent = counts.analise;
+  this.statusApresentacao.textContent = counts.apresentacao;
+  // this.statusSemInfo.textContent = counts.semInfo; // REMOVA ESTA LINHA
+}
 
- updateAdditionalInfo(data) {
-  if (this.totalMunicipiosGeralEl) {
-    const allMunicipios = new Set();
-    Object.values(this.data).forEach(monthData => {
-      monthData.forEach(item => allMunicipios.add(item.municipio));
-    });
-    this.totalMunicipiosGeralEl.textContent = allMunicipios.size;
-  }
+  updateAdditionalInfo(data) {
+    if (this.totalMunicipiosGeralEl) {
+      const allMunicipios = new Set();
+      Object.values(this.data).forEach(monthData => {
+        monthData.forEach(item => allMunicipios.add(item.municipio));
+      });
+      this.totalMunicipiosGeralEl.textContent = allMunicipios.size;
+    }
 
-  if (this.mediaAlunos && data.length > 0) {
-    const total = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-    const media = total / data.length;
-    this.mediaAlunos.textContent = this.formatNumber(Math.round(media));
-  }
+    if (this.mediaAlunos && data.length > 0) {
+      const total = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+      const media = total / data.length;
+      this.mediaAlunos.textContent = this.formatNumber(Math.round(media));
+    }
 
-  // ===== SUBSTITUI POR "ÚLTIMA DATA DOS DADOS" =====
-  if (this.ultimaAtualizacao) {
-    if (data.length > 0) {
-      // Pega a data do último item (já está ordenado por data crescente)
-      const ultimoItem = data[data.length - 1];
-      this.ultimaAtualizacao.textContent = ultimoItem.data;
-    } else {
-      this.ultimaAtualizacao.textContent = 'Sem dados';
+    // ===== SUBSTITUI "ÚLTIMA ATUALIZAÇÃO" POR "PERÍODO DOS DADOS" =====
+    if (this.periodoDados) {
+      if (data.length > 0) {
+        // Extrai todas as datas dos registros
+        const datas = data.map(item => {
+          let dateStr = item.data;
+          if (dateStr.includes(' - ')) {
+            dateStr = dateStr.split(' - ')[0];
+          }
+          return dateStr;
+        });
+        
+        // Ordena as datas
+        const sortedDates = datas.sort((a, b) => {
+          const partsA = a.split('/');
+          const partsB = b.split('/');
+          if (partsA.length === 3 && partsB.length === 3) {
+            return new Date(partsA[2], partsA[1] - 1, partsA[0]) - 
+                   new Date(partsB[2], partsB[1] - 1, partsB[0]);
+          }
+          return 0;
+        });
+        
+        const primeiraData = sortedDates[0] || '--';
+        const ultimaData = sortedDates[sortedDates.length - 1] || '--';
+        
+        if (primeiraData === ultimaData) {
+          this.periodoDados.textContent = `${primeiraData}`;
+        } else {
+          this.periodoDados.textContent = `${primeiraData} - ${ultimaData}`;
+        }
+      } else {
+        this.periodoDados.textContent = 'Sem dados';
+      }
     }
   }
-}
 
   calculateGeneralStats() {
     let totalMunicipios = 0;
@@ -636,7 +680,6 @@ class DNITDashboard {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('landscape', 'mm', 'a4');
     
-    // Obtém os dados atuais
     let data = [];
     if (this.currentMonth === 'Todos') {
       data = this.getAllData();
@@ -644,7 +687,6 @@ class DNITDashboard {
       data = this.data[this.currentMonth] || [];
     }
 
-    // Aplica filtros atuais
     let filteredData = [...data];
     if (this.currentFilter) {
       filteredData = filteredData.filter(item => item.situacao === this.currentFilter);
@@ -655,22 +697,18 @@ class DNITDashboard {
       );
     }
 
-    // Ordena os dados
     filteredData = this.sortData(filteredData);
 
-    // Define o título
     const monthDisplay = this.currentMonth === 'Todos' ? 'Todos os Meses' : this.currentMonth;
     const title = `Conexão DNIT - Educação No Trânsito`;
     const subtitle = `Relatório de Municípios - ${monthDisplay}`;
     const dateStr = new Date().toLocaleString('pt-BR');
 
-    // Configuração da página
     const pageWidth = doc.internal.pageSize.width;
     const marginLeft = 12;
     const marginRight = 12;
     const usableWidth = pageWidth - marginLeft - marginRight;
 
-    // ===== TÍTULO CENTRALIZADO =====
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(title, pageWidth / 2, 12, { align: 'center' });
@@ -679,7 +717,6 @@ class DNITDashboard {
     doc.setFont('helvetica', 'bold');
     doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
     
-    // ===== INFORMAÇÕES DE RESUMO =====
     const totalAlunos = filteredData.reduce((sum, item) => sum + (item.alunos || 0), 0);
     const totalProfessores = filteredData.reduce((sum, item) => sum + (item.professores || 0), 0);
     const totalEscolas = filteredData.reduce((sum, item) => sum + (item.escolas || 0), 0);
@@ -693,7 +730,6 @@ class DNITDashboard {
     doc.setFont('helvetica', 'italic');
     doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
 
-    // ===== PREPARA OS DADOS PARA A TABELA =====
     const tableData = filteredData.map(item => [
       item.municipio,
       item.data,
@@ -705,7 +741,6 @@ class DNITDashboard {
       item.proxima
     ]);
 
-    // ===== CABEÇALHOS =====
     const headers = [
       'Município',
       'Data',
@@ -717,16 +752,11 @@ class DNITDashboard {
       'Próxima Etapa'
     ];
 
-    // ===== LARGURAS DAS COLUNAS (distribuídas proporcionalmente) =====
-    // Distribuição uniforme com pesos
     const colWeights = [1.6, 1.0, 2.2, 0.9, 1.0, 0.8, 1.6, 2.2];
     const totalWeight = colWeights.reduce((a, b) => a + b, 0);
     const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
-    
-    // Ajusta para caber na página
     const adjustedWidths = colWidths.map(w => Math.max(w, 12));
 
-    // ===== GERA A TABELA COM CONFIGURAÇÃO MELHORADA =====
     doc.autoTable({
       head: [headers],
       body: tableData,
@@ -773,13 +803,11 @@ class DNITDashboard {
         const pageCount = doc.internal.getNumberOfPages();
         const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
         
-        // Linha separadora no rodapé
         const footerY = doc.internal.pageSize.height - 6;
         doc.setDrawColor(200, 200, 200);
         doc.setLineWidth(0.2);
         doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
         
-        // Texto do rodapé
         doc.setFontSize(6.5);
         doc.setFont('helvetica', 'italic');
         doc.text(`Página ${currentPage} de ${pageCount}`, marginLeft, footerY + 4);
@@ -787,7 +815,6 @@ class DNITDashboard {
       }
     });
 
-    // ===== SALVA O PDF =====
     const fileName = `conexao_dnit_${this.currentMonth.toLowerCase()}_${new Date().toISOString().slice(0,10)}.pdf`;
     doc.save(fileName);
     
@@ -816,9 +843,6 @@ class DNITDashboard {
     const timeStr = now.toLocaleTimeString('pt-BR', options);
     if (this.footerUpdate) {
       this.footerUpdate.textContent = timeStr;
-    }
-    if (this.ultimaAtualizacao) {
-      this.ultimaAtualizacao.textContent = now.toLocaleString('pt-BR');
     }
   }
 
