@@ -1,12 +1,8 @@
-<!-- index.html - atualizado -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-  <meta name="theme-color" content="#0b2b5c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conexão DNIT · Educação No Trânsito</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,24 +26,24 @@
       <div class="header-controls">
         <div class="month-selector-wrapper">
           <i class="fas fa-calendar-alt month-selector-icon"></i>
-          <select id="monthSelect" class="month-select" aria-label="Selecionar mês">
+          <select id="monthSelect" class="month-select">
             <option value="Todos" selected>Todos os meses</option>
             <option value="Maio">Maio 2026</option>
             <option value="Junho">Junho 2026</option>
             <option value="Julho">Julho 2026</option>
           </select>
         </div>
-        <button class="theme-toggle" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">
+        <button class="theme-toggle" id="themeToggle" title="Alternar tema">
           <i class="fas fa-moon"></i>
         </button>
-        <button class="refresh-btn" id="refreshBtn" title="Atualizar dados" aria-label="Atualizar dados">
+        <button class="refresh-btn" id="refreshBtn" title="Atualizar dados">
           <i class="fas fa-sync-alt"></i>
         </button>
       </div>
     </header>
 
     <!-- Resumo rápido -->
-    <div class="summary-cards" role="status" aria-label="Resumo dos dados">
+    <div class="summary-cards">
       <div class="summary-item">
         <span class="summary-label"><i class="fas fa-city"></i> Municípios</span>
         <span class="summary-value" id="totalMunicipios">0</span>
@@ -72,61 +68,67 @@
       <div class="table-container">
         <div class="card">
           <div class="card-header">
-            <h3><i class="fas fa-table"></i> Municípios participantes</h3>
+            <h3><i class="fas fa-table" style="margin-right: 8px;"></i> Municípios participantes</h3>
             <div class="card-actions">
-              <button class="filter-btn" id="filterBtn" title="Opções de filtro" aria-label="Abrir filtros">
+              <button class="filter-btn" id="filterBtn" title="Opções de filtro">
                 <i class="fas fa-filter"></i>
                 <span class="filter-label">Filtrar</span>
               </button>
-              <button class="export-btn" id="exportBtn" title="Exportar para PDF" aria-label="Exportar para PDF">
-                <i class="fas fa-file-pdf"></i>
+              <button class="export-btn" id="exportBtn" title="Exportar dados">
+                <i class="fas fa-download"></i>
               </button>
             </div>
           </div>
           
           <!-- Painel de filtros -->
-          <div class="filter-panel" id="filterPanel" role="dialog" aria-label="Painel de filtros">
+          <div class="filter-panel" id="filterPanel">
             <div class="filter-group">
               <span class="filter-title"><i class="fas fa-sort"></i> Ordenar por:</span>
-              <div class="filter-options" role="group" aria-label="Opções de ordenação">
-                <button class="filter-option" data-sort="municipio" data-order="asc" aria-label="Ordenar por município A-Z">
-                  <i class="fas fa-sort-alpha-down"></i> A-Z
+              <div class="filter-options">
+                <button class="filter-option" data-sort="municipio" data-order="asc">
+                  <i class="fas fa-sort-alpha-down"></i> Município (A-Z)
                 </button>
-                <button class="filter-option" data-sort="municipio" data-order="desc" aria-label="Ordenar por município Z-A">
-                  <i class="fas fa-sort-alpha-up"></i> Z-A
+                <button class="filter-option" data-sort="municipio" data-order="desc">
+                  <i class="fas fa-sort-alpha-up"></i> Município (Z-A)
                 </button>
-                <button class="filter-option" data-sort="alunos" data-order="asc" aria-label="Ordenar por alunos menor">
-                  <i class="fas fa-sort-numeric-down"></i> Alunos ↑
+                <button class="filter-option active" data-sort="data" data-order="asc">
+                  <i class="fas fa-sort-numeric-down"></i> Data (crescente)
                 </button>
-                <button class="filter-option" data-sort="alunos" data-order="desc" aria-label="Ordenar por alunos maior">
-                  <i class="fas fa-sort-numeric-up"></i> Alunos ↓
+                <button class="filter-option" data-sort="data" data-order="desc">
+                  <i class="fas fa-sort-numeric-up"></i> Data (decrescente)
                 </button>
-                <button class="filter-option" data-sort="professores" data-order="asc" aria-label="Ordenar por professores menor">
-                  <i class="fas fa-sort-numeric-down"></i> Profs ↑
+                <button class="filter-option" data-sort="alunos" data-order="asc">
+                  <i class="fas fa-sort-numeric-down"></i> Alunos (menor)
                 </button>
-                <button class="filter-option" data-sort="professores" data-order="desc" aria-label="Ordenar por professores maior">
-                  <i class="fas fa-sort-numeric-up"></i> Profs ↓
+                <button class="filter-option" data-sort="alunos" data-order="desc">
+                  <i class="fas fa-sort-numeric-up"></i> Alunos (maior)
                 </button>
-                <button class="filter-option" data-sort="escolas" data-order="asc" aria-label="Ordenar por escolas menor">
-                  <i class="fas fa-sort-numeric-down"></i> Escolas ↑
+                <button class="filter-option" data-sort="professores" data-order="asc">
+                  <i class="fas fa-sort-numeric-down"></i> Professores (menor)
                 </button>
-                <button class="filter-option" data-sort="escolas" data-order="desc" aria-label="Ordenar por escolas maior">
-                  <i class="fas fa-sort-numeric-up"></i> Escolas ↓
+                <button class="filter-option" data-sort="professores" data-order="desc">
+                  <i class="fas fa-sort-numeric-up"></i> Professores (maior)
+                </button>
+                <button class="filter-option" data-sort="escolas" data-order="asc">
+                  <i class="fas fa-sort-numeric-down"></i> Escolas (menor)
+                </button>
+                <button class="filter-option" data-sort="escolas" data-order="desc">
+                  <i class="fas fa-sort-numeric-up"></i> Escolas (maior)
                 </button>
               </div>
             </div>
             <div class="filter-group">
               <span class="filter-title"><i class="fas fa-search"></i> Buscar município:</span>
-              <input type="text" id="searchInput" class="search-input" placeholder="Digite o nome do município..." aria-label="Buscar município">
+              <input type="text" id="searchInput" class="search-input" placeholder="Digite o nome do município...">
             </div>
           </div>
 
           <div class="table-wrapper">
-            <table role="table" aria-label="Tabela de municípios participantes">
+            <table>
               <thead>
                 <tr>
                   <th class="sortable" data-sort="municipio">Município <i class="fas fa-sort"></i></th>
-                  <th>Data</th>
+                  <th class="sortable active asc" data-sort="data">Data <i class="fas fa-sort"></i></th>
                   <th>Participantes</th>
                   <th class="sortable" data-sort="alunos">Alunos <i class="fas fa-sort"></i></th>
                   <th class="sortable" data-sort="professores">Professores <i class="fas fa-sort"></i></th>
@@ -148,7 +150,7 @@
         <!-- Detalhes do município selecionado -->
         <div class="card" id="cityDetail">
           <div class="card-header">
-            <h3><i class="fas fa-info-circle"></i> Detalhes</h3>
+            <h3><i class="fas fa-info-circle" style="margin-right: 8px;"></i> Detalhes</h3>
             <span class="detail-hint">clique em um município</span>
           </div>
           <div id="detailContent">
@@ -162,42 +164,38 @@
         <!-- Status geral - clicável -->
         <div class="card">
           <div class="card-header">
-            <h3><i class="fas fa-chart-pie"></i> Status do programa</h3>
+            <h3><i class="fas fa-chart-pie" style="margin-right: 8px;"></i> Status do programa</h3>
             <span class="status-hint">clique para filtrar</span>
           </div>
-          <div id="statusChart" role="list" aria-label="Status do programa">
-            <div class="status-item clickable" data-status="Implantado" role="listitem" tabindex="0">
+          <div id="statusChart">
+            <div class="status-item clickable" data-status="Implantado">
               <span class="status-label"><span class="status-dot" style="background:#2ecc71;"></span> Implantado</span>
               <span class="status-count" id="statusImplantado">0</span>
             </div>
-            <div class="status-item clickable" data-status="Convênio assinado" role="listitem" tabindex="0">
+            <div class="status-item clickable" data-status="Convênio assinado">
               <span class="status-label"><span class="status-dot" style="background:#f39c12;"></span> Convênio assinado</span>
               <span class="status-count" id="statusConvenio">0</span>
             </div>
-            <div class="status-item clickable" data-status="Em análise jurídica" role="listitem" tabindex="0">
+            <div class="status-item clickable" data-status="Em análise jurídica">
               <span class="status-label"><span class="status-dot" style="background:#3498db;"></span> Em análise jurídica</span>
               <span class="status-count" id="statusAnalise">0</span>
             </div>
-            <div class="status-item clickable" data-status="Apresentação realizada" role="listitem" tabindex="0">
+            <div class="status-item clickable" data-status="Apresentação realizada">
               <span class="status-label"><span class="status-dot" style="background:#e74c3c;"></span> Apresentação realizada</span>
               <span class="status-count" id="statusApresentacao">0</span>
             </div>
-            <div class="status-item clickable" data-status="--" role="listitem" tabindex="0">
-              <span class="status-label"><span class="status-dot" style="background:#95a5a6;"></span> Sem informação</span>
-              <span class="status-count" id="statusSemInfo">0</span>
-            </div>
+
           </div>
         </div>
 
         <!-- Informações adicionais -->
         <div class="card info-card">
           <div class="card-header">
-            <h3><i class="fas fa-info-circle"></i> Sobre o programa</h3>
+            <h3><i class="fas fa-info-circle" style="margin-right: 8px;"></i> Sobre o programa</h3>
           </div>
           <div class="info-content">
             <p><i class="fas fa-check-circle" style="color:#2ecc71;"></i> <strong>Total de municípios atendidos:</strong> <span id="totalMunicipiosGeral">0</span></p>
             <p><i class="fas fa-chart-line" style="color:#3498db;"></i> <strong>Média de alunos por município:</strong> <span id="mediaAlunos">0</span></p>
-            <p><i class="fas fa-calendar-check" style="color:#f39c12;"></i> <strong>Última atualização:</strong> <span id="ultimaAtualizacao">--</span></p>
           </div>
         </div>
       </div>
@@ -211,6 +209,6 @@
     </footer>
   </div>
 
-  <script src="js/script.js?v=4"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
