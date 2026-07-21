@@ -522,16 +522,26 @@ class DNITDashboard {
   }
 
   updateSummary(data) {
-    const totalMunicipios = data.length;
-    const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-    const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
-    const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
+  // Conta municípios únicos (remove duplicatas)
+  const uniqueMunicipios = new Set();
+  const uniqueEscolas = new Set();
+  
+  data.forEach(item => {
+    uniqueMunicipios.add(item.municipio);
+    // Se quiser contar escolas únicas também (opcional)
+    // uniqueEscolas.add(item.municipio + '-' + item.escolas);
+  });
+  
+  const totalMunicipios = uniqueMunicipios.size;
+  const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+  const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
+  const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-    this.totalMunicipios.textContent = totalMunicipios;
-    this.totalAlunos.textContent = this.formatNumber(totalAlunos);
-    this.totalProfessores.textContent = this.formatNumber(totalProfessores);
-    this.totalEscolas.textContent = this.formatNumber(totalEscolas);
-  }
+  this.totalMunicipios.textContent = totalMunicipios;
+  this.totalAlunos.textContent = this.formatNumber(totalAlunos);
+  this.totalProfessores.textContent = this.formatNumber(totalProfessores);
+  this.totalEscolas.textContent = this.formatNumber(totalEscolas);
+}
 
   updateStatusCounts(data) {
     const counts = {
@@ -558,26 +568,32 @@ class DNITDashboard {
     this.statusSemInfo.textContent = counts.semInfo;
   }
 
-  updateAdditionalInfo(data) {
-    if (this.totalMunicipiosGeralEl) {
-      const allMunicipios = new Set();
-      Object.values(this.data).forEach(monthData => {
-        monthData.forEach(item => allMunicipios.add(item.municipio));
-      });
-      this.totalMunicipiosGeralEl.textContent = allMunicipios.size;
-    }
+ updateAdditionalInfo(data) {
+  if (this.totalMunicipiosGeralEl) {
+    const allMunicipios = new Set();
+    Object.values(this.data).forEach(monthData => {
+      monthData.forEach(item => allMunicipios.add(item.municipio));
+    });
+    this.totalMunicipiosGeralEl.textContent = allMunicipios.size;
+  }
 
-    if (this.mediaAlunos && data.length > 0) {
-      const total = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-      const media = total / data.length;
-      this.mediaAlunos.textContent = this.formatNumber(Math.round(media));
-    }
+  if (this.mediaAlunos && data.length > 0) {
+    const total = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+    const media = total / data.length;
+    this.mediaAlunos.textContent = this.formatNumber(Math.round(media));
+  }
 
-    if (this.ultimaAtualizacao) {
-      const now = new Date();
-      this.ultimaAtualizacao.textContent = now.toLocaleString('pt-BR');
+  // ===== SUBSTITUI POR "ÚLTIMA DATA DOS DADOS" =====
+  if (this.ultimaAtualizacao) {
+    if (data.length > 0) {
+      // Pega a data do último item (já está ordenado por data crescente)
+      const ultimoItem = data[data.length - 1];
+      this.ultimaAtualizacao.textContent = ultimoItem.data;
+    } else {
+      this.ultimaAtualizacao.textContent = 'Sem dados';
     }
   }
+}
 
   calculateGeneralStats() {
     let totalMunicipios = 0;
