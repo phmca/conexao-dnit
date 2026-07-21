@@ -306,55 +306,56 @@ class DNITDashboard {
     return text.substring(0, maxLength) + '...';
   }
 
-  renderTable(data) {
-    if (!this.tableBody) return;
+ renderTable(data) {
+  if (!this.tableBody) return;
 
-    if (data.length === 0) {
-      this.tableBody.innerHTML = `
-        <tr>
-          <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-secondary);">
-            <i class="fas fa-info-circle"></i> Nenhum município encontrado com os filtros atuais
-          </td>
-        </tr>
-      `;
-      return;
-    }
+  if (data.length === 0) {
+    this.tableBody.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align:center; padding:2rem; color:var(--text-secondary);">
+          <i class="fas fa-info-circle"></i> Nenhum município encontrado com os filtros atuais
+        </td>
+      </tr>
+    `;
+    return;
+  }
 
-    let html = '';
-    data.forEach((item, index) => {
-      const statusClass = this.getStatusClass(item.situacao);
-      const isEven = index % 2 === 0;
-      
-      const situacaoAbreviada = this.abbreviateText(item.situacao, 18);
-      const participantesAbreviado = this.abbreviateText(item.participantes, 20);
-      const proximaAbreviada = this.abbreviateText(item.proxima, 22);
-      
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.55rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-      
-      html += `
-        <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
-          <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
-          <td style="white-space:nowrap;">${item.data}</td>
-          <td style="font-size:0.7rem; max-width:100px; word-break:break-word;">${participantesAbreviado}</td>
-          <td style="text-align:center;">${this.formatNumber(item.alunos)}</td>
-          <td style="text-align:center;">${this.formatNumber(item.professores)}</td>
-          <td style="text-align:center;">${this.formatNumber(item.escolas)}</td>
-          <td><span class="status-badge ${statusClass}" style="font-size:0.65rem; white-space:nowrap;">${situacaoAbreviada}</span></td>
-          <td style="font-size:0.7rem; max-width:120px; word-break:break-word;">${proximaAbreviada}</td>
-        </tr>
-      `;
-    });
-
-    this.tableBody.innerHTML = html;
+  let html = '';
+  data.forEach((item, index) => {
+    const statusClass = this.getStatusClass(item.situacao);
+    const isEven = index % 2 === 0;
     
-    if (this.selectedCity) {
-      const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
-      if (rows.length > 0) {
-        rows[0].classList.add('selected');
-      } else {
-        this.clearDetail();
-      }
+    const situacaoAbreviada = this.abbreviateText(item.situacao, 18);
+    const participantesAbreviado = this.abbreviateText(item.participantes, 20);
+    const proximaAbreviada = this.abbreviateText(item.proxima, 22);
+    
+    // O mês é exibido apenas no modo "Todos" e como um elemento separado
+    const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.55rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
+    
+    html += `
+      <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
+        <td data-label="📍 Município"><strong>${item.municipio}</strong> ${mesDisplay}</td>
+        <td data-label="📅 Data">${item.data}</td>
+        <td data-label="👤 Participantes" style="font-size:0.7rem; max-width:100px; word-break:break-word;">${participantesAbreviado}</td>
+        <td data-label="🎓 Alunos" style="text-align:center;">${this.formatNumber(item.alunos)}</td>
+        <td data-label="👨‍🏫 Professores" style="text-align:center;">${this.formatNumber(item.professores)}</td>
+        <td data-label="🏫 Escolas" style="text-align:center;">${this.formatNumber(item.escolas)}</td>
+        <td data-label="📊 Situação"><span class="status-badge ${statusClass}" style="font-size:0.65rem; white-space:nowrap;">${situacaoAbreviada}</span></td>
+        <td data-label="➡️ Próxima Etapa" style="font-size:0.7rem; max-width:120px; word-break:break-word;">${proximaAbreviada}</td>
+      </tr>
+    `;
+  });
+
+  this.tableBody.innerHTML = html;
+  
+  if (this.selectedCity) {
+    const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
+    if (rows.length > 0) {
+      rows[0].classList.add('selected');
+    } else {
+      this.clearDetail();
     }
+  }
   }
 
   getStatusClass(situacao) {
