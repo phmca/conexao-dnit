@@ -1,4 +1,4 @@
-/* style.css - versão com fontes maiores e melhor legibilidade */
+/* style.css - versão com barra de meses compacta */
 :root {
   --bg-primary: #f0f4f8;
   --bg-card: #ffffff;
@@ -81,19 +81,19 @@ body {
 .logo-icon {
   background: var(--text-dark);
   color: white;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   box-shadow: 0 4px 12px rgba(11, 43, 92, 0.2);
   flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   color: var(--text-dark);
@@ -106,7 +106,7 @@ body {
 
 .logo-text small {
   font-weight: 400;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   margin-left: 6px;
   letter-spacing: 0.3px;
@@ -138,21 +138,21 @@ body {
 
 .month-selector-icon {
   color: var(--accent);
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-right: 0.3rem;
 }
 
 .month-select {
   background: transparent;
   border: none;
-  padding: 0.6rem 0.3rem 0.6rem 0;
+  padding: 0.5rem 0.3rem 0.5rem 0;
   font-family: 'Inter', sans-serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-dark);
   cursor: pointer;
   outline: none;
-  min-width: 130px;
+  min-width: 120px;
 }
 
 .month-select option {
@@ -164,12 +164,12 @@ body {
 .refresh-btn {
   background: var(--bg-secondary);
   border: none;
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   cursor: pointer;
   color: var(--text-secondary);
-  font-size: 1.1rem;
+  font-size: 1rem;
   transition: var(--transition);
   display: flex;
   align-items: center;
@@ -210,7 +210,7 @@ body {
 .summary-item {
   background: var(--bg-secondary);
   border-radius: 1.2rem;
-  padding: 1.2rem 1.4rem;
+  padding: 1rem 1.2rem;
   border: 1px solid var(--border-color);
   transition: var(--transition);
 }
@@ -222,7 +222,7 @@ body {
 
 .summary-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   font-weight: 500;
   text-transform: uppercase;
@@ -235,7 +235,7 @@ body {
 }
 
 .summary-value {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--text-dark);
 }
@@ -251,7 +251,7 @@ body {
 .card {
   background: var(--bg-card);
   border-radius: 1.5rem;
-  padding: 1.6rem 1.8rem;
+  padding: 1.4rem 1.6rem;
   border: 1px solid var(--border-color);
   transition: var(--transition);
   margin-bottom: 1.2rem;
@@ -272,7 +272,7 @@ body {
 
 .card-header h3 {
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--text-dark);
   display: flex;
   align-items: center;
@@ -289,12 +289,12 @@ body {
 .export-btn {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  padding: 0.4rem 1rem;
+  padding: 0.3rem 0.9rem;
   border-radius: 30px;
   cursor: pointer;
   color: var(--text-secondary);
   transition: var(--transition);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -315,7 +315,7 @@ body {
 }
 
 .filter-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
 /* ========== FILTER PANEL ========== */
@@ -343,7 +343,7 @@ body {
 
 .filter-title {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -354,16 +354,16 @@ body {
 .filter-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .filter-option {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  padding: 0.4rem 0.9rem;
+  padding: 0.3rem 0.8rem;
   border-radius: 30px;
   cursor: pointer;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
   transition: var(--transition);
   font-family: inherit;
@@ -382,11 +382,11 @@ body {
 
 .search-input {
   width: 100%;
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: 30px;
   font-family: inherit;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   background: var(--bg-card);
   color: var(--text-primary);
   transition: var(--transition);
@@ -413,8 +413,8 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
-  min-width: 700px;
+  font-size: 0.85rem;
+  min-width: 600px;
 }
 
 thead {
@@ -423,10 +423,10 @@ thead {
 
 th {
   text-align: left;
-  padding: 0.8rem 0.7rem;
+  padding: 0.7rem 0.6rem;
   font-weight: 600;
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.3px;
   border-bottom: 2px solid var(--border-color);
@@ -467,19 +467,17 @@ th.sortable.desc i {
 }
 
 td {
-  padding: 0.8rem 0.7rem;
+  padding: 0.7rem 0.6rem;
   border-bottom: 1px solid var(--border-color);
   color: var(--text-primary);
   cursor: pointer;
   transition: var(--transition);
   vertical-align: middle;
-  font-size: 0.9rem;
 }
 
 td:first-child {
   font-weight: 600;
   color: var(--text-dark);
-  font-size: 0.95rem;
 }
 
 tbody tr {
@@ -497,9 +495,9 @@ tbody tr.selected {
 
 .status-badge {
   display: inline-block;
-  padding: 0.25rem 0.8rem;
+  padding: 0.2rem 0.7rem;
   border-radius: 30px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
   white-space: nowrap;
 }
@@ -525,7 +523,7 @@ tbody tr.selected {
 
 .detail-hint,
 .status-hint {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-secondary);
   font-weight: 400;
   opacity: 0.7;
@@ -545,15 +543,15 @@ tbody tr.selected {
 }
 
 .empty-state p {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 #detailContent .detail-row {
   display: flex;
   justify-content: space-between;
-  padding: 0.6rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid var(--border-color);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   gap: 0.5rem;
 }
 
@@ -565,7 +563,6 @@ tbody tr.selected {
   color: var(--text-secondary);
   font-weight: 500;
   flex-shrink: 0;
-  font-size: 0.9rem;
 }
 
 #detailContent .detail-value {
@@ -573,11 +570,10 @@ tbody tr.selected {
   color: var(--text-dark);
   text-align: right;
   word-break: break-word;
-  font-size: 0.95rem;
 }
 
 .detail-municipio {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-dark);
   margin-bottom: 0.8rem;
@@ -590,7 +586,7 @@ tbody tr.selected {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   border-bottom: 1px solid var(--border-color);
   transition: var(--transition);
 }
@@ -601,7 +597,7 @@ tbody tr.selected {
 
 .status-item.clickable {
   cursor: pointer;
-  padding: 0.5rem 0.6rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 8px;
   margin: 0 -0.6rem;
 }
@@ -619,7 +615,7 @@ tbody tr.selected {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-primary);
 }
 
@@ -634,17 +630,17 @@ tbody tr.selected {
 .status-count {
   font-weight: 700;
   color: var(--text-dark);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 /* ========== INFO CARD ========== */
 .info-content {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-primary);
 }
 
 .info-content p {
-  padding: 0.5rem 0;
+  padding: 0.4rem 0;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
@@ -665,7 +661,7 @@ tbody tr.selected {
 .footer-note {
   margin-top: 2rem;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   border-top: 1px solid var(--border-color);
   padding-top: 1.2rem;
@@ -687,11 +683,11 @@ tbody tr.selected {
   right: 30px;
   background: var(--bg-card);
   color: var(--text-primary);
-  padding: 0.9rem 1.6rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 60px;
   box-shadow: var(--shadow-hover);
   border: 1px solid var(--border-color);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   z-index: 1000;
   animation: fadeInUp 0.3s ease-out;
   display: flex;
@@ -731,18 +727,18 @@ tbody tr.selected {
   }
   
   .logo-text {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
   }
   
   .logo-text small {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     margin-left: 4px;
   }
   
   .logo-icon {
-    width: 42px;
-    height: 42px;
-    font-size: 1.3rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
   }
   
   .header-controls {
@@ -760,15 +756,15 @@ tbody tr.selected {
   .month-select {
     width: 100%;
     min-width: auto;
-    font-size: 0.85rem;
-    padding: 0.5rem 0.2rem 0.5rem 0;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.2rem 0.4rem 0;
   }
   
   .theme-toggle,
   .refresh-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
   }
   
   .summary-cards {
@@ -778,16 +774,16 @@ tbody tr.selected {
   }
   
   .summary-item {
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 0.9rem;
     border-radius: 0.8rem;
   }
   
   .summary-value {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
   
   .summary-label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
   
   .dashboard-grid {
@@ -796,13 +792,13 @@ tbody tr.selected {
   }
   
   .card {
-    padding: 1rem 1.2rem;
+    padding: 0.8rem 1rem;
     border-radius: 1rem;
     margin-bottom: 0.8rem;
   }
   
   .card-header h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .filter-btn .filter-label {
@@ -828,7 +824,7 @@ tbody tr.selected {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 0.8rem;
-    padding: 0.8rem 1rem;
+    padding: 0.8rem;
     margin-bottom: 0.8rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   }
@@ -842,9 +838,9 @@ tbody tr.selected {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.4rem 0 !important;
+    padding: 0.3rem 0 !important;
     border-bottom: 1px dashed var(--border-color);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     text-align: right;
     gap: 0.5rem;
   }
@@ -857,12 +853,12 @@ tbody tr.selected {
     content: attr(data-label);
     font-weight: 600;
     color: var(--text-secondary);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     flex-shrink: 0;
   }
   
   td:first-child {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 700;
   }
   
@@ -885,16 +881,16 @@ tbody tr.selected {
   }
   
   .status-item.clickable {
-    padding: 0.4rem 0.4rem;
+    padding: 0.3rem 0.4rem;
     margin: 0 -0.4rem;
   }
   
   .status-label {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   
   .status-count {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .toast-notification {
@@ -902,14 +898,14 @@ tbody tr.selected {
     right: auto;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.85rem;
-    padding: 0.7rem 1.3rem;
+    font-size: 0.8rem;
+    padding: 0.6rem 1.2rem;
     max-width: 90%;
     white-space: normal;
   }
   
   .footer-note {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     gap: 0.8rem;
     flex-direction: column;
     align-items: center;
@@ -927,19 +923,19 @@ tbody tr.selected {
   }
   
   .logo-text {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
   
   .logo-text small {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     display: block;
     margin-left: 0;
   }
   
   .logo-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
   }
   
   .month-selector-wrapper {
@@ -948,19 +944,19 @@ tbody tr.selected {
   }
   
   .month-select {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     min-width: 70px;
   }
   
   .month-selector-icon {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   
   .theme-toggle,
   .refresh-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 0.85rem;
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
   }
   
   .summary-cards {
@@ -973,19 +969,15 @@ tbody tr.selected {
   }
   
   .summary-value {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .summary-label {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
   }
   
   .card {
-    padding: 0.7rem;
-  }
-  
-  .card-header h3 {
-    font-size: 0.9rem;
+    padding: 0.6rem;
   }
   
   .filter-btn .filter-label {
@@ -993,40 +985,25 @@ tbody tr.selected {
   }
   
   .filter-option {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.6rem;
-  }
-  
-  .filter-btn,
-  .export-btn {
-    font-size: 0.8rem;
-    padding: 0.3rem 0.7rem;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
   }
   
   tbody tr {
-    padding: 0.6rem 0.7rem;
+    padding: 0.6rem;
   }
   
   td {
-    font-size: 0.78rem;
-    padding: 0.3rem 0 !important;
+    font-size: 0.7rem;
+    padding: 0.25rem 0 !important;
   }
   
   td:first-child {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
   
   td:before {
-    font-size: 0.65rem;
-  }
-  
-  .detail-municipio {
-    font-size: 1.1rem;
-  }
-  
-  #detailContent .detail-row {
-    font-size: 0.85rem;
-    padding: 0.4rem 0;
+    font-size: 0.6rem;
   }
 }
 
