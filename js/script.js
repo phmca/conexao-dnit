@@ -33,7 +33,7 @@ class DNITDashboard {
         { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
         { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-        { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ]
     };
 
@@ -45,6 +45,7 @@ class DNITDashboard {
     this.searchTerm = '';
     this.isMobile = window.innerWidth <= 768;
     this.touchTimeout = null;
+    this.isInitialLoad = true; // NOVO: controla se é o carregamento inicial
 
     this.init();
   }
@@ -60,6 +61,12 @@ class DNITDashboard {
     this.setupResizeHandler();
     
     this.loadJSPDF();
+
+    // NOVO: Após o carregamento inicial, volta para o topo
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.isInitialLoad = false;
+    }, 100);
   }
 
   loadJSPDF() {
@@ -294,170 +301,13 @@ class DNITDashboard {
     this.clearDetail();
 
     if (sortedData.length > 0) {
-      this.selectCity(sortedData[0].municipio);
+      this.selectCity(sortedData[0].municipio, true); // TRUE = não fazer scroll
     }
 
     this.updateAdditionalInfo(data);
   }
 
-  renderData(data) {
-    let sortedData = [...data];
-    sortedData = this.sortData(sortedData);
-    
-    if (this.currentFilter) {
-      sortedData = sortedData.filter(item => item.situacao === this.currentFilter);
-    }
-    
-    if (this.searchTerm) {
-      sortedData = sortedData.filter(item => 
-        item.municipio.toLowerCase().includes(this.searchTerm)
-      );
-    }
-
-    this.renderTable(sortedData);
-  }
-
-  sortData(data) {
-    const { field, order } = this.currentSort;
-    const multiplier = order === 'asc' ? 1 : -1;
-    
-    return data.sort((a, b) => {
-      let valA = a[field];
-      let valB = b[field];
-      
-      if (typeof valA === 'number' && typeof valB === 'number') {
-        return (valA - valB) * multiplier;
-      }
-      
-      if (field === 'data') {
-        return this.compareDates(valA, valB) * multiplier;
-      }
-      
-      valA = String(valA).toLowerCase();
-      valB = String(valB).toLowerCase();
-      return valA.localeCompare(valB) * multiplier;
-    });
-  }
-
-  compareDates(dateA, dateB) {
-    const extractDate = (dateStr) => {
-      if (!dateStr) return new Date(0);
-      
-      if (dateStr.includes(' - ')) {
-        dateStr = dateStr.split(' - ')[0];
-      }
-      
-      const parts = dateStr.split('/');
-      if (parts.length === 3) {
-        return new Date(parts[2], parts[1] - 1, parts[0]);
-      } else if (parts.length === 2) {
-        return new Date(2026, parts[1] - 1, parts[0]);
-      }
-      return new Date(0);
-    };
-
-    const dA = extractDate(dateA);
-    const dB = extractDate(dateB);
-    return dA - dB;
-  }
-
-  applyFilters() {
-    let data = [];
-    if (this.currentMonth === 'Todos') {
-      data = this.getAllData();
-    } else {
-      data = this.data[this.currentMonth] || [];
-    }
-    this.renderData(data);
-  }
-
-  renderTable(data) {
-    if (!this.tableBody) return;
-
-    if (data.length === 0) {
-      this.tableBody.innerHTML = `
-        <tr>
-          <td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
-            <i class="fas fa-info-circle"></i> Nenhum município encontrado
-          </td>
-        </tr>
-      `;
-      return;
-    }
-
-    let html = '';
-    data.forEach((item, index) => {
-      const statusClass = this.getStatusClass(item.situacao);
-      const isEven = index % 2 === 0;
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-      
-      const labels = [
-        'municipio',
-        'data',
-        'participantes',
-        'agentes',
-        'alunos',
-        'professores',
-        'escolas',
-        'situacao',
-        'proxima'
-      ];
-      
-      const values = [
-        `${item.municipio} ${mesDisplay}`,
-        item.data,
-        item.participantes,
-        this.formatNumber(item.agentes),
-        this.formatNumber(item.alunos),
-        this.formatNumber(item.professores),
-        this.formatNumber(item.escolas),
-        `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
-        item.proxima
-      ];
-
-      let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
-      
-      values.forEach((val, idx) => {
-        const label = labels[idx];
-        const labelMap = {
-          'municipio': '📍 Município',
-          'data': '📅 Data',
-          'participantes': '👤 Participantes',
-          'agentes': '👮 Agentes',
-          'alunos': '🎓 Alunos',
-          'professores': '👨‍🏫 Professores',
-          'escolas': '🏫 Escolas',
-          'situacao': '📊 Situação',
-          'proxima': '➡️ Próxima Etapa'
-        };
-        rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
-      });
-      
-      rowHtml += '</tr>';
-      html += rowHtml;
-    });
-
-    this.tableBody.innerHTML = html;
-    
-    if (this.selectedCity) {
-      const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
-      if (rows.length > 0) {
-        rows[0].classList.add('selected');
-      } else {
-        this.clearDetail();
-      }
-    }
-  }
-
-  getStatusClass(situacao) {
-    if (situacao.includes('Implantado')) return 'status-implantado';
-    if (situacao.includes('Convênio') || situacao.includes('convênio')) return 'status-convenio';
-    if (situacao.includes('análise') || situacao.includes('jurídica')) return 'status-analise';
-    if (situacao.includes('Apresentação') || situacao.includes('apresentação')) return 'status-apresentacao';
-    return 'status-seminfo';
-  }
-
-  selectCity(municipio) {
+  selectCity(municipio, skipScroll = false) {
     this.selectedCity = municipio;
     
     document.querySelectorAll('tbody tr').forEach(tr => tr.classList.remove('selected'));
@@ -466,15 +316,18 @@ class DNITDashboard {
     if (rows.length > 0) {
       rows[0].classList.add('selected');
       
-      if (this.isMobile) {
-        setTimeout(() => {
-          const detailCard = document.getElementById('cityDetail');
-          if (detailCard) {
-            detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 200);
-      } else {
-        rows[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      // Só faz scroll se não for carregamento inicial E não for skipScroll
+      if (!this.isInitialLoad && !skipScroll) {
+        if (this.isMobile) {
+          setTimeout(() => {
+            const detailCard = document.getElementById('cityDetail');
+            if (detailCard) {
+              detailCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 200);
+        } else {
+          rows[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
       }
     }
 
