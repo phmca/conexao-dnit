@@ -33,7 +33,7 @@ class DNITDashboard {
         { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
         { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-        { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ]
     };
 
