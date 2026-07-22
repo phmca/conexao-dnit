@@ -45,7 +45,7 @@ class DNITDashboard {
     this.searchTerm = '';
     this.isMobile = window.innerWidth <= 768;
     this.touchTimeout = null;
-    this.isInitialLoad = true; // NOVO: controla se é o carregamento inicial
+    this.isInitialLoad = true;
 
     this.init();
   }
@@ -62,7 +62,6 @@ class DNITDashboard {
     
     this.loadJSPDF();
 
-    // NOVO: Após o carregamento inicial, volta para o topo
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       this.isInitialLoad = false;
@@ -301,10 +300,154 @@ class DNITDashboard {
     this.clearDetail();
 
     if (sortedData.length > 0) {
-      this.selectCity(sortedData[0].municipio, true); // TRUE = não fazer scroll
+      this.selectCity(sortedData[0].municipio, true);
     }
 
     this.updateAdditionalInfo(data);
+  }
+
+  renderData(data) {
+    let sortedData = [...data];
+    sortedData = this.sortData(sortedData);
+    
+    if (this.currentFilter) {
+      sortedData = sortedData.filter(item => item.situacao === this.currentFilter);
+    }
+    
+    if (this.searchTerm) {
+      sortedData = sortedData.filter(item => 
+        item.municipio.toLowerCase().includes(this.searchTerm)
+      );
+    }
+
+    this.renderTable(sortedData);
+  }
+
+  sortData(data) {
+    const { field, order } = this.currentSort;
+    const multiplier = order === 'asc' ? 1 : -1;
+    
+    return data.sort((a, b) => {
+      let valA = a[field];
+      let valB = b[field];
+      
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return (valA - valB) * multiplier;
+      }
+      
+      if (field === 'data') {
+        return this.compareDates(valA, valB) * multiplier;
+      }
+      
+      valA = String(valA).toLowerCase();
+      valB = String(valB).toLowerCase();
+      return valA.localeCompare(valB) * multiplier;
+    });
+  }
+
+  compareDates(dateA, dateB) {
+    const extractDate = (dateStr) => {
+      if (!dateStr) return new Date(0);
+      
+      if (dateStr.includes(' - ')) {
+        dateStr = dateStr.split(' - ')[0];
+      }
+      
+      const parts = dateStr.split('/');
+      if (parts.length === 3) {
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+      } else if (parts.length === 2) {
+        return new Date(2026, parts[1] - 1, parts[0]);
+      }
+      return new Date(0);
+    };
+
+    const dA = extractDate(dateA);
+    const dB = extractDate(dateB);
+    return dA - dB;
+  }
+
+  applyFilters() {
+    let data = [];
+    if (this.currentMonth === 'Todos') {
+      data = this.getAllData();
+    } else {
+      data = this.data[this.currentMonth] || [];
+    }
+    this.renderData(data);
+  }
+
+  renderTable(data) {
+    if (!this.tableBody) return;
+
+    if (data.length === 0) {
+      this.tableBody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
+            <i class="fas fa-info-circle"></i> Nenhum município encontrado
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = '';
+    data.forEach((item, index) => {
+      const statusClass = this.getStatusClass(item.situacao);
+      const isEven = index % 2 === 0;
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
+      
+      // Para mobile, usamos uma estrutura diferente
+      if (this.isMobile) {
+        html += `
+          <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
+            <td data-label="📍 Município"><strong>${item.municipio}</strong> ${mesDisplay}</td>
+            <td data-label="📅 Data">${item.data}</td>
+            <td data-label="👤 Participantes">${item.participantes}</td>
+            <td data-label="👮 Agentes">${this.formatNumber(item.agentes)}</td>
+            <td data-label="🎓 Alunos">${this.formatNumber(item.alunos)}</td>
+            <td data-label="👨‍🏫 Professores">${this.formatNumber(item.professores)}</td>
+            <td data-label="🏫 Escolas">${this.formatNumber(item.escolas)}</td>
+            <td data-label="📊 Situação"><span class="status-badge ${statusClass}">${item.situacao}</span></td>
+            <td data-label="➡️ Próxima Etapa">${item.proxima}</td>
+          </tr>
+        `;
+      } else {
+        // Desktop - tabela normal
+        html += `
+          <tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">
+            <td><strong>${item.municipio}</strong> ${mesDisplay}</td>
+            <td>${item.data}</td>
+            <td>${item.participantes}</td>
+            <td>${this.formatNumber(item.agentes)}</td>
+            <td>${this.formatNumber(item.alunos)}</td>
+            <td>${this.formatNumber(item.professores)}</td>
+            <td>${this.formatNumber(item.escolas)}</td>
+            <td><span class="status-badge ${statusClass}">${item.situacao}</span></td>
+            <td>${item.proxima}</td>
+          </tr>
+        `;
+      }
+    });
+
+    this.tableBody.innerHTML = html;
+    
+    if (this.selectedCity) {
+      const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
+      if (rows.length > 0) {
+        rows[0].classList.add('selected');
+      } else {
+        this.clearDetail();
+      }
+    }
+  }
+
+  getStatusClass(situacao) {
+    if (situacao.includes('Implantado')) return 'status-implantado';
+    if (situacao.includes('Convênio') || situacao.includes('convênio')) return 'status-convenio';
+    if (situacao.includes('análise') || situacao.includes('jurídica')) return 'status-analise';
+    if (situacao.includes('Apresentação') || situacao.includes('apresentação')) return 'status-apresentacao';
+    return 'status-seminfo';
   }
 
   selectCity(municipio, skipScroll = false) {
@@ -316,7 +459,6 @@ class DNITDashboard {
     if (rows.length > 0) {
       rows[0].classList.add('selected');
       
-      // Só faz scroll se não for carregamento inicial E não for skipScroll
       if (!this.isInitialLoad && !skipScroll) {
         if (this.isMobile) {
           setTimeout(() => {
