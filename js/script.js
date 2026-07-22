@@ -7,33 +7,33 @@ class DNITDashboard {
     // Dados organizados por mês
     this.data = {
       'Maio': [
-        { municipio: 'Acarape', data: '20/05 - 28/05', participantes: 'Jonas Campelo', alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Barreira', data: '20/05 - 28/05', participantes: 'Prof. Glória Maria e equipe pedagógica', alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
-        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
-        { municipio: 'Mulungu', data: '21/05/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
-        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Acarape', data: '20/05 - 28/05', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Barreira', data: '20/05 - 28/05', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Baturité', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Chorozinho', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Guaiúba', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
+        { municipio: 'Mulungu', data: '21/05/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+        { municipio: 'Pacajus', data: '19/05/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacatuba', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Redenção', data: '22/05/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Junho': [
-        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-        { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Pacajus', data: '12/06/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
-        { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Pacoti', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Aratuba', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+        { municipio: 'Mulungu', data: '11/06/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Capistrano', data: '11/06 - 17/06', participantes: 'Equipe da SME', agentes: 0, alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Itapiúna', data: '11/06 - 18/06', participantes: 'Equipe da SME', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacajus', data: '12/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Barreira', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Guaiúba', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Redenção', data: '24/06/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Realizada implantação do programa' },
+        { municipio: 'Pacatuba', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacoti', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ],
       'Julho': [
-        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-        { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
-        { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-         { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+        { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+        { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+        { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
+        { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ]
     };
 
@@ -75,37 +75,36 @@ class DNITDashboard {
     }
   }
 
-cacheElements() {
-  this.themeToggle = document.getElementById('themeToggle');
-  this.refreshBtn = document.getElementById('refreshBtn');
-  this.exportBtn = document.getElementById('exportBtn');
-  this.filterBtn = document.getElementById('filterBtn');
-  this.monthSelect = document.getElementById('monthSelect');
-  this.filterPanel = document.getElementById('filterPanel');
-  this.searchInput = document.getElementById('searchInput');
+  cacheElements() {
+    this.themeToggle = document.getElementById('themeToggle');
+    this.refreshBtn = document.getElementById('refreshBtn');
+    this.exportBtn = document.getElementById('exportBtn');
+    this.filterBtn = document.getElementById('filterBtn');
+    this.monthSelect = document.getElementById('monthSelect');
+    this.filterPanel = document.getElementById('filterPanel');
+    this.searchInput = document.getElementById('searchInput');
 
-  this.tableBody = document.getElementById('tableBody');
-  this.detailContent = document.getElementById('detailContent');
-  this.footerUpdate = document.getElementById('footerUpdate');
+    this.tableBody = document.getElementById('tableBody');
+    this.detailContent = document.getElementById('detailContent');
+    this.footerUpdate = document.getElementById('footerUpdate');
 
-  this.totalMunicipios = document.getElementById('totalMunicipios');
-  this.totalAlunos = document.getElementById('totalAlunos');
-  this.totalProfessores = document.getElementById('totalProfessores');
-  this.totalEscolas = document.getElementById('totalEscolas');
+    this.totalMunicipios = document.getElementById('totalMunicipios');
+    this.totalAlunos = document.getElementById('totalAlunos');
+    this.totalProfessores = document.getElementById('totalProfessores');
+    this.totalEscolas = document.getElementById('totalEscolas');
 
-  this.statusImplantado = document.getElementById('statusImplantado');
-  this.statusConvenio = document.getElementById('statusConvenio');
-  this.statusAnalise = document.getElementById('statusAnalise');
-  this.statusApresentacao = document.getElementById('statusApresentacao');
-  // this.statusSemInfo = document.getElementById('statusSemInfo'); // REMOVA ESTA LINHA
+    this.statusImplantado = document.getElementById('statusImplantado');
+    this.statusConvenio = document.getElementById('statusConvenio');
+    this.statusAnalise = document.getElementById('statusAnalise');
+    this.statusApresentacao = document.getElementById('statusApresentacao');
 
-  this.totalMunicipiosGeralEl = document.getElementById('totalMunicipiosGeral');
-  this.mediaAlunos = document.getElementById('mediaAlunos');
-  this.periodoDados = document.getElementById('periodoDados');
+    this.totalMunicipiosGeralEl = document.getElementById('totalMunicipiosGeral');
+    this.mediaAlunos = document.getElementById('mediaAlunos');
+    this.periodoDados = document.getElementById('periodoDados');
 
-  this.statusItems = document.querySelectorAll('.status-item.clickable');
-  this.sortableHeaders = document.querySelectorAll('th.sortable');
-}
+    this.statusItems = document.querySelectorAll('.status-item.clickable');
+    this.sortableHeaders = document.querySelectorAll('th.sortable');
+  }
 
   bindEvents() {
     this.themeToggle.addEventListener('click', () => this.toggleTheme());
@@ -271,10 +270,8 @@ cacheElements() {
       data = this.data[month] || [];
     }
 
-    // ===== SEMPRE ORDENAR POR DATA AO CARREGAR =====
     this.currentSort = { field: 'data', order: 'asc' };
     
-    // Atualiza os indicadores visuais nos headers
     this.sortableHeaders.forEach(th => {
       th.classList.remove('active', 'asc', 'desc');
       if (th.dataset.sort === 'data') {
@@ -282,7 +279,6 @@ cacheElements() {
       }
     });
     
-    // Atualiza os botões de filtro
     document.querySelectorAll('.filter-option').forEach(btn => {
       btn.classList.remove('active');
       if (btn.dataset.sort === 'data' && btn.dataset.order === 'asc') {
@@ -290,7 +286,6 @@ cacheElements() {
       }
     });
 
-    // Ordena os dados por data (crescente) ANTES de selecionar
     const sortedData = this.sortData([...data]);
 
     this.renderData(data);
@@ -298,7 +293,6 @@ cacheElements() {
     this.updateStatusCounts(data);
     this.clearDetail();
 
-    // ===== Seleciona a PRIMEIRA cidade cronologicamente (mais antiga) =====
     if (sortedData.length > 0) {
       this.selectCity(sortedData[0].municipio);
     }
@@ -377,83 +371,83 @@ cacheElements() {
     this.renderData(data);
   }
 
-renderTable(data) {
-  if (!this.tableBody) return;
+  renderTable(data) {
+    if (!this.tableBody) return;
 
-  if (data.length === 0) {
-    this.tableBody.innerHTML = `
-      <tr>
-        <td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
-          <i class="fas fa-info-circle"></i> Nenhum município encontrado
-        </td>
-      </tr>
-    `;
-    return;
-  }
+    if (data.length === 0) {
+      this.tableBody.innerHTML = `
+        <tr>
+          <td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
+            <i class="fas fa-info-circle"></i> Nenhum município encontrado
+          </td>
+        </tr>
+      `;
+      return;
+    }
 
-  let html = '';
-  data.forEach((item, index) => {
-    const statusClass = this.getStatusClass(item.situacao);
-    const isEven = index % 2 === 0;
-    const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-    
-    const labels = [
-      'municipio',
-      'data',
-      'participantes',
-      'agentes',
-      'alunos',
-      'professores',
-      'escolas',
-      'situacao',
-      'proxima'
-    ];
-    
-    const values = [
-      `${item.municipio} ${mesDisplay}`,
-      item.data,
-      item.participantes,
-      this.formatNumber(item.agentes),
-      this.formatNumber(item.alunos),
-      this.formatNumber(item.professores),
-      this.formatNumber(item.escolas),
-      `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
-      item.proxima
-    ];
+    let html = '';
+    data.forEach((item, index) => {
+      const statusClass = this.getStatusClass(item.situacao);
+      const isEven = index % 2 === 0;
+      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
+      
+      const labels = [
+        'municipio',
+        'data',
+        'participantes',
+        'agentes',
+        'alunos',
+        'professores',
+        'escolas',
+        'situacao',
+        'proxima'
+      ];
+      
+      const values = [
+        `${item.municipio} ${mesDisplay}`,
+        item.data,
+        item.participantes,
+        this.formatNumber(item.agentes),
+        this.formatNumber(item.alunos),
+        this.formatNumber(item.professores),
+        this.formatNumber(item.escolas),
+        `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
+        item.proxima
+      ];
 
-    let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
-    
-    values.forEach((val, idx) => {
-      const label = labels[idx];
-      const labelMap = {
-        'municipio': '📍 Município',
-        'data': '📅 Data',
-        'participantes': '👤 Participantes',
-        'agentes': '👮 Agentes',
-        'alunos': '🎓 Alunos',
-        'professores': '👨‍🏫 Professores',
-        'escolas': '🏫 Escolas',
-        'situacao': '📊 Situação',
-        'proxima': '➡️ Próxima Etapa'
-      };
-      rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
+      let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
+      
+      values.forEach((val, idx) => {
+        const label = labels[idx];
+        const labelMap = {
+          'municipio': '📍 Município',
+          'data': '📅 Data',
+          'participantes': '👤 Participantes',
+          'agentes': '👮 Agentes',
+          'alunos': '🎓 Alunos',
+          'professores': '👨‍🏫 Professores',
+          'escolas': '🏫 Escolas',
+          'situacao': '📊 Situação',
+          'proxima': '➡️ Próxima Etapa'
+        };
+        rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
+      });
+      
+      rowHtml += '</tr>';
+      html += rowHtml;
     });
-    
-    rowHtml += '</tr>';
-    html += rowHtml;
-  });
 
-  this.tableBody.innerHTML = html;
-  
-  if (this.selectedCity) {
-    const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
-    if (rows.length > 0) {
-      rows[0].classList.add('selected');
-    } else {
-      this.clearDetail();
+    this.tableBody.innerHTML = html;
+    
+    if (this.selectedCity) {
+      const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
+      if (rows.length > 0) {
+        rows[0].classList.add('selected');
+      } else {
+        this.clearDetail();
+      }
     }
   }
-}
 
   getStatusClass(situacao) {
     if (situacao.includes('Implantado')) return 'status-implantado';
@@ -499,47 +493,48 @@ renderTable(data) {
   }
 
   renderDetail(item) {
-  if (!this.detailContent) return;
+    if (!this.detailContent) return;
 
-  const mesInfo = this.currentMonth === 'Todos' ? `<div class="detail-row"><span class="detail-label"><i class="fas fa-calendar"></i> Mês</span><span class="detail-value">${item.mes}</span></div>` : '';
+    const mesInfo = this.currentMonth === 'Todos' ? `<div class="detail-row"><span class="detail-label"><i class="fas fa-calendar"></i> Mês</span><span class="detail-value">${item.mes}</span></div>` : '';
 
-  this.detailContent.innerHTML = `
-    <div class="detail-municipio">${item.municipio}</div>
-    ${mesInfo}
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-calendar-day"></i> Data</span>
-      <span class="detail-value">${item.data}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
-      <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-user-shield"></i> Agentes</span>
-      <span class="detail-value">${this.formatNumber(item.agentes)}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
-      <span class="detail-value">${this.formatNumber(item.alunos)}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
-      <span class="detail-value">${this.formatNumber(item.professores)}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-school"></i> Escolas</span>
-      <span class="detail-value">${this.formatNumber(item.escolas)}</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-chart-line"></i> Situação</span>
-      <span class="detail-value"><span class="status-badge ${this.getStatusClass(item.situacao)}">${item.situacao}</span></span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
-      <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
-    </div>
-  `;
-}
+    this.detailContent.innerHTML = `
+      <div class="detail-municipio">${item.municipio}</div>
+      ${mesInfo}
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-calendar-day"></i> Data</span>
+        <span class="detail-value">${item.data}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-user-shield"></i> Agentes</span>
+        <span class="detail-value">${this.formatNumber(item.agentes)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
+        <span class="detail-value">${this.formatNumber(item.alunos)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
+        <span class="detail-value">${this.formatNumber(item.professores)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-school"></i> Escolas</span>
+        <span class="detail-value">${this.formatNumber(item.escolas)}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-chart-line"></i> Situação</span>
+        <span class="detail-value"><span class="status-badge ${this.getStatusClass(item.situacao)}">${item.situacao}</span></span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
+        <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
+      </div>
+    `;
+  }
+
   clearDetail() {
     if (!this.detailContent) return;
     this.detailContent.innerHTML = `
@@ -551,48 +546,45 @@ renderTable(data) {
   }
 
   updateSummary(data) {
-  const uniqueMunicipios = new Set();
-  
-  data.forEach(item => {
-    uniqueMunicipios.add(item.municipio);
-  });
-  
-  const totalMunicipios = uniqueMunicipios.size;
-  const totalAgentes = data.reduce((sum, item) => sum + (item.agentes || 0), 0);
-  const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-  const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
-  const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
+    const uniqueMunicipios = new Set();
+    
+    data.forEach(item => {
+      uniqueMunicipios.add(item.municipio);
+    });
+    
+    const totalMunicipios = uniqueMunicipios.size;
+    const totalAgentes = data.reduce((sum, item) => sum + (item.agentes || 0), 0);
+    const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+    const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
+    const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-  this.totalMunicipios.textContent = totalMunicipios;
-  this.totalAlunos.textContent = this.formatNumber(totalAlunos);
-  this.totalProfessores.textContent = this.formatNumber(totalProfessores);
-  this.totalEscolas.textContent = this.formatNumber(totalEscolas);
-  
-}
+    this.totalMunicipios.textContent = totalMunicipios;
+    this.totalAlunos.textContent = this.formatNumber(totalAlunos);
+    this.totalProfessores.textContent = this.formatNumber(totalProfessores);
+    this.totalEscolas.textContent = this.formatNumber(totalEscolas);
+  }
+
   updateStatusCounts(data) {
-  const counts = {
-    implantado: 0,
-    convenio: 0,
-    analise: 0,
-    apresentacao: 0
-    // semInfo: 0  // REMOVA ESTA LINHA
-  };
+    const counts = {
+      implantado: 0,
+      convenio: 0,
+      analise: 0,
+      apresentacao: 0
+    };
 
-  data.forEach(item => {
-    const situacao = item.situacao;
-    if (situacao.includes('Implantado')) counts.implantado++;
-    else if (situacao.includes('Convênio') || situacao.includes('convênio')) counts.convenio++;
-    else if (situacao.includes('análise') || situacao.includes('jurídica')) counts.analise++;
-    else if (situacao.includes('Apresentação') || situacao.includes('apresentação')) counts.apresentacao++;
-    // else counts.semInfo++; // REMOVA ESTA LINHA
-  });
+    data.forEach(item => {
+      const situacao = item.situacao;
+      if (situacao.includes('Implantado')) counts.implantado++;
+      else if (situacao.includes('Convênio') || situacao.includes('convênio')) counts.convenio++;
+      else if (situacao.includes('análise') || situacao.includes('jurídica')) counts.analise++;
+      else if (situacao.includes('Apresentação') || situacao.includes('apresentação')) counts.apresentacao++;
+    });
 
-  this.statusImplantado.textContent = counts.implantado;
-  this.statusConvenio.textContent = counts.convenio;
-  this.statusAnalise.textContent = counts.analise;
-  this.statusApresentacao.textContent = counts.apresentacao;
-  // this.statusSemInfo.textContent = counts.semInfo; // REMOVA ESTA LINHA
-}
+    this.statusImplantado.textContent = counts.implantado;
+    this.statusConvenio.textContent = counts.convenio;
+    this.statusAnalise.textContent = counts.analise;
+    this.statusApresentacao.textContent = counts.apresentacao;
+  }
 
   updateAdditionalInfo(data) {
     if (this.totalMunicipiosGeralEl) {
@@ -609,10 +601,8 @@ renderTable(data) {
       this.mediaAlunos.textContent = this.formatNumber(Math.round(media));
     }
 
-    // ===== SUBSTITUI "ÚLTIMA ATUALIZAÇÃO" POR "PERÍODO DOS DADOS" =====
     if (this.periodoDados) {
       if (data.length > 0) {
-        // Extrai todas as datas dos registros
         const datas = data.map(item => {
           let dateStr = item.data;
           if (dateStr.includes(' - ')) {
@@ -621,7 +611,6 @@ renderTable(data) {
           return dateStr;
         });
         
-        // Ordena as datas
         const sortedDates = datas.sort((a, b) => {
           const partsA = a.split('/');
           const partsB = b.split('/');
@@ -666,7 +655,6 @@ renderTable(data) {
     }, 600);
   }
 
-  // ========== EXPORTAÇÃO PARA PDF MELHORADA ==========
   exportToPDF() {
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
       this.showNotification('Carregando biblioteca PDF... Aguarde e tente novamente');
@@ -741,6 +729,7 @@ renderTable(data) {
       item.municipio,
       item.data,
       item.participantes,
+      this.formatNumber(item.agentes),
       this.formatNumber(item.alunos),
       this.formatNumber(item.professores),
       this.formatNumber(item.escolas),
@@ -752,6 +741,7 @@ renderTable(data) {
       'Município',
       'Data',
       'Participantes',
+      'Agentes',
       'Alunos',
       'Professores',
       'Escolas',
@@ -759,10 +749,10 @@ renderTable(data) {
       'Próxima Etapa'
     ];
 
-    const colWeights = [1.6, 1.0, 2.2, 0.9, 1.0, 0.8, 1.6, 2.2];
+    const colWeights = [1.6, 1.0, 2.2, 0.8, 0.9, 1.0, 0.8, 1.6, 2.2];
     const totalWeight = colWeights.reduce((a, b) => a + b, 0);
     const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
-    const adjustedWidths = colWidths.map(w => Math.max(w, 12));
+    const adjustedWidths = colWidths.map(w => Math.max(w, 10));
 
     doc.autoTable({
       head: [headers],
@@ -801,8 +791,9 @@ renderTable(data) {
         3: { halign: 'right', cellWidth: adjustedWidths[3] },
         4: { halign: 'right', cellWidth: adjustedWidths[4] },
         5: { halign: 'right', cellWidth: adjustedWidths[5] },
-        6: { halign: 'center', cellWidth: adjustedWidths[6] },
-        7: { halign: 'left', cellWidth: adjustedWidths[7] }
+        6: { halign: 'right', cellWidth: adjustedWidths[6] },
+        7: { halign: 'center', cellWidth: adjustedWidths[7] },
+        8: { halign: 'left', cellWidth: adjustedWidths[8] }
       },
       margin: { left: marginLeft, right: marginRight },
       tableWidth: 'auto',
