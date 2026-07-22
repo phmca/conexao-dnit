@@ -33,7 +33,7 @@ class DNITDashboard {
         { municipio: 'Caucaia', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
         { municipio: 'Pacajus', data: '16/07/2026', participantes: 'Equipe da SME', alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
         { municipio: 'Chorozinho', data: '20/07/2026', participantes: 'Nilo Vieira', alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-         { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+         { municipio: 'Caucaia', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
       ]
     };
 
@@ -377,80 +377,83 @@ cacheElements() {
     this.renderData(data);
   }
 
-  renderTable(data) {
-    if (!this.tableBody) return;
+renderTable(data) {
+  if (!this.tableBody) return;
 
-    if (data.length === 0) {
-      this.tableBody.innerHTML = `
-        <tr>
-          <td colspan="8" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
-            <i class="fas fa-info-circle"></i> Nenhum município encontrado
-          </td>
-        </tr>
-      `;
-      return;
-    }
+  if (data.length === 0) {
+    this.tableBody.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align:center; padding:1.5rem; color:var(--text-secondary);">
+          <i class="fas fa-info-circle"></i> Nenhum município encontrado
+        </td>
+      </tr>
+    `;
+    return;
+  }
 
-    let html = '';
-    data.forEach((item, index) => {
-      const statusClass = this.getStatusClass(item.situacao);
-      const isEven = index % 2 === 0;
-      const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
-      
-      const labels = [
-        'municipio',
-        'data',
-        'participantes',
-        'alunos',
-        'professores',
-        'escolas',
-        'situacao',
-        'proxima'
-      ];
-      
-      const values = [
-        `${item.municipio} ${mesDisplay}`,
-        item.data,
-        item.participantes,
-        this.formatNumber(item.alunos),
-        this.formatNumber(item.professores),
-        this.formatNumber(item.escolas),
-        `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
-        item.proxima
-      ];
-
-      let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
-      
-      values.forEach((val, idx) => {
-        const label = labels[idx];
-        const labelMap = {
-          'municipio': '📍 Município',
-          'data': '📅 Data',
-          'participantes': '👤 Participantes',
-          'alunos': '🎓 Alunos',
-          'professores': '👨‍🏫 Professores',
-          'escolas': '🏫 Escolas',
-          'situacao': '📊 Situação',
-          'proxima': '➡️ Próxima Etapa'
-        };
-        rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
-      });
-      
-      rowHtml += '</tr>';
-      html += rowHtml;
-    });
-
-    this.tableBody.innerHTML = html;
+  let html = '';
+  data.forEach((item, index) => {
+    const statusClass = this.getStatusClass(item.situacao);
+    const isEven = index % 2 === 0;
+    const mesDisplay = this.currentMonth === 'Todos' ? `<span style="font-size:0.6rem; color:var(--text-secondary); display:block;">${item.mes}</span>` : '';
     
-    if (this.selectedCity) {
-      const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
-      if (rows.length > 0) {
-        rows[0].classList.add('selected');
-      } else {
-        this.clearDetail();
-      }
+    const labels = [
+      'municipio',
+      'data',
+      'participantes',
+      'agentes',
+      'alunos',
+      'professores',
+      'escolas',
+      'situacao',
+      'proxima'
+    ];
+    
+    const values = [
+      `${item.municipio} ${mesDisplay}`,
+      item.data,
+      item.participantes,
+      this.formatNumber(item.agentes),
+      this.formatNumber(item.alunos),
+      this.formatNumber(item.professores),
+      this.formatNumber(item.escolas),
+      `<span class="status-badge ${statusClass}">${item.situacao}</span>`,
+      item.proxima
+    ];
+
+    let rowHtml = `<tr data-municipio="${item.municipio}" onclick="dashboard.selectCity('${item.municipio}')" style="${isEven ? 'background: var(--bg-secondary);' : ''}">`;
+    
+    values.forEach((val, idx) => {
+      const label = labels[idx];
+      const labelMap = {
+        'municipio': '📍 Município',
+        'data': '📅 Data',
+        'participantes': '👤 Participantes',
+        'agentes': '👮 Agentes',
+        'alunos': '🎓 Alunos',
+        'professores': '👨‍🏫 Professores',
+        'escolas': '🏫 Escolas',
+        'situacao': '📊 Situação',
+        'proxima': '➡️ Próxima Etapa'
+      };
+      rowHtml += `<td data-label="${labelMap[label] || label}">${val}</td>`;
+    });
+    
+    rowHtml += '</tr>';
+    html += rowHtml;
+  });
+
+  this.tableBody.innerHTML = html;
+  
+  if (this.selectedCity) {
+    const rows = document.querySelectorAll(`tbody tr[data-municipio="${this.selectedCity}"]`);
+    if (rows.length > 0) {
+      rows[0].classList.add('selected');
+    } else {
+      this.clearDetail();
     }
   }
+}
 
   getStatusClass(situacao) {
     if (situacao.includes('Implantado')) return 'status-implantado';
@@ -496,44 +499,47 @@ cacheElements() {
   }
 
   renderDetail(item) {
-    if (!this.detailContent) return;
+  if (!this.detailContent) return;
 
-    const mesInfo = this.currentMonth === 'Todos' ? `<div class="detail-row"><span class="detail-label"><i class="fas fa-calendar"></i> Mês</span><span class="detail-value">${item.mes}</span></div>` : '';
+  const mesInfo = this.currentMonth === 'Todos' ? `<div class="detail-row"><span class="detail-label"><i class="fas fa-calendar"></i> Mês</span><span class="detail-value">${item.mes}</span></div>` : '';
 
-    this.detailContent.innerHTML = `
-      <div class="detail-municipio">${item.municipio}</div>
-      ${mesInfo}
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-calendar-day"></i> Data</span>
-        <span class="detail-value">${item.data}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
-        <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
-        <span class="detail-value">${this.formatNumber(item.alunos)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
-        <span class="detail-value">${this.formatNumber(item.professores)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-school"></i> Escolas</span>
-        <span class="detail-value">${this.formatNumber(item.escolas)}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-chart-line"></i> Situação</span>
-        <span class="detail-value"><span class="status-badge ${this.getStatusClass(item.situacao)}">${item.situacao}</span></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
-        <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
-      </div>
-    `;
-  }
-
+  this.detailContent.innerHTML = `
+    <div class="detail-municipio">${item.municipio}</div>
+    ${mesInfo}
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-calendar-day"></i> Data</span>
+      <span class="detail-value">${item.data}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-users"></i> Participantes</span>
+      <span class="detail-value" style="font-size:0.8rem;">${item.participantes}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-user-shield"></i> Agentes</span>
+      <span class="detail-value">${this.formatNumber(item.agentes)}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-user-graduate"></i> Alunos</span>
+      <span class="detail-value">${this.formatNumber(item.alunos)}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
+      <span class="detail-value">${this.formatNumber(item.professores)}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-school"></i> Escolas</span>
+      <span class="detail-value">${this.formatNumber(item.escolas)}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-chart-line"></i> Situação</span>
+      <span class="detail-value"><span class="status-badge ${this.getStatusClass(item.situacao)}">${item.situacao}</span></span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label"><i class="fas fa-arrow-right"></i> Próxima etapa</span>
+      <span class="detail-value" style="font-size:0.8rem;">${item.proxima}</span>
+    </div>
+  `;
+}
   clearDetail() {
     if (!this.detailContent) return;
     this.detailContent.innerHTML = `
@@ -545,24 +551,24 @@ cacheElements() {
   }
 
   updateSummary(data) {
-    // Conta municípios únicos (remove duplicatas)
-    const uniqueMunicipios = new Set();
-    
-    data.forEach(item => {
-      uniqueMunicipios.add(item.municipio);
-    });
-    
-    const totalMunicipios = uniqueMunicipios.size;
-    const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
-    const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
-    const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
+  const uniqueMunicipios = new Set();
+  
+  data.forEach(item => {
+    uniqueMunicipios.add(item.municipio);
+  });
+  
+  const totalMunicipios = uniqueMunicipios.size;
+  const totalAgentes = data.reduce((sum, item) => sum + (item.agentes || 0), 0);
+  const totalAlunos = data.reduce((sum, item) => sum + (item.alunos || 0), 0);
+  const totalProfessores = data.reduce((sum, item) => sum + (item.professores || 0), 0);
+  const totalEscolas = data.reduce((sum, item) => sum + (item.escolas || 0), 0);
 
-    this.totalMunicipios.textContent = totalMunicipios;
-    this.totalAlunos.textContent = this.formatNumber(totalAlunos);
-    this.totalProfessores.textContent = this.formatNumber(totalProfessores);
-    this.totalEscolas.textContent = this.formatNumber(totalEscolas);
-  }
-
+  this.totalMunicipios.textContent = totalMunicipios;
+  this.totalAlunos.textContent = this.formatNumber(totalAlunos);
+  this.totalProfessores.textContent = this.formatNumber(totalProfessores);
+  this.totalEscolas.textContent = this.formatNumber(totalEscolas);
+  
+}
   updateStatusCounts(data) {
   const counts = {
     implantado: 0,
