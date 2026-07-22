@@ -506,7 +506,6 @@ tbody tr.selected {
 .status-convenio { background: #fff3cd; color: #856404; }
 .status-analise { background: #cce5ff; color: #004085; }
 .status-apresentacao { background: #f8d7da; color: #721c24; }
-.status-seminfo { background: #e2e3e5; color: #383d41; }
 
 [data-theme="dark"] .status-implantado { background: #1a3a2a; color: #7ddb9a; }
 [data-theme="dark"] .status-convenio { background: #3a2e1a; color: #f0c87a; }
@@ -867,14 +866,15 @@ tbody tr.selected {
     font-weight: 600;
   }
   
-  td:nth-child(2):before { content: "📅 Data"; }
-  td:nth-child(3):before { content: "👤 Participantes"; }
-  td:nth-child(4):before { content: "🎓 Alunos"; }
-  td:nth-child(5):before { content: "👨‍🏫 Professores"; }
-  td:nth-child(6):before { content: "🏫 Escolas"; }
-  td:nth-child(7):before { content: "📊 Situação"; }
-  td:nth-child(8):before { content: "➡️ Próxima Etapa"; }
-  
+td:nth-child(2):before { content: "📅 Data"; }
+td:nth-child(3):before { content: "👤 Participantes"; }
+td:nth-child(4):before { content: "👮 Agentes"; }
+td:nth-child(5):before { content: "🎓 Alunos"; }
+td:nth-child(6):before { content: "👨‍🏫 Professores"; }
+td:nth-child(7):before { content: "🏫 Escolas"; }
+td:nth-child(8):before { content: "📊 Situação"; }
+td:nth-child(9):before { content: "➡️ Próxima Etapa"; }
+
   .detail-hint,
   .status-hint {
     display: none;
