@@ -31,11 +31,11 @@
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
-  const totalMunicipios = document.getElementById('totalMunicipios');
+  const total = document.getElementById('total');
   const totalAlunos = document.getElementById('totalAlunos');
   const totalProfessores = document.getElementById('totalProfessores');
   const totalEscolas = document.getElementById('totalEscolas');
-  const totalMunicipiosGeral = document.getElementById('totalMunicipiosGeral');
+  const totalGeral = document.getElementById('totalGeral');
   const mediaAlunos = document.getElementById('mediaAlunos');
   const detailContent = document.getElementById('detailContent');
   const filterPanel = document.getElementById('filterPanel');
@@ -98,50 +98,62 @@
   }
 
   function render() {
-    const filtered = getFilteredData();
-    const sortKey = currentFilter.sort || 'data';
-    const order = currentFilter.order || 'asc';
-    const sorted = applySort([...filtered], sortKey, order);
+  const filtered = getFilteredData();
+  const sortKey = currentFilter.sort || 'data';
+  const order = currentFilter.order || 'asc';
+  const sorted = applySort([...filtered], sortKey, order);
 
-    const autarquias = sorted.filter(d => d.agentes > 0);
-    const escolas = sorted.filter(d => d.agentes === 0);
+  const autarquias = sorted.filter(d => d.agentes > 0);
+  const escolas = sorted.filter(d => d.agentes === 0);
 
-    renderTableEscolas(escolas);
-    renderTableAutarquias(autarquias);
+  renderTableEscolas(escolas);
+  renderTableAutarquias(autarquias);
 
-    const municipiosUnicos = new Set(filtered.map(d => d.municipio));
-    const totalMun = municipiosUnicos.size;
-    const totalAlu = filtered.reduce((s, d) => s + (d.alunos || 0), 0);
-    const totalProf = filtered.reduce((s, d) => s + (d.professores || 0), 0);
-    const totalEsc = filtered.reduce((s, d) => s + (d.escolas || 0), 0);
-
-    totalMunicipios.textContent = totalMun;
-    totalAlunos.textContent = totalAlu.toLocaleString();
-    totalProfessores.textContent = totalProf.toLocaleString();
-    totalEscolas.textContent = totalEsc.toLocaleString();
-    totalMunicipiosGeral.textContent = totalMun;
-    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
-
-    const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
-    const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
-    const analise = filtered.filter(d => d.situacao === 'Em análise jurídica').length;
-    const apresentacao = filtered.filter(d => d.situacao === 'Apresentação realizada').length;
-    statusImplantado.textContent = implantados;
-    statusConvenio.textContent = convenio;
-    statusAnalise.textContent = analise;
-    statusApresentacao.textContent = apresentacao;
-
-    if (selectedMunicipio) {
-      const found = filtered.find(d => d.municipio === selectedMunicipio);
-      if (found) renderDetail(found);
-      else { selectedMunicipio = null; renderEmptyDetail(); }
-    } else {
-      renderEmptyDetail();
+  // ===== CORREÇÃO: Soma apenas valores ÚNICOS por município =====
+  // Agrupa os dados por município e pega o último valor de cada um
+  const municipiosMap = new Map();
+  filtered.forEach(d => {
+    // Para cada município, mantém o registro mais recente (ou o que tiver maior data)
+    const existing = municipiosMap.get(d.municipio);
+    if (!existing || new Date(d.data.split('/').reverse().join('-')) > new Date(existing.data.split('/').reverse().join('-'))) {
+      municipiosMap.set(d.municipio, d);
     }
+  });
 
-    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-    atualizarIndicadoresOrdenacao();
+  const municipiosUnicos = Array.from(municipiosMap.values());
+  const totalMun = municipiosUnicos.length;
+  const totalAlu = municipiosUnicos.reduce((s, d) => s + (d.alunos || 0), 0);
+  const totalProf = municipiosUnicos.reduce((s, d) => s + (d.professores || 0), 0);
+  const totalEsc = municipiosUnicos.reduce((s, d) => s + (d.escolas || 0), 0);
+
+  totalMunicipios.textContent = totalMun;
+  totalAlunos.textContent = totalAlu.toLocaleString();
+  totalProfessores.textContent = totalProf.toLocaleString();
+  totalEscolas.textContent = totalEsc.toLocaleString();
+  totalMunicipiosGeral.textContent = totalMun;
+  mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(1) : 0;
+
+  // Status (mantido como estava - conta registros, não municípios únicos)
+  const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
+  const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
+  const analise = filtered.filter(d => d.situacao === 'Em análise jurídica').length;
+  const apresentacao = filtered.filter(d => d.situacao === 'Apresentação realizada').length;
+  statusImplantado.textContent = implantados;
+  statusConvenio.textContent = convenio;
+  statusAnalise.textContent = analise;
+  statusApresentacao.textContent = apresentacao;
+
+  if (selectedMunicipio) {
+    const found = filtered.find(d => d.municipio === selectedMunicipio);
+    if (found) renderDetail(found);
+    else { selectedMunicipio = null; renderEmptyDetail(); }
+  } else {
+    renderEmptyDetail();
   }
+
+  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+  atualizarIndicadoresOrdenacao();
+}
 
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
