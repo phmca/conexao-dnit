@@ -84,10 +84,17 @@
   }
 
   function getStatusClass(situacao) {
-    if (situacao === 'Implantado') return 'implantado';
-    if (situacao === 'Convênio assinado') return 'convenio';
-    if (situacao === 'Em análise jurídica') return 'analise';
-    return 'apresentacao';
+    if (situacao === 'Implantado') return 'status-implantado';
+    if (situacao === 'Convênio assinado') return 'status-convenio';
+    if (situacao === 'Em análise jurídica') return 'status-analise';
+    return 'status-apresentacao';
+  }
+
+  function getLabels(tabType) {
+    if (tabType === 'escolas') {
+      return ['Município', 'Data', 'Participantes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
+    }
+    return ['Município', 'Data', 'Participantes', 'Agentes', 'Situação', 'Próxima Etapa'];
   }
 
   function render() {
@@ -133,7 +140,6 @@
     }
 
     document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-
     atualizarIndicadoresOrdenacao();
   }
 
@@ -150,24 +156,26 @@
   function renderTableEscolas(data) {
     if (!tbodyEscolas) return;
     if (data.length === 0) {
-      tbodyEscolas.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#94a3b8;">
+      tbodyEscolas.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-secondary);">
         Nenhum registro de escolas
       </td></tr>`;
       return;
     }
 
+    const labels = getLabels('escolas');
     let html = '';
     data.forEach(d => {
       const statusClass = getStatusClass(d.situacao);
+      const isMobile = window.innerWidth <= 768;
       html += `<tr data-municipio="${d.municipio}" class="clickable-row">
-        <td><strong>${d.municipio}</strong></td>
-        <td>${d.data}</td>
-        <td>${d.participantes}</td>
-        <td>${d.alunos.toLocaleString()}</td>
-        <td>${d.professores.toLocaleString()}</td>
-        <td>${d.escolas}</td>
-        <td><span class="status-badge ${statusClass}">${d.situacao}</span></td>
-        <td>${d.proxima || '-'}</td>
+        <td data-label="${labels[0]}"><strong>${d.municipio}</strong></td>
+        <td data-label="${labels[1]}">${d.data}</td>
+        <td data-label="${labels[2]}">${d.participantes}</td>
+        <td data-label="${labels[3]}">${d.alunos.toLocaleString()}</td>
+        <td data-label="${labels[4]}">${d.professores.toLocaleString()}</td>
+        <td data-label="${labels[5]}">${d.escolas}</td>
+        <td data-label="${labels[6]}"><span class="status-badge ${statusClass}">${d.situacao}</span></td>
+        <td data-label="${labels[7]}">${d.proxima || '-'}</td>
       </tr>`;
     });
     tbodyEscolas.innerHTML = html;
@@ -183,22 +191,23 @@
   function renderTableAutarquias(data) {
     if (!tbodyAutarquias) return;
     if (data.length === 0) {
-      tbodyAutarquias.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:#94a3b8;">
+      tbodyAutarquias.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-secondary);">
         Nenhum registro de autarquias ou departamentos de trânsito
       </td></tr>`;
       return;
     }
 
+    const labels = getLabels('autarquias');
     let html = '';
     data.forEach(d => {
       const statusClass = getStatusClass(d.situacao);
       html += `<tr data-municipio="${d.municipio}" class="clickable-row">
-        <td><strong>${d.municipio}</strong> <span class="badge-agencia"><i class="fas fa-building"></i> Autarquia</span></td>
-        <td>${d.data}</td>
-        <td>${d.participantes}</td>
-        <td>${d.agentes}</td>
-        <td><span class="status-badge ${statusClass}">${d.situacao}</span></td>
-        <td>${d.proxima || '-'}</td>
+        <td data-label="${labels[0]}"><strong>${d.municipio}</strong> <span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span></td>
+        <td data-label="${labels[1]}">${d.data}</td>
+        <td data-label="${labels[2]}">${d.participantes}</td>
+        <td data-label="${labels[3]}">${d.agentes}</td>
+        <td data-label="${labels[4]}"><span class="status-badge ${statusClass}">${d.situacao}</span></td>
+        <td data-label="${labels[5]}">${d.proxima || '-'}</td>
       </tr>`;
     });
     tbodyAutarquias.innerHTML = html;
@@ -216,16 +225,16 @@
     const statusClass = getStatusClass(d.situacao);
     detailContent.innerHTML = `
       <div class="detail-item">
-        <h4 style="margin:0 0 8px; font-size:20px;">${d.municipio}</h4>
-        <div class="detail-row"><span>Mês</span><span>${d.mes}</span></div>
-        <div class="detail-row"><span>Data</span><span>${d.data}</span></div>
-        <div class="detail-row"><span>Participantes</span><span>${d.participantes}</span></div>
-        <div class="detail-row"><span>Agentes</span><span>${d.agentes}</span></div>
-        <div class="detail-row"><span>Alunos</span><span>${d.alunos.toLocaleString()}</span></div>
-        <div class="detail-row"><span>Professores</span><span>${d.professores.toLocaleString()}</span></div>
-        <div class="detail-row"><span>Escolas</span><span>${d.escolas}</span></div>
-        <div class="detail-row"><span>Situação</span><span class="status-badge ${statusClass}">${d.situacao}</span></div>
-        <div class="detail-row"><span>Próxima etapa</span><span>${d.proxima || '-'}</span></div>
+        <div class="detail-municipio">${d.municipio}</div>
+        <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${d.mes}</span></div>
+        <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${d.data}</span></div>
+        <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${d.participantes}</span></div>
+        <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${d.agentes}</span></div>
+        <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${d.alunos.toLocaleString()}</span></div>
+        <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${d.professores.toLocaleString()}</span></div>
+        <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${d.escolas}</span></div>
+        <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${d.situacao}</span></span></div>
+        <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${d.proxima || '-'}</span></div>
       </div>
     `;
   }
@@ -239,7 +248,6 @@
     `;
   }
 
-  // ===== ORDENAÇÃO POR CLIQUE NO CABEÇALHO =====
   document.querySelectorAll('th.sortable').forEach(th => {
     th.addEventListener('click', function() {
       const sortKey = this.dataset.sort;
@@ -250,7 +258,6 @@
         currentFilter.order = 'asc';
       }
       
-      // Atualiza os botões do filtro para refletir a ordenação atual
       document.querySelectorAll('.filter-option').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.sort === sortKey && btn.dataset.order === currentFilter.order) {
@@ -284,9 +291,8 @@
       currentData = filtered.length ? filtered : backup;
       render();
       currentData = backup;
-      document.querySelectorAll('.status-item').forEach(el => el.style.background = '');
-      this.style.background = '#e9edf3';
-      setTimeout(() => { this.style.background = ''; }, 600);
+      document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+      this.classList.add('active');
     });
   });
 
@@ -303,6 +309,7 @@
 
   document.getElementById('filterBtn').addEventListener('click', function() {
     filterPanel.classList.toggle('open');
+    this.classList.toggle('active');
   });
 
   document.getElementById('exportBtn').addEventListener('click', function() {
@@ -323,14 +330,22 @@
   });
 
   themeToggle.addEventListener('click', function() {
-    document.body.classList.toggle('dark');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
     this.querySelector('i').classList.toggle('fa-moon');
     this.querySelector('i').classList.toggle('fa-sun');
   });
 
   document.getElementById('refreshBtn').addEventListener('click', function() {
+    this.classList.add('spinning');
     currentData = [...rawData];
     selectedMunicipio = null;
+    render();
+    setTimeout(() => this.classList.remove('spinning'), 800);
+  });
+
+  window.addEventListener('resize', function() {
+    // Re-renderiza para ajustar os labels mobile
     render();
   });
 
