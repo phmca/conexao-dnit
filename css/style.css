@@ -1073,6 +1073,49 @@ tbody tr.selected {
   }
 }
 
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 0.8rem 1.5rem;
+  border-radius: 60px;
+  box-shadow: var(--shadow-hover);
+  border: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  z-index: 1000;
+  animation: fadeInUp 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  max-width: 400px;
+}
+
+[data-theme="dark"] .toast-notification {
+  background: #1a2233;
+  border-color: #2a3650;
+  color: #e8edf5;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .toast-notification {
+    bottom: 16px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    padding: 0.6rem 1.2rem;
+    max-width: 90%;
+    white-space: normal;
+  }
+}
+
 @media (min-width: 769px) and (max-width: 1024px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
