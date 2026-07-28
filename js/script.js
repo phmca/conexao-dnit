@@ -30,6 +30,7 @@
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
   let currentTab = 'escolas';
+  let currentStatusFilter = null; // Armazena o status selecionado para filtro
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
@@ -73,6 +74,10 @@
     const search = searchInput.value.trim().toLowerCase();
     if (search) {
       filtered = filtered.filter(d => d.municipio.toLowerCase().includes(search));
+    }
+    // Aplica filtro de status se existir
+    if (currentStatusFilter) {
+      filtered = filtered.filter(d => d.situacao === currentStatusFilter);
     }
     return filtered;
   }
@@ -159,7 +164,7 @@
     totalProfessores.textContent = totalProf.toLocaleString();
     totalEscolas.textContent = totalEsc.toLocaleString();
     totalMunicipiosGeral.textContent = totalMun;
-    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
+    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(1) : 0;
 
     const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
     const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
@@ -287,7 +292,7 @@
   }
 
   // ============================================================
-  // EXPORTAÇÃO PARA PDF MELHORADA (usando jspdf + autotable)
+  // EXPORTAÇÃO PARA PDF - RESPEITANDO TODOS OS FILTROS
   // ============================================================
   function exportToPDF() {
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
@@ -309,36 +314,39 @@
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('landscape', 'mm', 'a4');
     
-    let data = [];
-    if (monthSelect.value === 'Todos') {
-      data = [...currentData];
-    } else {
-      data = currentData.filter(d => d.mes === monthSelect.value);
-    }
-
-    const search = searchInput.value.trim().toLowerCase();
-    if (search) {
-      data = data.filter(d => d.municipio.toLowerCase().includes(search));
-    }
-
-    data = applySort([...data], currentFilter.sort || 'data', currentFilter.order || 'asc');
+    // ===== USA A MESMA LÓGICA DE FILTRO QUE O RENDER =====
+    let filteredData = getFilteredData();
+    
+    // Aplica ordenação
+    filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
 
     // ===== DETERMINA QUAL ABA ESTÁ ATIVA =====
     const tabAtiva = document.querySelector('.tab-btn.active');
     const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
     
     // Filtra os dados conforme a aba ativa
-    let dadosFiltrados = data;
+    let dadosFiltrados = filteredData;
     if (tipo === 'escolas') {
-      dadosFiltrados = data.filter(d => d.agentes === 0);
+      dadosFiltrados = filteredData.filter(d => d.agentes === 0);
     } else {
-      dadosFiltrados = data.filter(d => d.agentes > 0);
+      dadosFiltrados = filteredData.filter(d => d.agentes > 0);
     }
 
+    // ===== CONSTRÓI O SUBTÍTULO COM INFORMAÇÕES DOS FILTROS =====
     const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
     const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Autarquias e Departamentos de Trânsito';
+    
+    let filtrosAtivos = [];
+    if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
+    if (searchInput.value.trim()) filtrosAtivos.push(`Busca: "${searchInput.value.trim()}"`);
+    if (currentStatusFilter) filtrosAtivos.push(`Status: ${currentStatusFilter}`);
+    
+    let subtitle = `${tabDisplay} - ${monthDisplay}`;
+    if (filtrosAtivos.length > 0) {
+      subtitle += ` (Filtros: ${filtrosAtivos.join(' | ')})`;
+    }
+
     const title = `Conexão DNIT - Educação No Trânsito`;
-    const subtitle = `${tabDisplay} - ${monthDisplay}`;
     const dateStr = new Date().toLocaleString('pt-BR');
 
     const pageWidth = doc.internal.pageSize.width;
@@ -346,14 +354,17 @@
     const marginRight = 12;
     const usableWidth = pageWidth - marginLeft - marginRight;
 
+    // ===== TÍTULO =====
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(title, pageWidth / 2, 12, { align: 'center' });
     
-    doc.setFontSize(11);
+    // ===== SUBTÍTULO =====
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
     
+    // ===== RESUMO DOS DADOS =====
     const totalAlunos = dadosFiltrados.reduce((sum, item) => sum + (item.alunos || 0), 0);
     const totalProfessores = dadosFiltrados.reduce((sum, item) => sum + (item.professores || 0), 0);
     const totalEscolas = dadosFiltrados.reduce((sum, item) => sum + (item.escolas || 0), 0);
@@ -370,9 +381,20 @@
     }
     doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
     
+    // ===== DATA DE GERAÇÃO =====
     doc.setFontSize(7);
     doc.setFont('helvetica', 'italic');
     doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
+
+    // ===== SE NÃO HOUVER DADOS =====
+    if (dadosFiltrados.length === 0) {
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Nenhum dado encontrado com os filtros aplicados.', pageWidth / 2, 50, { align: 'center' });
+      doc.save(`conexao_dnit_sem_dados_${new Date().toISOString().slice(0,10)}.pdf`);
+      showToast('Nenhum dado encontrado para exportar.');
+      return;
+    }
 
     // ===== DEFINE CABEÇALHOS CONFORME A ABA =====
     let headers, tableData;
@@ -523,9 +545,20 @@
       });
     }
 
-    const fileName = `conexao_dnit_${monthSelect.value.toLowerCase()}_${tipo}_${new Date().toISOString().slice(0,10)}.pdf`;
-    doc.save(fileName);
+    // ===== NOME DO ARQUIVO COM INFORMAÇÕES DOS FILTROS =====
+    let fileNameParts = ['conexao_dnit'];
+    if (monthSelect.value !== 'Todos') fileNameParts.push(monthSelect.value.toLowerCase());
+    fileNameParts.push(tipo);
+    if (searchInput.value.trim()) {
+      fileNameParts.push('busca_' + searchInput.value.trim().replace(/\s+/g, '_'));
+    }
+    if (currentStatusFilter) {
+      fileNameParts.push('status_' + currentStatusFilter.replace(/\s+/g, '_'));
+    }
+    fileNameParts.push(new Date().toISOString().slice(0,10));
+    const fileName = fileNameParts.join('_') + '.pdf';
     
+    doc.save(fileName);
     showToast('PDF exportado com sucesso!');
   }
 
@@ -593,14 +626,17 @@
   document.querySelectorAll('.status-item.clickable').forEach(item => {
     item.addEventListener('click', function() {
       const status = this.dataset.status;
-      searchInput.value = '';
-      const filtered = currentData.filter(d => d.situacao === status);
-      const backup = currentData;
-      currentData = filtered.length ? filtered : backup;
+      if (currentStatusFilter === status) {
+        currentStatusFilter = null;
+        this.classList.remove('active');
+        showToast('Filtro de status removido');
+      } else {
+        currentStatusFilter = status;
+        document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+        showToast(`Filtrando por: ${status}`);
+      }
       render();
-      currentData = backup;
-      document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
-      this.classList.add('active');
     });
   });
 
@@ -658,6 +694,8 @@
     this.classList.add('spinning');
     currentData = [...rawData];
     selectedMunicipio = null;
+    currentStatusFilter = null;
+    document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
     render();
     setTimeout(() => this.classList.remove('spinning'), 800);
   });
