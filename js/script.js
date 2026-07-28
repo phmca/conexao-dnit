@@ -109,22 +109,37 @@
   renderTableEscolas(escolas);
   renderTableAutarquias(autarquias);
 
-  // ===== CORREÇÃO: Soma apenas valores ÚNICOS por município =====
-  // Agrupa os dados por município e pega o último valor de cada um
-  const municipiosMap = new Map();
-  filtered.forEach(d => {
-    // Para cada município, mantém o registro mais recente (ou o que tiver maior data)
-    const existing = municipiosMap.get(d.municipio);
-    if (!existing || new Date(d.data.split('/').reverse().join('-')) > new Date(existing.data.split('/').reverse().join('-'))) {
-      municipiosMap.set(d.municipio, d);
+  // ===== CORREÇÃO: Separa Escolas de Autarquias para os totais =====
+  // Para ALUNOS, PROFESSORES e ESCOLAS: considera APENAS registros com agentes === 0
+  const apenasEscolas = filtered.filter(d => d.agentes === 0);
+  
+  const municipiosEscolas = new Map();
+  apenasEscolas.forEach(d => {
+    const existing = municipiosEscolas.get(d.municipio);
+    if (!existing) {
+      municipiosEscolas.set(d.municipio, d);
+    } else {
+      const dataExistente = existing.data.split('/').reverse().join('-');
+      const dataNova = d.data.split('/').reverse().join('-');
+      if (dataNova > dataExistente) {
+        municipiosEscolas.set(d.municipio, d);
+      }
     }
   });
 
-  const municipiosUnicos = Array.from(municipiosMap.values());
-  const totalMun = municipiosUnicos.length;
-  const totalAlu = municipiosUnicos.reduce((s, d) => s + (d.alunos || 0), 0);
-  const totalProf = municipiosUnicos.reduce((s, d) => s + (d.professores || 0), 0);
-  const totalEsc = municipiosUnicos.reduce((s, d) => s + (d.escolas || 0), 0);
+  // Para MUNICÍPIOS: considera TODOS (tanto escolas quanto autarquias)
+  const todosMunicipios = new Map();
+  filtered.forEach(d => {
+    if (!todosMunicipios.has(d.municipio)) {
+      todosMunicipios.set(d.municipio, d);
+    }
+  });
+
+  const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
+  const totalMun = todosMunicipios.size;
+  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
 
   totalMunicipios.textContent = totalMun;
   totalAlunos.textContent = totalAlu.toLocaleString();
@@ -133,6 +148,8 @@
   totalMunicipiosGeral.textContent = totalMun;
   mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(1) : 0;
 
+  // ... resto do código
+}
   // Status (mantido como estava - conta registros, não municípios únicos)
   const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
   const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
