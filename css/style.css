@@ -638,3 +638,38 @@ body.dark .footer-note {
     flex-direction: column;
   }
 }
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+th.sortable:hover {
+  color: #0047ab;
+}
+
+body.dark th.sortable:hover {
+  color: #60a5fa;
+}
+
+th.sortable.asc .fa-sort::before {
+  content: "\f0de";
+}
+
+th.sortable.desc .fa-sort::before {
+  content: "\f0dd";
+}
+
+th.sortable .fa-sort {
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+th.sortable:hover .fa-sort {
+  opacity: 1;
+}
+
+th.sortable.asc .fa-sort,
+th.sortable.desc .fa-sort {
+  opacity: 1;
+}
