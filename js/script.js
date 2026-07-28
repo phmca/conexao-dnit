@@ -110,8 +110,6 @@
     renderTableEscolas(escolas);
     renderTableAutarquias(autarquias);
 
-    // ===== CORREÇÃO: Separa Escolas de Autarquias para os totais =====
-    // Para ALUNOS, PROFESSORES e ESCOLAS: considera APENAS registros com agentes === 0
     const apenasEscolas = filtered.filter(d => d.agentes === 0);
     
     const municipiosEscolas = new Map();
@@ -128,7 +126,6 @@
       }
     });
 
-    // Para MUNICÍPIOS: considera TODOS (tanto escolas quanto autarquias)
     const todosMunicipios = new Map();
     filtered.forEach(d => {
       if (!todosMunicipios.has(d.municipio)) {
@@ -274,6 +271,58 @@
     `;
   }
 
+  // ===== EXPORTAR PARA PDF =====
+  document.getElementById('exportBtn').addEventListener('click', function() {
+    const element = document.getElementById('contentToExport');
+    const btn = this;
+    const originalText = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
+    btn.disabled = true;
+
+    // Mostra um toast de carregamento
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando PDF...';
+    document.body.appendChild(toast);
+
+    const opt = {
+      margin: [10, 10, 10, 10],
+      filename: `conexao_dnit_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        letterRendering: true,
+        scrollY: 0
+      },
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'landscape' 
+      },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(element).save().then(function() {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      toast.innerHTML = '<i class="fas fa-check-circle" style="color:#2ecc71;"></i> PDF gerado com sucesso!';
+      setTimeout(() => {
+        toast.remove();
+      }, 3000);
+    }).catch(function(err) {
+      console.error('Erro ao gerar PDF:', err);
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      toast.innerHTML = '<i class="fas fa-exclamation-circle" style="color:#e74c3c;"></i> Erro ao gerar PDF. Tente novamente.';
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    });
+  });
+
+  // ===== ORDENAÇÃO POR CLIQUE NO CABEÇALHO =====
   document.querySelectorAll('th.sortable').forEach(th => {
     th.addEventListener('click', function() {
       const sortKey = this.dataset.sort;
@@ -336,23 +385,6 @@
   document.getElementById('filterBtn').addEventListener('click', function() {
     filterPanel.classList.toggle('open');
     this.classList.toggle('active');
-  });
-
-  document.getElementById('exportBtn').addEventListener('click', function() {
-    const filtered = getFilteredData();
-    const headers = ['Município', 'Mês', 'Data', 'Participantes', 'Agentes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
-    const csv = [headers.join(',')];
-    filtered.forEach(d => {
-      csv.push([
-        d.municipio, d.mes, d.data, `"${d.participantes}"`, d.agentes,
-        d.alunos, d.professores, d.escolas, `"${d.situacao}"`, `"${d.proxima || ''}"`
-      ].join(','));
-    });
-    const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'conexao_dnit.csv';
-    link.click();
   });
 
   themeToggle.addEventListener('click', function() {
