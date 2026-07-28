@@ -28,10 +28,9 @@
   let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
-  let currentTab = 'escolas';
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
-  const tbodyAgencias = document.getElementById('tableBodyAgencias');
+  const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
   const totalMunicipios = document.getElementById('totalMunicipios');
   const totalAlunos = document.getElementById('totalAlunos');
   const totalProfessores = document.getElementById('totalProfessores');
@@ -97,11 +96,11 @@
     const order = currentFilter.order || 'asc';
     const sorted = applySort([...filtered], sortKey, order);
 
-    const agencias = sorted.filter(d => d.agentes > 0);
+    const autarquias = sorted.filter(d => d.agentes > 0);
     const escolas = sorted.filter(d => d.agentes === 0);
 
     renderTableEscolas(escolas);
-    renderTableAgencias(agencias);
+    renderTableAutarquias(autarquias);
 
     const municipiosUnicos = new Set(filtered.map(d => d.municipio));
     const totalMun = municipiosUnicos.size;
@@ -169,10 +168,10 @@
     });
   }
 
-  function renderTableAgencias(data) {
-    if (!tbodyAgencias) return;
+  function renderTableAutarquias(data) {
+    if (!tbodyAutarquias) return;
     if (data.length === 0) {
-      tbodyAgencias.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:#94a3b8;">
+      tbodyAutarquias.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:#94a3b8;">
         Nenhum registro de autarquias ou departamentos de trânsito
       </td></tr>`;
       return;
@@ -190,9 +189,9 @@
         <td>${d.proxima || '-'}</td>
       </tr>`;
     });
-    tbodyAgencias.innerHTML = html;
+    tbodyAutarquias.innerHTML = html;
 
-    tbodyAgencias.querySelectorAll('.clickable-row').forEach(row => {
+    tbodyAutarquias.querySelectorAll('.clickable-row').forEach(row => {
       row.addEventListener('click', function() {
         selectedMunicipio = this.dataset.municipio;
         render();
@@ -261,9 +260,8 @@
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
       const tab = this.dataset.tab;
-      currentTab = tab;
       document.getElementById('tabEscolas').classList.toggle('active', tab === 'escolas');
-      document.getElementById('tabAgencias').classList.toggle('active', tab === 'agencias');
+      document.getElementById('tabAutarquias').classList.toggle('active', tab === 'autarquias');
       render();
     });
   });
