@@ -120,7 +120,7 @@
     totalProfessores.textContent = totalProf.toLocaleString();
     totalEscolas.textContent = totalEsc.toLocaleString();
     totalMunicipiosGeral.textContent = totalMun;
-    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(1) : 0;
+    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
 
     const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
     const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
