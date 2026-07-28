@@ -133,6 +133,18 @@
     }
 
     document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+
+    atualizarIndicadoresOrdenacao();
+  }
+
+  function atualizarIndicadoresOrdenacao() {
+    document.querySelectorAll('th.sortable').forEach(th => {
+      th.classList.remove('asc', 'desc');
+      const sortKey = th.dataset.sort;
+      if (sortKey === currentFilter.sort) {
+        th.classList.add(currentFilter.order);
+      }
+    });
   }
 
   function renderTableEscolas(data) {
@@ -226,6 +238,29 @@
       </div>
     `;
   }
+
+  // ===== ORDENAÇÃO POR CLIQUE NO CABEÇALHO =====
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', function() {
+      const sortKey = this.dataset.sort;
+      if (currentFilter.sort === sortKey) {
+        currentFilter.order = currentFilter.order === 'asc' ? 'desc' : 'asc';
+      } else {
+        currentFilter.sort = sortKey;
+        currentFilter.order = 'asc';
+      }
+      
+      // Atualiza os botões do filtro para refletir a ordenação atual
+      document.querySelectorAll('.filter-option').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.sort === sortKey && btn.dataset.order === currentFilter.order) {
+          btn.classList.add('active');
+        }
+      });
+      
+      render();
+    });
+  });
 
   document.querySelectorAll('.filter-option').forEach(btn => {
     btn.addEventListener('click', function() {
