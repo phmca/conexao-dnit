@@ -22,7 +22,8 @@
     { municipio: 'Caucaia', mes: 'Julho', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Pacajus', mes: 'Julho', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
     { municipio: 'Chorozinho', mes: 'Julho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-    { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' }
+    { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Redenção', mes: 'Julho', data: '30/07/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades' }
   ];
 
   let currentData = [...rawData];
@@ -31,11 +32,11 @@
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
-  const total = document.getElementById('total');
+  const totalMunicipios = document.getElementById('totalMunicipios');
   const totalAlunos = document.getElementById('totalAlunos');
   const totalProfessores = document.getElementById('totalProfessores');
   const totalEscolas = document.getElementById('totalEscolas');
-  const totalGeral = document.getElementById('totalGeral');
+  const totalMunicipiosGeral = document.getElementById('totalMunicipiosGeral');
   const mediaAlunos = document.getElementById('mediaAlunos');
   const detailContent = document.getElementById('detailContent');
   const filterPanel = document.getElementById('filterPanel');
@@ -98,79 +99,76 @@
   }
 
   function render() {
-  const filtered = getFilteredData();
-  const sortKey = currentFilter.sort || 'data';
-  const order = currentFilter.order || 'asc';
-  const sorted = applySort([...filtered], sortKey, order);
+    const filtered = getFilteredData();
+    const sortKey = currentFilter.sort || 'data';
+    const order = currentFilter.order || 'asc';
+    const sorted = applySort([...filtered], sortKey, order);
 
-  const autarquias = sorted.filter(d => d.agentes > 0);
-  const escolas = sorted.filter(d => d.agentes === 0);
+    const autarquias = sorted.filter(d => d.agentes > 0);
+    const escolas = sorted.filter(d => d.agentes === 0);
 
-  renderTableEscolas(escolas);
-  renderTableAutarquias(autarquias);
+    renderTableEscolas(escolas);
+    renderTableAutarquias(autarquias);
 
-  // ===== CORREÇÃO: Separa Escolas de Autarquias para os totais =====
-  // Para ALUNOS, PROFESSORES e ESCOLAS: considera APENAS registros com agentes === 0
-  const apenasEscolas = filtered.filter(d => d.agentes === 0);
-  
-  const municipiosEscolas = new Map();
-  apenasEscolas.forEach(d => {
-    const existing = municipiosEscolas.get(d.municipio);
-    if (!existing) {
-      municipiosEscolas.set(d.municipio, d);
-    } else {
-      const dataExistente = existing.data.split('/').reverse().join('-');
-      const dataNova = d.data.split('/').reverse().join('-');
-      if (dataNova > dataExistente) {
+    // ===== CORREÇÃO: Separa Escolas de Autarquias para os totais =====
+    // Para ALUNOS, PROFESSORES e ESCOLAS: considera APENAS registros com agentes === 0
+    const apenasEscolas = filtered.filter(d => d.agentes === 0);
+    
+    const municipiosEscolas = new Map();
+    apenasEscolas.forEach(d => {
+      const existing = municipiosEscolas.get(d.municipio);
+      if (!existing) {
         municipiosEscolas.set(d.municipio, d);
+      } else {
+        const dataExistente = existing.data.split('/').reverse().join('-');
+        const dataNova = d.data.split('/').reverse().join('-');
+        if (dataNova > dataExistente) {
+          municipiosEscolas.set(d.municipio, d);
+        }
       }
+    });
+
+    // Para MUNICÍPIOS: considera TODOS (tanto escolas quanto autarquias)
+    const todosMunicipios = new Map();
+    filtered.forEach(d => {
+      if (!todosMunicipios.has(d.municipio)) {
+        todosMunicipios.set(d.municipio, d);
+      }
+    });
+
+    const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
+    const totalMun = todosMunicipios.size;
+    const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+    const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+    const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+
+    totalMunicipios.textContent = totalMun;
+    totalAlunos.textContent = totalAlu.toLocaleString();
+    totalProfessores.textContent = totalProf.toLocaleString();
+    totalEscolas.textContent = totalEsc.toLocaleString();
+    totalMunicipiosGeral.textContent = totalMun;
+    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
+
+    const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
+    const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
+    const analise = filtered.filter(d => d.situacao === 'Em análise jurídica').length;
+    const apresentacao = filtered.filter(d => d.situacao === 'Apresentação realizada').length;
+    statusImplantado.textContent = implantados;
+    statusConvenio.textContent = convenio;
+    statusAnalise.textContent = analise;
+    statusApresentacao.textContent = apresentacao;
+
+    if (selectedMunicipio) {
+      const found = filtered.find(d => d.municipio === selectedMunicipio);
+      if (found) renderDetail(found);
+      else { selectedMunicipio = null; renderEmptyDetail(); }
+    } else {
+      renderEmptyDetail();
     }
-  });
 
-  // Para MUNICÍPIOS: considera TODOS (tanto escolas quanto autarquias)
-  const todosMunicipios = new Map();
-  filtered.forEach(d => {
-    if (!todosMunicipios.has(d.municipio)) {
-      todosMunicipios.set(d.municipio, d);
-    }
-  });
-
-  const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
-  const totalMun = todosMunicipios.size;
-  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
-
-  totalMunicipios.textContent = totalMun;
-  totalAlunos.textContent = totalAlu.toLocaleString();
-  totalProfessores.textContent = totalProf.toLocaleString();
-  totalEscolas.textContent = totalEsc.toLocaleString();
-  totalMunicipiosGeral.textContent = totalMun;
-  mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
-
-  // ... resto do código
-}
-  // Status (mantido como estava - conta registros, não municípios únicos)
-  const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
-  const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
-  const analise = filtered.filter(d => d.situacao === 'Em análise jurídica').length;
-  const apresentacao = filtered.filter(d => d.situacao === 'Apresentação realizada').length;
-  statusImplantado.textContent = implantados;
-  statusConvenio.textContent = convenio;
-  statusAnalise.textContent = analise;
-  statusApresentacao.textContent = apresentacao;
-
-  if (selectedMunicipio) {
-    const found = filtered.find(d => d.municipio === selectedMunicipio);
-    if (found) renderDetail(found);
-    else { selectedMunicipio = null; renderEmptyDetail(); }
-  } else {
-    renderEmptyDetail();
+    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+    atualizarIndicadoresOrdenacao();
   }
-
-  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-  atualizarIndicadoresOrdenacao();
-}
 
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
@@ -195,7 +193,6 @@
     let html = '';
     data.forEach(d => {
       const statusClass = getStatusClass(d.situacao);
-      const isMobile = window.innerWidth <= 768;
       html += `<tr data-municipio="${d.municipio}" class="clickable-row">
         <td data-label="${labels[0]}"><strong>${d.municipio}</strong></td>
         <td data-label="${labels[1]}">${d.data}</td>
@@ -374,7 +371,6 @@
   });
 
   window.addEventListener('resize', function() {
-    // Re-renderiza para ajustar os labels mobile
     render();
   });
 
