@@ -22,15 +22,17 @@
     { municipio: 'Caucaia', mes: 'Julho', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Pacajus', mes: 'Julho', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
     { municipio: 'Chorozinho', mes: 'Julho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando agenda para implantação do programa' },
-    { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
-    { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades' }
+    // ===== AUTARQUIA (Caucaia) =====
+    { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Autarquia' },
+    // ===== DEPARTAMENTO (Redenção) =====
+    { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades', tipo_orgao: 'Departamento' }
   ];
 
   let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
   let currentTab = 'escolas';
-  let currentStatusFilter = null; // Armazena o status selecionado para filtro
+  let currentStatusFilter = null;
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
@@ -75,7 +77,6 @@
     if (search) {
       filtered = filtered.filter(d => d.municipio.toLowerCase().includes(search));
     }
-    // Aplica filtro de status se existir
     if (currentStatusFilter) {
       filtered = filtered.filter(d => d.situacao === currentStatusFilter);
     }
@@ -111,11 +112,25 @@
     return 'status-apresentacao';
   }
 
+  function getTipoOrgao(item) {
+    if (item.tipo_orgao) return item.tipo_orgao;
+    // Fallback: se não tiver tipo definido, usa o padrão
+    return 'Autarquia';
+  }
+
+  function getBadgeOrgao(item) {
+    const tipo = getTipoOrgao(item);
+    if (tipo === 'Departamento') {
+      return `<span class="badge-departamento"><i class="fas fa-building"></i> Departamento</span>`;
+    }
+    return `<span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span>`;
+  }
+
   function getLabels(tabType) {
     if (tabType === 'escolas') {
       return ['Município', 'Data', 'Participantes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
     }
-    return ['Município', 'Data', 'Participantes', 'Agentes', 'Situação', 'Próxima Etapa'];
+    return ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
   }
 
   function render() {
@@ -234,8 +249,8 @@
   function renderTableAutarquias(data) {
     if (!tbodyAutarquias) return;
     if (data.length === 0) {
-      tbodyAutarquias.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--text-secondary);">
-        Nenhum registro de autarquias ou departamentos de trânsito
+      tbodyAutarquias.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-secondary);">
+        Nenhum registro de Departamentos/Autarquias de Trânsito
       </td></tr>`;
       return;
     }
@@ -244,13 +259,15 @@
     let html = '';
     data.forEach(d => {
       const statusClass = getStatusClass(d.situacao);
+      const badge = getBadgeOrgao(d);
       html += `<tr data-municipio="${d.municipio}" class="clickable-row">
-        <td data-label="${labels[0]}"><strong>${d.municipio}</strong> <span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span></td>
+        <td data-label="${labels[0]}"><strong>${d.municipio}</strong></td>
         <td data-label="${labels[1]}">${d.data}</td>
         <td data-label="${labels[2]}">${d.participantes}</td>
         <td data-label="${labels[3]}">${d.agentes}</td>
-        <td data-label="${labels[4]}"><span class="status-badge ${statusClass}">${d.situacao}</span></td>
-        <td data-label="${labels[5]}">${d.proxima || '-'}</td>
+        <td data-label="${labels[4]}">${badge}</td>
+        <td data-label="${labels[5]}"><span class="status-badge ${statusClass}">${d.situacao}</span></td>
+        <td data-label="${labels[6]}">${d.proxima || '-'}</td>
       </tr>`;
     });
     tbodyAutarquias.innerHTML = html;
@@ -266,6 +283,7 @@
   function renderDetail(d) {
     if (!d) return renderEmptyDetail();
     const statusClass = getStatusClass(d.situacao);
+    const tipoOrgao = d.agentes > 0 ? getTipoOrgao(d) : 'Escola';
     detailContent.innerHTML = `
       <div class="detail-item">
         <div class="detail-municipio">${d.municipio}</div>
@@ -273,6 +291,7 @@
         <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${d.data}</span></div>
         <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${d.participantes}</span></div>
         <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${d.agentes}</span></div>
+        ${d.agentes > 0 ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
         <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${d.alunos.toLocaleString()}</span></div>
         <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${d.professores.toLocaleString()}</span></div>
         <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${d.escolas}</span></div>
@@ -292,7 +311,7 @@
   }
 
   // ============================================================
-  // EXPORTAÇÃO PARA PDF - RESPEITANDO TODOS OS FILTROS
+  // EXPORTAÇÃO PARA PDF
   // ============================================================
   function exportToPDF() {
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
@@ -314,17 +333,12 @@
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('landscape', 'mm', 'a4');
     
-    // ===== USA A MESMA LÓGICA DE FILTRO QUE O RENDER =====
     let filteredData = getFilteredData();
-    
-    // Aplica ordenação
     filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
 
-    // ===== DETERMINA QUAL ABA ESTÁ ATIVA =====
     const tabAtiva = document.querySelector('.tab-btn.active');
     const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
     
-    // Filtra os dados conforme a aba ativa
     let dadosFiltrados = filteredData;
     if (tipo === 'escolas') {
       dadosFiltrados = filteredData.filter(d => d.agentes === 0);
@@ -332,9 +346,8 @@
       dadosFiltrados = filteredData.filter(d => d.agentes > 0);
     }
 
-    // ===== CONSTRÓI O SUBTÍTULO COM INFORMAÇÕES DOS FILTROS =====
     const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
-    const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Autarquias e Departamentos de Trânsito';
+    const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
     
     let filtrosAtivos = [];
     if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
@@ -354,17 +367,14 @@
     const marginRight = 12;
     const usableWidth = pageWidth - marginLeft - marginRight;
 
-    // ===== TÍTULO =====
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(title, pageWidth / 2, 12, { align: 'center' });
     
-    // ===== SUBTÍTULO =====
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
     
-    // ===== RESUMO DOS DADOS =====
     const totalAlunos = dadosFiltrados.reduce((sum, item) => sum + (item.alunos || 0), 0);
     const totalProfessores = dadosFiltrados.reduce((sum, item) => sum + (item.professores || 0), 0);
     const totalEscolas = dadosFiltrados.reduce((sum, item) => sum + (item.escolas || 0), 0);
@@ -381,12 +391,10 @@
     }
     doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
     
-    // ===== DATA DE GERAÇÃO =====
     doc.setFontSize(7);
     doc.setFont('helvetica', 'italic');
     doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
 
-    // ===== SE NÃO HOUVER DADOS =====
     if (dadosFiltrados.length === 0) {
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
@@ -396,7 +404,6 @@
       return;
     }
 
-    // ===== DEFINE CABEÇALHOS CONFORME A ABA =====
     let headers, tableData;
     if (tipo === 'escolas') {
       headers = ['Município', 'Data', 'Participantes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
@@ -473,17 +480,18 @@
         }
       });
     } else {
-      // AUTARQUIAS
-      headers = ['Município', 'Data', 'Participantes', 'Agentes', 'Situação', 'Próxima Etapa'];
+      // DEPARTAMENTOS/AUTARQUIAS
+      headers = ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
       tableData = dadosFiltrados.map(item => [
         item.municipio,
         item.data,
         item.participantes,
         formatNumber(item.agentes),
+        getTipoOrgao(item),
         item.situacao,
         item.proxima || '-'
       ]);
-      const colWeights = [1.8, 1.2, 2.4, 0.9, 1.6, 2.2];
+      const colWeights = [1.6, 1.0, 2.0, 0.9, 1.2, 1.4, 2.0];
       const totalWeight = colWeights.reduce((a, b) => a + b, 0);
       const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
       const adjustedWidths = colWidths.map(w => Math.max(w, 10));
@@ -524,7 +532,8 @@
           2: { halign: 'left', cellWidth: adjustedWidths[2] },
           3: { halign: 'right', cellWidth: adjustedWidths[3] },
           4: { halign: 'center', cellWidth: adjustedWidths[4] },
-          5: { halign: 'left', cellWidth: adjustedWidths[5] }
+          5: { halign: 'center', cellWidth: adjustedWidths[5] },
+          6: { halign: 'left', cellWidth: adjustedWidths[6] }
         },
         margin: { left: marginLeft, right: marginRight },
         tableWidth: 'auto',
@@ -545,7 +554,6 @@
       });
     }
 
-    // ===== NOME DO ARQUIVO COM INFORMAÇÕES DOS FILTROS =====
     let fileNameParts = ['conexao_dnit'];
     if (monthSelect.value !== 'Todos') fileNameParts.push(monthSelect.value.toLowerCase());
     fileNameParts.push(tipo);
@@ -657,14 +665,12 @@
     this.classList.toggle('active');
   });
 
-  // ===== BOTÃO DE EXPORTAR PDF =====
   document.getElementById('exportBtn').addEventListener('click', function() {
     const btn = this;
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PDF';
     btn.disabled = true;
     
-    // Carrega as bibliotecas se necessário
     if (typeof window.jspdf === 'undefined') {
       loadPDFLibraries();
       setTimeout(() => {
@@ -704,8 +710,6 @@
     render();
   });
 
-  // Carrega as bibliotecas de PDF ao iniciar
   loadPDFLibraries();
-
   render();
 })();
