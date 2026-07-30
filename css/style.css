@@ -1098,6 +1098,45 @@ tbody tr.selected {
   color: #e8edf5;
 }
 
+/* ===== BADGES PARA DEPARTAMENTOS E AUTARQUIAS ===== */
+.badge-autarquia {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 30px;
+  border: 1px solid #93c5fd;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.badge-departamento {
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 30px;
+  border: 1px solid #fcd34d;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .badge-autarquia {
+  background: #1e3a5f;
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+
+[data-theme="dark"] .badge-departamento {
+  background: #5f3a1e;
+  color: #fcd34d;
+  border-color: #f59e0b;
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
