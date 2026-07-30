@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>Conexão DNIT · Escolas & Autarquias</title>
+    <title>Conexão DNIT · Escolas & Departamentos/Autarquias</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,7 +22,7 @@
         <div class="logo-area">
           <div class="logo-icon"><i class="fas fa-road"></i></div>
           <div class="logo-text">
-            Conexão <span>DNIT</span><small>Escolas · Autarquias</small>
+            Conexão <span>DNIT</span><small>Escolas · Departamentos/Autarquias</small>
           </div>
         </div>
         <div class="header-controls">
@@ -33,6 +33,7 @@
               <option value="Maio">Maio 2026</option>
               <option value="Junho">Junho 2026</option>
               <option value="Julho">Julho 2026</option>
+              <option value="Agosto">Agosto 2026</option>
             </select>
           </div>
           <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
@@ -101,10 +102,11 @@
                 <i class="fas fa-school"></i> Escolas
               </button>
               <button class="tab-btn" data-tab="autarquias">
-                <i class="fas fa-building"></i> Autarquias
+                <i class="fas fa-building"></i> Departamentos/Autarquias de Trânsito
               </button>
             </div>
 
+            <!-- TAB: ESCOLAS -->
             <div id="tabEscolas" class="tab-content active">
               <div class="table-wrapper">
                 <table>
@@ -125,6 +127,7 @@
               </div>
             </div>
 
+            <!-- TAB: DEPARTAMENTOS/AUTARQUIAS -->
             <div id="tabAutarquias" class="tab-content">
               <div class="table-wrapper">
                 <table>
@@ -134,6 +137,7 @@
                       <th class="sortable active asc" data-sort="data">Data <i class="fas fa-sort"></i></th>
                       <th>Participantes</th>
                       <th class="sortable" data-sort="agentes">Agentes <i class="fas fa-sort"></i></th>
+                      <th>Tipo</th>
                       <th>Situação</th>
                       <th>Próxima Etapa</th>
                     </tr>
