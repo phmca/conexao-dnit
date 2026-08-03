@@ -23,7 +23,7 @@
     { municipio: 'Pacatuba', mes: 'Junho', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Pacoti', mes: 'Junho', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
 
-    // ===== JULHO (ATUALIZADO CONFORME PLANILHA) =====
+    // ===== JULHO =====
     { municipio: 'Caucaia', mes: 'Julho', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Pacajus', mes: 'Julho', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
     { municipio: 'Chorozinho', mes: 'Julho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
@@ -66,7 +66,6 @@
   const statusAnalise = document.getElementById('statusAnalise');
   const statusApresentacao = document.getElementById('statusApresentacao');
 
-  // ===== CARREGAR BIBLIOTECAS PARA PDF =====
   function loadPDFLibraries() {
     if (typeof window.jspdf === 'undefined') {
       const script = document.createElement('script');
@@ -323,7 +322,7 @@
   }
 
   // ============================================================
-  // EXPORTAÇÃO PARA PDF
+  // EXPORTAÇÃO PARA PDF - CORRIGIDA
   // ============================================================
   function exportToPDF() {
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
@@ -358,6 +357,42 @@
       dadosFiltrados = filteredData.filter(d => d.agentes > 0);
     }
 
+    // ===== CORREÇÃO: Conta MUNICÍPIOS ÚNICOS =====
+    const municipiosUnicos = new Set();
+    dadosFiltrados.forEach(d => municipiosUnicos.add(d.municipio));
+    const totalMunicipiosUnicos = municipiosUnicos.size;
+
+    // ===== CORREÇÃO: Agrupa por município para somar alunos/professores/escolas =====
+    let municipiosMap = new Map();
+    dadosFiltrados.forEach(d => {
+      const existing = municipiosMap.get(d.municipio);
+      if (!existing) {
+        municipiosMap.set(d.municipio, d);
+      } else {
+        const dataExistente = existing.data.split('/').reverse().join('-');
+        const dataNova = d.data.split('/').reverse().join('-');
+        if (dataNova > dataExistente) {
+          municipiosMap.set(d.municipio, d);
+        }
+      }
+    });
+
+    const municipiosUnicosDados = Array.from(municipiosMap.values());
+    
+    const totalAlunos = tipo === 'escolas' 
+      ? municipiosUnicosDados.reduce((sum, item) => sum + (item.alunos || 0), 0)
+      : dadosFiltrados.reduce((sum, item) => sum + (item.alunos || 0), 0);
+      
+    const totalProfessores = tipo === 'escolas'
+      ? municipiosUnicosDados.reduce((sum, item) => sum + (item.professores || 0), 0)
+      : dadosFiltrados.reduce((sum, item) => sum + (item.professores || 0), 0);
+      
+    const totalEscolas = tipo === 'escolas'
+      ? municipiosUnicosDados.reduce((sum, item) => sum + (item.escolas || 0), 0)
+      : dadosFiltrados.reduce((sum, item) => sum + (item.escolas || 0), 0);
+      
+    const totalAgentes = dadosFiltrados.reduce((sum, item) => sum + (item.agentes || 0), 0);
+
     const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
     const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
     
@@ -387,15 +422,10 @@
     doc.setFont('helvetica', 'bold');
     doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
     
-    const totalAlunos = dadosFiltrados.reduce((sum, item) => sum + (item.alunos || 0), 0);
-    const totalProfessores = dadosFiltrados.reduce((sum, item) => sum + (item.professores || 0), 0);
-    const totalEscolas = dadosFiltrados.reduce((sum, item) => sum + (item.escolas || 0), 0);
-    const totalAgentes = dadosFiltrados.reduce((sum, item) => sum + (item.agentes || 0), 0);
-    
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     
-    let summaryText = `Municípios: ${dadosFiltrados.length}`;
+    let summaryText = `Municípios: ${totalMunicipiosUnicos}`;
     if (tipo === 'escolas') {
       summaryText += `  |  Alunos: ${formatNumber(totalAlunos)}  |  Professores: ${formatNumber(totalProfessores)}  |  Escolas: ${formatNumber(totalEscolas)}`;
     } else {
@@ -416,6 +446,7 @@
       return;
     }
 
+    // ===== TABELA - usa dados filtrados (mostra todos os registros) =====
     let headers, tableData;
     if (tipo === 'escolas') {
       headers = ['Município', 'Data', 'Participantes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
