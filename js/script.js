@@ -38,7 +38,7 @@
 
     // ===== AGOSTO =====
     // ===== DEPARTAMENTO (Redenção) =====
-    { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades', tipo_orgao: 'Departamento' }
+    { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Tenente Henrique', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Departamento' }
   ];
 
   let currentData = [...rawData];
