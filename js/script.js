@@ -162,6 +162,7 @@ function render() {
   renderTableAutarquias(autarquias);
 
   // ===== CARDS DE RESUMO (Municípios ÚNICOS, Alunos, etc.) =====
+  // Usa os dados filtrados (com status)
   const apenasEscolas = filtered.filter(d => d.agentes === 0);
   const municipiosEscolas = new Map();
   apenasEscolas.forEach(d => {
@@ -198,8 +199,18 @@ function render() {
   mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
 
   // ===== CONTADORES DE STATUS: CONTAGEM DE REGISTROS (VISITAS) =====
-  // Usa os dados SEM filtro de status (apenas mês e busca)
-  const dataSemFiltroStatus = getDataSemFiltroStatus();
+  // Usa os dados SEM filtro de status (apenas mês e busca) - PARTINDO DO currentData ORIGINAL
+  let dataSemFiltro = [...currentData];
+  
+  const month = monthSelect.value;
+  if (month !== 'Todos') {
+    dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
+  }
+  
+  const search = searchInput.value.trim().toLowerCase();
+  if (search) {
+    dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
+  }
 
   // Conta quantas LINHAS/REGISTROS cada status tem
   const statusCounts = {
@@ -209,7 +220,7 @@ function render() {
     apresentacao: 0
   };
 
-  dataSemFiltroStatus.forEach(d => {
+  dataSemFiltro.forEach(d => {
     const situacao = d.situacao;
     if (situacao === 'Implantado') statusCounts.implantado++;
     else if (situacao === 'Convênio assinado') statusCounts.convenio++;
