@@ -148,75 +148,102 @@ const rawData = [
     return ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
   }
 
-  function render() {
-    const filtered = getFilteredData();
-    const sortKey = currentFilter.sort || 'data';
-    const order = currentFilter.order || 'asc';
-    const sorted = applySort([...filtered], sortKey, order);
+function render() {
+  const filtered = getFilteredData();
+  const sortKey = currentFilter.sort || 'data';
+  const order = currentFilter.order || 'asc';
+  const sorted = applySort([...filtered], sortKey, order);
 
-    const autarquias = sorted.filter(d => d.agentes > 0);
-    const escolas = sorted.filter(d => d.agentes === 0);
+  const autarquias = sorted.filter(d => d.agentes > 0);
+  const escolas = sorted.filter(d => d.agentes === 0);
 
-    renderTableEscolas(escolas);
-    renderTableAutarquias(autarquias);
+  renderTableEscolas(escolas);
+  renderTableAutarquias(autarquias);
 
-    const apenasEscolas = filtered.filter(d => d.agentes === 0);
-    
-    const municipiosEscolas = new Map();
-    apenasEscolas.forEach(d => {
-      const existing = municipiosEscolas.get(d.municipio);
-      if (!existing) {
-        municipiosEscolas.set(d.municipio, d);
-      } else {
-        const dataExistente = existing.data.split('/').reverse().join('-');
-        const dataNova = d.data.split('/').reverse().join('-');
-        if (dataNova > dataExistente) {
-          municipiosEscolas.set(d.municipio, d);
-        }
-      }
-    });
-
-    const todosMunicipios = new Map();
-    filtered.forEach(d => {
-      if (!todosMunicipios.has(d.municipio)) {
-        todosMunicipios.set(d.municipio, d);
-      }
-    });
-
-    const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
-    const totalMun = todosMunicipios.size;
-    const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-    const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-    const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
-
-    totalMunicipios.textContent = totalMun;
-    totalAlunos.textContent = totalAlu.toLocaleString();
-    totalProfessores.textContent = totalProf.toLocaleString();
-    totalEscolas.textContent = totalEsc.toLocaleString();
-    totalMunicipiosGeral.textContent = totalMun;
-    mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
-
-    const implantados = filtered.filter(d => d.situacao === 'Implantado').length;
-    const convenio = filtered.filter(d => d.situacao === 'Convênio assinado').length;
-    const analise = filtered.filter(d => d.situacao === 'Em análise jurídica').length;
-    const apresentacao = filtered.filter(d => d.situacao === 'Apresentação realizada').length;
-    statusImplantado.textContent = implantados;
-    statusConvenio.textContent = convenio;
-    statusAnalise.textContent = analise;
-    statusApresentacao.textContent = apresentacao;
-
-    if (selectedMunicipio) {
-      const found = filtered.find(d => d.municipio === selectedMunicipio);
-      if (found) renderDetail(found);
-      else { selectedMunicipio = null; renderEmptyDetail(); }
+  // --- Atualização dos totais (municípios, alunos, etc.) ---
+  const apenasEscolas = filtered.filter(d => d.agentes === 0);
+  const municipiosEscolas = new Map();
+  apenasEscolas.forEach(d => {
+    const existing = municipiosEscolas.get(d.municipio);
+    if (!existing) {
+      municipiosEscolas.set(d.municipio, d);
     } else {
-      renderEmptyDetail();
+      const dataExistente = existing.data.split('/').reverse().join('-');
+      const dataNova = d.data.split('/').reverse().join('-');
+      if (dataNova > dataExistente) {
+        municipiosEscolas.set(d.municipio, d);
+      }
     }
+  });
 
-    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-    atualizarIndicadoresOrdenacao();
+  const todosMunicipios = new Map();
+  filtered.forEach(d => {
+    if (!todosMunicipios.has(d.municipio)) {
+      todosMunicipios.set(d.municipio, d);
+    }
+  });
+
+  const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
+  const totalMun = todosMunicipios.size;
+  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+
+  totalMunicipios.textContent = totalMun;
+  totalAlunos.textContent = totalAlu.toLocaleString();
+  totalProfessores.textContent = totalProf.toLocaleString();
+  totalEscolas.textContent = totalEsc.toLocaleString();
+  totalMunicipiosGeral.textContent = totalMun;
+  mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
+
+  // ===== NOVA LÓGICA PARA OS CONTADORES DE STATUS =====
+  const statusKeys = {
+    'Implantado': 'implantado',
+    'Convênio assinado': 'convenio',
+    'Em análise jurídica': 'analise',
+    'Apresentação realizada': 'apresentacao'
+  };
+
+  // Inicializa todos os contadores com 0
+  const statusCounts = { implantado: 0, convenio: 0, analise: 0, apresentacao: 0 };
+
+  if (currentStatusFilter) {
+    // Se há um filtro de status ativo, apenas o status selecionado terá contagem
+    const key = statusKeys[currentStatusFilter];
+    if (key) {
+      // Conta municípios únicos dentro do filtro
+      const uniqueMunicipios = new Set(filtered.map(d => d.municipio));
+      statusCounts[key] = uniqueMunicipios.size;
+    }
+  } else {
+    // Sem filtro de status: conta municípios únicos para cada status
+    Object.keys(statusKeys).forEach(status => {
+      const key = statusKeys[status];
+      const items = filtered.filter(d => d.situacao === status);
+      const unique = new Set(items.map(d => d.municipio));
+      statusCounts[key] = unique.size;
+    });
   }
 
+  // Atualiza os elementos HTML
+  statusImplantado.textContent = statusCounts.implantado;
+  statusConvenio.textContent = statusCounts.convenio;
+  statusAnalise.textContent = statusCounts.analise;
+  statusApresentacao.textContent = statusCounts.apresentacao;
+
+  // --- Detalhe do município selecionado ---
+  if (selectedMunicipio) {
+    const found = filtered.find(d => d.municipio === selectedMunicipio);
+    if (found) renderDetail(found);
+    else { selectedMunicipio = null; renderEmptyDetail(); }
+  } else {
+    renderEmptyDetail();
+  }
+
+  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+  atualizarIndicadoresOrdenacao();
+}
+  
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
       th.classList.remove('asc', 'desc');
