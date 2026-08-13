@@ -149,6 +149,7 @@ const rawData = [
   }
 
 function render() {
+  // ===== DADOS COM FILTROS (mês, busca, status) =====
   const filtered = getFilteredData();
   const sortKey = currentFilter.sort || 'data';
   const order = currentFilter.order || 'asc';
@@ -160,7 +161,8 @@ function render() {
   renderTableEscolas(escolas);
   renderTableAutarquias(autarquias);
 
-  // --- Atualização dos totais (municípios, alunos, etc.) ---
+  // ===== PARA OS CARDS DE RESUMO (Municípios, Alunos, etc.) =====
+  // Usa os dados filtrados (com status)
   const apenasEscolas = filtered.filter(d => d.agentes === 0);
   const municipiosEscolas = new Map();
   apenasEscolas.forEach(d => {
@@ -196,7 +198,19 @@ function render() {
   totalMunicipiosGeral.textContent = totalMun;
   mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
 
-  // ===== NOVA LÓGICA PARA OS CONTADORES DE STATUS =====
+  // ===== CONTADORES DE STATUS: SEMPRE USAM OS DADOS SEM FILTRO DE STATUS =====
+  // Obtém os dados sem o filtro de status (apenas mês e busca)
+  let dataSemFiltroStatus = [...currentData];
+  const month = monthSelect.value;
+  if (month !== 'Todos') {
+    dataSemFiltroStatus = dataSemFiltroStatus.filter(d => d.mes === month);
+  }
+  const search = searchInput.value.trim().toLowerCase();
+  if (search) {
+    dataSemFiltroStatus = dataSemFiltroStatus.filter(d => d.municipio.toLowerCase().includes(search));
+  }
+
+  // Conta municípios únicos para cada status (sem filtro de status)
   const statusKeys = {
     'Implantado': 'implantado',
     'Convênio assinado': 'convenio',
@@ -204,34 +218,22 @@ function render() {
     'Apresentação realizada': 'apresentacao'
   };
 
-  // Inicializa todos os contadores com 0
   const statusCounts = { implantado: 0, convenio: 0, analise: 0, apresentacao: 0 };
 
-  if (currentStatusFilter) {
-    // Se há um filtro de status ativo, apenas o status selecionado terá contagem
-    const key = statusKeys[currentStatusFilter];
-    if (key) {
-      // Conta municípios únicos dentro do filtro
-      const uniqueMunicipios = new Set(filtered.map(d => d.municipio));
-      statusCounts[key] = uniqueMunicipios.size;
-    }
-  } else {
-    // Sem filtro de status: conta municípios únicos para cada status
-    Object.keys(statusKeys).forEach(status => {
-      const key = statusKeys[status];
-      const items = filtered.filter(d => d.situacao === status);
-      const unique = new Set(items.map(d => d.municipio));
-      statusCounts[key] = unique.size;
-    });
-  }
+  Object.keys(statusKeys).forEach(status => {
+    const key = statusKeys[status];
+    const items = dataSemFiltroStatus.filter(d => d.situacao === status);
+    const unique = new Set(items.map(d => d.municipio));
+    statusCounts[key] = unique.size;
+  });
 
-  // Atualiza os elementos HTML
+  // Atualiza os elementos HTML dos status (sempre absolutos)
   statusImplantado.textContent = statusCounts.implantado;
   statusConvenio.textContent = statusCounts.convenio;
   statusAnalise.textContent = statusCounts.analise;
   statusApresentacao.textContent = statusCounts.apresentacao;
 
-  // --- Detalhe do município selecionado ---
+  // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
   if (selectedMunicipio) {
     const found = filtered.find(d => d.municipio === selectedMunicipio);
     if (found) renderDetail(found);
