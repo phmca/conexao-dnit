@@ -48,8 +48,8 @@ const rawData = [
   { municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
   { municipio: 'Caucaia', mes: 'Agosto', data: '13/08/2026', participantes: 'Agentes de Trânsito de Caucaia 1', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 { municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'Agentes de Trânsito de Caucaia 2', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '18/08/2026', participantes: 'Agentes de Trânsito de Caucaia 3', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
- { municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'Agentes de Trânsito de Caucaia 4', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+{ municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'Agentes de Trânsito de Caucaia 3', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+ { municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'Agentes de Trânsito de Caucaia 4', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 ];
 
   let currentData = [...rawData];
