@@ -161,8 +161,7 @@ function render() {
   renderTableEscolas(escolas);
   renderTableAutarquias(autarquias);
 
-  // ===== PARA OS CARDS DE RESUMO (Municípios, Alunos, etc.) =====
-  // Usa os dados filtrados (com status)
+  // ===== CARDS DE RESUMO (Municípios ÚNICOS, Alunos, etc.) =====
   const apenasEscolas = filtered.filter(d => d.agentes === 0);
   const municipiosEscolas = new Map();
   apenasEscolas.forEach(d => {
@@ -198,36 +197,27 @@ function render() {
   totalMunicipiosGeral.textContent = totalMun;
   mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
 
-  // ===== CONTADORES DE STATUS: SEMPRE USAM OS DADOS SEM FILTRO DE STATUS =====
-  // Obtém os dados sem o filtro de status (apenas mês e busca)
-  let dataSemFiltroStatus = [...currentData];
-  const month = monthSelect.value;
-  if (month !== 'Todos') {
-    dataSemFiltroStatus = dataSemFiltroStatus.filter(d => d.mes === month);
-  }
-  const search = searchInput.value.trim().toLowerCase();
-  if (search) {
-    dataSemFiltroStatus = dataSemFiltroStatus.filter(d => d.municipio.toLowerCase().includes(search));
-  }
+  // ===== CONTADORES DE STATUS: CONTAGEM DE REGISTROS (VISITAS) =====
+  // Usa os dados SEM filtro de status (apenas mês e busca)
+  const dataSemFiltroStatus = getDataSemFiltroStatus();
 
-  // Conta municípios únicos para cada status (sem filtro de status)
-  const statusKeys = {
-    'Implantado': 'implantado',
-    'Convênio assinado': 'convenio',
-    'Em análise jurídica': 'analise',
-    'Apresentação realizada': 'apresentacao'
+  // Conta quantas LINHAS/REGISTROS cada status tem
+  const statusCounts = {
+    implantado: 0,
+    convenio: 0,
+    analise: 0,
+    apresentacao: 0
   };
 
-  const statusCounts = { implantado: 0, convenio: 0, analise: 0, apresentacao: 0 };
-
-  Object.keys(statusKeys).forEach(status => {
-    const key = statusKeys[status];
-    const items = dataSemFiltroStatus.filter(d => d.situacao === status);
-    const unique = new Set(items.map(d => d.municipio));
-    statusCounts[key] = unique.size;
+  dataSemFiltroStatus.forEach(d => {
+    const situacao = d.situacao;
+    if (situacao === 'Implantado') statusCounts.implantado++;
+    else if (situacao === 'Convênio assinado') statusCounts.convenio++;
+    else if (situacao === 'Em análise jurídica') statusCounts.analise++;
+    else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
   });
 
-  // Atualiza os elementos HTML dos status (sempre absolutos)
+  // Atualiza os elementos HTML
   statusImplantado.textContent = statusCounts.implantado;
   statusConvenio.textContent = statusCounts.convenio;
   statusAnalise.textContent = statusCounts.analise;
