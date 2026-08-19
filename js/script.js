@@ -141,13 +141,16 @@ const rawData = [
     return 'Autarquia';
   }
 
-  function getBadgeOrgao(item) {
-    const tipo = getTipoOrgao(item);
-    if (tipo === 'Departamento') {
-      return `<span class="badge-departamento"><i class="fas fa-building"></i> Departamento</span>`;
-    }
-    return `<span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span>`;
+ function getBadgeOrgao(item) {
+  const tipo = getTipoOrgao(item);
+  if (tipo === 'Departamento') {
+    return `<span class="badge-departamento"><i class="fas fa-building"></i> Departamento</span>`;
   }
+  if (tipo === 'Secretaria') {
+    return `<span class="badge-secretaria"><i class="fas fa-university"></i> Secretaria</span>`;
+  }
+  return `<span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span>`;
+}
 
   function getLabels(tabType) {
     if (tabType === 'escolas') {
