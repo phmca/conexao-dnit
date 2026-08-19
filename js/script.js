@@ -41,16 +41,17 @@ const rawData = [
   { municipio: 'Redenção', mes: 'Julho', data: '30/07/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
   { municipio: 'Caucaia', mes: 'Julho', data: '31/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
 
-  // ===== AGOSTO =====
-  { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades', tipo_orgao: 'Departamento' },
-  { municipio: 'Fortaleza', mes: 'Agosto', data: '07/08/2026', participantes: 'Cristina Costa', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-  { municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-  { municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Caucaia', mes: 'Agosto', data: '13/08/2026', participantes: 'Agentes de Trânsito de Caucaia 1', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'Agentes de Trânsito de Caucaia 2', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'Agentes de Trânsito de Caucaia 3', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
- { municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'Agentes de Trânsito de Caucaia 4', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-];
+ // ===== AGOSTO =====
+{ municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Departamento de Trânsito de Redenção', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando início das atividades', tipo_orgao: 'Departamento' },
+{ municipio: 'Fortaleza', mes: 'Agosto', data: '07/08/2026', participantes: 'Cristina Costa', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+{ municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+{ municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+{ municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Ribamar Ferreira Junior', agentes: 0, alunos: 9223, professores: 607, escolas: 65, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+{ municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Secretaria de Trânsito de Cascavel', agentes: 38, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Secretaria' },
+{ municipio: 'Caucaia', mes: 'Agosto', data: '13/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+{ municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+{ municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+{ municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando retorno', tipo_orgao: 'Autarquia' }
 
   let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
