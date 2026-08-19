@@ -1099,6 +1099,7 @@ tbody tr.selected {
 }
 
 /* ===== BADGES PARA DEPARTAMENTOS E AUTARQUIAS ===== */
+/* ===== BADGE AUTARQUIA ===== */
 .badge-autarquia {
   display: inline-block;
   background: #dbeafe;
@@ -1112,6 +1113,13 @@ tbody tr.selected {
   white-space: nowrap;
 }
 
+[data-theme="dark"] .badge-autarquia {
+  background: #1e3a5f;
+  color: #93c5fd;
+  border-color: #3b82f6;
+}
+
+/* ===== BADGE DEPARTAMENTO ===== */
 .badge-departamento {
   display: inline-block;
   background: #fef3c7;
@@ -1125,16 +1133,30 @@ tbody tr.selected {
   white-space: nowrap;
 }
 
-[data-theme="dark"] .badge-autarquia {
-  background: #1e3a5f;
-  color: #93c5fd;
-  border-color: #3b82f6;
-}
-
 [data-theme="dark"] .badge-departamento {
   background: #5f3a1e;
   color: #fcd34d;
   border-color: #f59e0b;
+}
+
+/* ===== BADGE SECRETARIA ===== */
+.badge-secretaria {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 30px;
+  border: 1px solid #7dd3fc;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .badge-secretaria {
+  background: #0c4a6e;
+  color: #7dd3fc;
+  border-color: #38bdf8;
 }
 
 @keyframes fadeInUp {
