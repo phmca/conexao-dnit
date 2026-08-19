@@ -52,7 +52,7 @@ const rawData = [
 { municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 { municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 { municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando retorno', tipo_orgao: 'Autarquia' }
-
+];
   let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
