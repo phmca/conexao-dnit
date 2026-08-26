@@ -52,7 +52,10 @@ const rawData = [
 { municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 { municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
 { municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-  { municipio: 'Pacoti', mes: 'Agosto', data: '25/08/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' }
+  { municipio: 'Pacoti', mes: 'Agosto', data: '25/08/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+  { municipio: 'Acarape', mes: 'Agosto', data: '26/08/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+{ municipio: 'Aracoiaba', mes: 'Agosto', data: '26/08/2026', participantes: 'Prof. Naiara', agentes: 0, alunos: 4320, professores: 355, escolas: 25, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+{ municipio: 'Itapiúna', mes: 'Agosto', data: '26/08/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 ];
   let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
