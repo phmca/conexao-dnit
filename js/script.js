@@ -59,7 +59,7 @@ const rawData = [
 { municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 { municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' }
 ];
-  let currentData = [...rawData];
+ let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
   let currentTab = 'escolas';
@@ -76,6 +76,7 @@ const rawData = [
   const detailContent = document.getElementById('detailContent');
   const filterPanel = document.getElementById('filterPanel');
   const searchInput = document.getElementById('searchInput');
+  const searchSelect = document.getElementById('searchSelect');
   const monthSelect = document.getElementById('monthSelect');
   const themeToggle = document.getElementById('themeToggle');
 
@@ -84,6 +85,20 @@ const rawData = [
   const statusAnalise = document.getElementById('statusAnalise');
   const statusApresentacao = document.getElementById('statusApresentacao');
 
+  // ===== POPULAR DROPDOWN DE MUNICÍPIOS =====
+  function populateSearchSelect() {
+    if (!searchSelect) return;
+    const municipios = [...new Set(currentData.map(d => d.municipio))].sort();
+    searchSelect.innerHTML = '<option value="">Todos os municípios</option>';
+    municipios.forEach(m => {
+      const option = document.createElement('option');
+      option.value = m;
+      option.textContent = m;
+      searchSelect.appendChild(option);
+    });
+  }
+
+  // ===== CARREGAR BIBLIOTECAS PARA PDF =====
   function loadPDFLibraries() {
     if (typeof window.jspdf === 'undefined') {
       const script = document.createElement('script');
@@ -106,6 +121,10 @@ const rawData = [
     const search = searchInput.value.trim().toLowerCase();
     if (search) {
       filtered = filtered.filter(d => d.municipio.toLowerCase().includes(search));
+    }
+    // Filtro pelo dropdown de municípios
+    if (searchSelect && searchSelect.value) {
+      filtered = filtered.filter(d => d.municipio === searchSelect.value);
     }
     if (currentStatusFilter) {
       filtered = filtered.filter(d => d.situacao === currentStatusFilter);
@@ -147,16 +166,16 @@ const rawData = [
     return 'Autarquia';
   }
 
- function getBadgeOrgao(item) {
-  const tipo = getTipoOrgao(item);
-  if (tipo === 'Departamento') {
-    return `<span class="badge-departamento"><i class="fas fa-building"></i> Departamento</span>`;
+  function getBadgeOrgao(item) {
+    const tipo = getTipoOrgao(item);
+    if (tipo === 'Departamento') {
+      return `<span class="badge-departamento"><i class="fas fa-building"></i> Departamento</span>`;
+    }
+    if (tipo === 'Secretaria') {
+      return `<span class="badge-secretaria"><i class="fas fa-university"></i> Secretaria</span>`;
+    }
+    return `<span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span>`;
   }
-  if (tipo === 'Secretaria') {
-    return `<span class="badge-secretaria"><i class="fas fa-university"></i> Secretaria</span>`;
-  }
-  return `<span class="badge-autarquia"><i class="fas fa-building"></i> Autarquia</span>`;
-}
 
   function getLabels(tabType) {
     if (tabType === 'escolas') {
@@ -165,105 +184,99 @@ const rawData = [
     return ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
   }
 
-function render() {
-  // ===== DADOS COM FILTROS (mês, busca, status) =====
-  const filtered = getFilteredData();
-  const sortKey = currentFilter.sort || 'data';
-  const order = currentFilter.order || 'asc';
-  const sorted = applySort([...filtered], sortKey, order);
+  function render() {
+    const filtered = getFilteredData();
+    const sortKey = currentFilter.sort || 'data';
+    const order = currentFilter.order || 'asc';
+    const sorted = applySort([...filtered], sortKey, order);
 
-  const autarquias = sorted.filter(d => d.agentes > 0);
-  const escolas = sorted.filter(d => d.agentes === 0);
+    const autarquias = sorted.filter(d => d.agentes > 0);
+    const escolas = sorted.filter(d => d.agentes === 0);
 
-  renderTableEscolas(escolas);
-  renderTableAutarquias(autarquias);
+    renderTableEscolas(escolas);
+    renderTableAutarquias(autarquias);
 
-  // ===== CARDS DE RESUMO (Municípios ÚNICOS, Alunos, etc.) =====
-  // Usa os dados filtrados (com status)
-  const apenasEscolas = filtered.filter(d => d.agentes === 0);
-  const municipiosEscolas = new Map();
-  apenasEscolas.forEach(d => {
-    const existing = municipiosEscolas.get(d.municipio);
-    if (!existing) {
-      municipiosEscolas.set(d.municipio, d);
-    } else {
-      const dataExistente = existing.data.split('/').reverse().join('-');
-      const dataNova = d.data.split('/').reverse().join('-');
-      if (dataNova > dataExistente) {
+    const apenasEscolas = filtered.filter(d => d.agentes === 0);
+    
+    const municipiosEscolas = new Map();
+    apenasEscolas.forEach(d => {
+      const existing = municipiosEscolas.get(d.municipio);
+      if (!existing) {
         municipiosEscolas.set(d.municipio, d);
+      } else {
+        const dataExistente = existing.data.split('/').reverse().join('-');
+        const dataNova = d.data.split('/').reverse().join('-');
+        if (dataNova > dataExistente) {
+          municipiosEscolas.set(d.municipio, d);
+        }
       }
+    });
+
+    const todosMunicipios = new Map();
+    filtered.forEach(d => {
+      if (!todosMunicipios.has(d.municipio)) {
+        todosMunicipios.set(d.municipio, d);
+      }
+    });
+
+    const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
+    const totalMun = todosMunicipios.size;
+    const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+    const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+    const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+
+    totalMunicipios.textContent = totalMun;
+    totalAlunos.textContent = totalAlu.toLocaleString();
+    totalProfessores.textContent = totalProf.toLocaleString();
+    totalEscolas.textContent = totalEsc.toLocaleString();
+    totalMunicipiosGeral.textContent = totalMun;
+    mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
+
+    let dataSemFiltro = [...currentData];
+    const month = monthSelect.value;
+    if (month !== 'Todos') {
+      dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
     }
-  });
-
-  const todosMunicipios = new Map();
-  filtered.forEach(d => {
-    if (!todosMunicipios.has(d.municipio)) {
-      todosMunicipios.set(d.municipio, d);
+    const search = searchInput.value.trim().toLowerCase();
+    if (search) {
+      dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
     }
-  });
+    if (searchSelect && searchSelect.value) {
+      dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
+    }
 
-  const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
-  const totalMun = todosMunicipios.size;
-  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+    const statusCounts = {
+      implantado: 0,
+      convenio: 0,
+      analise: 0,
+      apresentacao: 0
+    };
 
-  totalMunicipios.textContent = totalMun;
-  totalAlunos.textContent = totalAlu.toLocaleString();
-  totalProfessores.textContent = totalProf.toLocaleString();
-  totalEscolas.textContent = totalEsc.toLocaleString();
-  totalMunicipiosGeral.textContent = totalMun;
-  mediaAlunos.textContent = totalMun ? (totalAlu / totalMun).toFixed(0) : 0;
+    dataSemFiltro.forEach(d => {
+      const situacao = d.situacao;
+      if (situacao === 'Implantado') statusCounts.implantado++;
+      else if (situacao === 'Convênio assinado') statusCounts.convenio++;
+      else if (situacao === 'Em análise jurídica') statusCounts.analise++;
+      else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
+    });
 
-  // ===== CONTADORES DE STATUS: CONTAGEM DE REGISTROS (VISITAS) =====
-  // Usa os dados SEM filtro de status (apenas mês e busca) - PARTINDO DO currentData ORIGINAL
-  let dataSemFiltro = [...currentData];
-  
-  const month = monthSelect.value;
-  if (month !== 'Todos') {
-    dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
-  }
-  
-  const search = searchInput.value.trim().toLowerCase();
-  if (search) {
-    dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
-  }
+    statusImplantado.textContent = statusCounts.implantado;
+    statusConvenio.textContent = statusCounts.convenio;
+    statusAnalise.textContent = statusCounts.analise;
+    statusApresentacao.textContent = statusCounts.apresentacao;
 
-  // Conta quantas LINHAS/REGISTROS cada status tem
-  const statusCounts = {
-    implantado: 0,
-    convenio: 0,
-    analise: 0,
-    apresentacao: 0
-  };
+    if (selectedMunicipio) {
+      const found = filtered.find(d => d.municipio === selectedMunicipio);
+      if (found) renderDetail(found);
+      else { selectedMunicipio = null; renderEmptyDetail(); }
+    } else {
+      renderEmptyDetail();
+    }
 
-  dataSemFiltro.forEach(d => {
-    const situacao = d.situacao;
-    if (situacao === 'Implantado') statusCounts.implantado++;
-    else if (situacao === 'Convênio assinado') statusCounts.convenio++;
-    else if (situacao === 'Em análise jurídica') statusCounts.analise++;
-    else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
-  });
-
-  // Atualiza os elementos HTML
-  statusImplantado.textContent = statusCounts.implantado;
-  statusConvenio.textContent = statusCounts.convenio;
-  statusAnalise.textContent = statusCounts.analise;
-  statusApresentacao.textContent = statusCounts.apresentacao;
-
-  // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
-  if (selectedMunicipio) {
-    const found = filtered.find(d => d.municipio === selectedMunicipio);
-    if (found) renderDetail(found);
-    else { selectedMunicipio = null; renderEmptyDetail(); }
-  } else {
-    renderEmptyDetail();
+    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+    atualizarIndicadoresOrdenacao();
   }
 
-  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-  atualizarIndicadoresOrdenacao();
-}
-  
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
       th.classList.remove('asc', 'desc');
@@ -303,6 +316,7 @@ function render() {
     tbodyEscolas.querySelectorAll('.clickable-row').forEach(row => {
       row.addEventListener('click', function() {
         selectedMunicipio = this.dataset.municipio;
+        if (searchSelect) searchSelect.value = this.dataset.municipio;
         render();
       });
     });
@@ -337,6 +351,7 @@ function render() {
     tbodyAutarquias.querySelectorAll('.clickable-row').forEach(row => {
       row.addEventListener('click', function() {
         selectedMunicipio = this.dataset.municipio;
+        if (searchSelect) searchSelect.value = this.dataset.municipio;
         render();
       });
     });
@@ -373,7 +388,7 @@ function render() {
   }
 
   // ============================================================
-  // EXPORTAÇÃO PARA PDF - CORRIGIDA
+  // EXPORTAÇÃO PARA PDF
   // ============================================================
   function exportToPDF() {
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
@@ -408,12 +423,10 @@ function render() {
       dadosFiltrados = filteredData.filter(d => d.agentes > 0);
     }
 
-    // ===== CORREÇÃO: Conta MUNICÍPIOS ÚNICOS =====
     const municipiosUnicos = new Set();
     dadosFiltrados.forEach(d => municipiosUnicos.add(d.municipio));
     const totalMunicipiosUnicos = municipiosUnicos.size;
 
-    // ===== CORREÇÃO: Agrupa por município para somar alunos/professores/escolas =====
     let municipiosMap = new Map();
     dadosFiltrados.forEach(d => {
       const existing = municipiosMap.get(d.municipio);
@@ -450,6 +463,7 @@ function render() {
     let filtrosAtivos = [];
     if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
     if (searchInput.value.trim()) filtrosAtivos.push(`Busca: "${searchInput.value.trim()}"`);
+    if (searchSelect && searchSelect.value) filtrosAtivos.push(`Município: ${searchSelect.value}`);
     if (currentStatusFilter) filtrosAtivos.push(`Status: ${currentStatusFilter}`);
     
     let subtitle = `${tabDisplay} - ${monthDisplay}`;
@@ -497,7 +511,6 @@ function render() {
       return;
     }
 
-    // ===== TABELA - usa dados filtrados (mostra todos os registros) =====
     let headers, tableData;
     if (tipo === 'escolas') {
       headers = ['Município', 'Data', 'Participantes', 'Alunos', 'Professores', 'Escolas', 'Situação', 'Próxima Etapa'];
@@ -653,6 +666,9 @@ function render() {
     if (searchInput.value.trim()) {
       fileNameParts.push('busca_' + searchInput.value.trim().replace(/\s+/g, '_'));
     }
+    if (searchSelect && searchSelect.value) {
+      fileNameParts.push('municipio_' + searchSelect.value.replace(/\s+/g, '_'));
+    }
     if (currentStatusFilter) {
       fileNameParts.push('status_' + currentStatusFilter.replace(/\s+/g, '_'));
     }
@@ -721,8 +737,30 @@ function render() {
     });
   });
 
-  searchInput.addEventListener('input', render);
-  monthSelect.addEventListener('change', render);
+  // ===== EVENTO DO DROPDOWN DE MUNICÍPIOS =====
+  if (searchSelect) {
+    searchSelect.addEventListener('change', function() {
+      if (this.value) {
+        selectedMunicipio = this.value;
+        searchInput.value = '';
+      } else {
+        selectedMunicipio = null;
+      }
+      render();
+    });
+  }
+
+  searchInput.addEventListener('input', function() {
+    if (searchSelect) searchSelect.value = '';
+    render();
+  });
+
+  monthSelect.addEventListener('change', function() {
+    if (searchSelect) searchSelect.value = '';
+    searchInput.value = '';
+    selectedMunicipio = null;
+    render();
+  });
 
   document.querySelectorAll('.status-item.clickable').forEach(item => {
     item.addEventListener('click', function() {
@@ -794,6 +832,8 @@ function render() {
     currentData = [...rawData];
     selectedMunicipio = null;
     currentStatusFilter = null;
+    if (searchSelect) searchSelect.value = '';
+    searchInput.value = '';
     document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
     render();
     setTimeout(() => this.classList.remove('spinning'), 800);
@@ -803,6 +843,10 @@ function render() {
     render();
   });
 
+  // ===== POPULA O DROPDOWN E INICIA =====
+  populateSearchSelect();
   loadPDFLibraries();
+  render();
+})();
   render();
 })();
