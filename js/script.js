@@ -59,6 +59,8 @@ const rawData = [
 { municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 { municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' }
 ];
+
+  
  let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
