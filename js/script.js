@@ -850,5 +850,3 @@ const rawData = [
   loadPDFLibraries();
   render();
 })();
-  render();
-})();
