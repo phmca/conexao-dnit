@@ -57,9 +57,15 @@ const rawData = [
 { municipio: 'Itapiúna', mes: 'Agosto', data: '26/08/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 { municipio: 'Horizonte', mes: 'Agosto', data: '27/08/2026', participantes: 'Professor Romulo', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 { municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' }
-];
+{ municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 
+  // ===== SETEMBRO =====
+  { municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Danielle Taumaturgo (SEDUC)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
+  { municipio: 'Fortaleza', mes: 'Setembro', data: '04/09/2026', participantes: 'DETRAN-CE', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação', tipo_orgao: 'Departamento'},
+  { municipio: 'Horizonte', mes: 'Setembro', data: '10/09/2026', participantes: 'Secretária Gezenira Rodrigues', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação'},
+  { municipio: 'Itapiúna', mes: 'Setembro', data: '11/09/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Implantado', proxima: 'Acompanhamento da implantação'}
+ 
+];
   
  let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
@@ -185,34 +191,36 @@ const rawData = [
     }
     return ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
   }
+function render() {
+  const filtered = getFilteredData();
+  const sortKey = currentFilter.sort || 'data';
+  const order = currentFilter.order || 'asc';
+  const sorted = applySort([...filtered], sortKey, order);
 
-  function render() {
-    const filtered = getFilteredData();
-    const sortKey = currentFilter.sort || 'data';
-    const order = currentFilter.order || 'asc';
-    const sorted = applySort([...filtered], sortKey, order);
+  const autarquias = sorted.filter(d => d.tipo_orgao);
+  const escolas = sorted.filter(d => !d.tipo_orgao);
 
-    const autarquias = sorted.filter(d => d.agentes > 0);
-    const escolas = sorted.filter(d => d.agentes === 0);
+  renderTableEscolas(escolas);
+  renderTableAutarquias(autarquias);
 
-    renderTableEscolas(escolas);
-    renderTableAutarquias(autarquias);
 
-    const apenasEscolas = filtered.filter(d => d.agentes === 0);
-    
-    const municipiosEscolas = new Map();
-    apenasEscolas.forEach(d => {
-      const existing = municipiosEscolas.get(d.municipio);
-      if (!existing) {
-        municipiosEscolas.set(d.municipio, d);
-      } else {
-        const dataExistente = existing.data.split('/').reverse().join('-');
-        const dataNova = d.data.split('/').reverse().join('-');
-        if (dataNova > dataExistente) {
-          municipiosEscolas.set(d.municipio, d);
-        }
-      }
-    });
+
+const municipiosComDadosEscolares = new Map();
+filtered.forEach(d => {
+  const temDadosEscolares = (d.alunos > 0) || (d.professores > 0) || (d.escolas > 0);
+  if (!temDadosEscolares) return;
+  
+  const existing = municipiosComDadosEscolares.get(d.municipio);
+  if (!existing) {
+    municipiosComDadosEscolares.set(d.municipio, d);
+  } else {
+    const dataExistente = existing.data.split('/').reverse().join('-');
+    const dataNova = d.data.split('/').reverse().join('-');
+    if (dataNova > dataExistente) {
+      municipiosComDadosEscolares.set(d.municipio, d);
+    }
+  }
+});
 
     const todosMunicipios = new Map();
     filtered.forEach(d => {
@@ -221,11 +229,11 @@ const rawData = [
       }
     });
 
-    const municipiosUnicosEscolas = Array.from(municipiosEscolas.values());
-    const totalMun = todosMunicipios.size;
-    const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-    const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-    const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+   const municipiosUnicosEscolas = Array.from(municipiosComDadosEscolares.values());
+const totalMun = todosMunicipios.size;
+const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
 
     totalMunicipios.textContent = totalMun;
     totalAlunos.textContent = totalAlu.toLocaleString();
@@ -360,25 +368,25 @@ const rawData = [
   }
 
   function renderDetail(d) {
-    if (!d) return renderEmptyDetail();
-    const statusClass = getStatusClass(d.situacao);
-    const tipoOrgao = d.agentes > 0 ? getTipoOrgao(d) : 'Escola';
-    detailContent.innerHTML = `
-      <div class="detail-item">
-        <div class="detail-municipio">${d.municipio}</div>
-        <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${d.mes}</span></div>
-        <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${d.data}</span></div>
-        <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${d.participantes}</span></div>
-        <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${d.agentes}</span></div>
-        ${d.agentes > 0 ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
-        <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${d.alunos.toLocaleString()}</span></div>
-        <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${d.professores.toLocaleString()}</span></div>
-        <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${d.escolas}</span></div>
-        <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${d.situacao}</span></span></div>
-        <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${d.proxima || '-'}</span></div>
-      </div>
-    `;
-  }
+  if (!d) return renderEmptyDetail();
+  const statusClass = getStatusClass(d.situacao);
+  const tipoOrgao = d.tipo_orgao ? getTipoOrgao(d) : 'Escola';
+  detailContent.innerHTML = `
+    <div class="detail-item">
+      <div class="detail-municipio">${d.municipio}</div>
+      <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${d.mes}</span></div>
+      <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${d.data}</span></div>
+      <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${d.participantes}</span></div>
+      <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${d.agentes}</span></div>
+      ${d.tipo_orgao ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
+      <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${d.alunos.toLocaleString()}</span></div>
+      <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${d.professores.toLocaleString()}</span></div>
+      <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${d.escolas}</span></div>
+      <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${d.situacao}</span></span></div>
+      <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${d.proxima || '-'}</span></div>
+    </div>
+  `;
+}
 
   function renderEmptyDetail() {
     detailContent.innerHTML = `
@@ -408,23 +416,24 @@ const rawData = [
     generatePDF();
   }
 
-  function generatePDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('landscape', 'mm', 'a4');
-    
-    let filteredData = getFilteredData();
-    filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
+ function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('landscape', 'mm', 'a4');
+  
+  let filteredData = getFilteredData();
+  filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
 
-    const tabAtiva = document.querySelector('.tab-btn.active');
-    const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
-    
-    let dadosFiltrados = filteredData;
-    if (tipo === 'escolas') {
-      dadosFiltrados = filteredData.filter(d => d.agentes === 0);
-    } else {
-      dadosFiltrados = filteredData.filter(d => d.agentes > 0);
-    }
+  const tabAtiva = document.querySelector('.tab-btn.active');
+  const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
+  
+  let dadosFiltrados = filteredData;
+  if (tipo === 'escolas') {
+    dadosFiltrados = filteredData.filter(d => !d.tipo_orgao);
+  } else {
+    dadosFiltrados = filteredData.filter(d => d.tipo_orgao);
+  }
 
+  
     const municipiosUnicos = new Set();
     dadosFiltrados.forEach(d => municipiosUnicos.add(d.municipio));
     const totalMunicipiosUnicos = municipiosUnicos.size;
