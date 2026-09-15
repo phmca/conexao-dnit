@@ -367,12 +367,24 @@ const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 
     });
   }
 
-  function renderDetail(d) {
+function renderDetail(d) {
   if (!d) return renderEmptyDetail();
   
   const registrosMunicipio = currentData.filter(item => item.municipio === d.municipio);
   
-  const registrosOrdenados = registrosMunicipio.sort((a, b) => {
+  const registrosEscolas = registrosMunicipio.filter(item => !item.tipo_orgao);
+  const registrosOrgaos = registrosMunicipio.filter(item => item.tipo_orgao);
+  
+  let registrosPrioritarios;
+  if (currentTab === 'escolas') {
+    registrosPrioritarios = registrosEscolas.length > 0 ? registrosEscolas : registrosOrgaos;
+  } else {
+    registrosPrioritarios = registrosOrgaos.length > 0 ? registrosOrgaos : registrosEscolas;
+  }
+  
+  if (registrosPrioritarios.length === 0) registrosPrioritarios = [d];
+  
+  const registrosOrdenados = [...registrosPrioritarios].sort((a, b) => {
     const parseDate = (str) => {
       const parts = str.split(' - ');
       const first = parts[0].split('/');
@@ -381,7 +393,7 @@ const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 
     return parseDate(b.data) - parseDate(a.data);
   });
   
-  const maisRecente = registrosOrdenados[0] || d;
+  const maisRecente = registrosOrdenados[0];
   
   const statusClass = getStatusClass(maisRecente.situacao);
   const tipoOrgao = maisRecente.tipo_orgao ? getTipoOrgao(maisRecente) : 'Escola';
@@ -402,6 +414,7 @@ const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 
     </div>
   `;
 }
+
   function renderEmptyDetail() {
     detailContent.innerHTML = `
       <div class="empty-state">
