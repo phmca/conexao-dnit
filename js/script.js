@@ -369,25 +369,39 @@ const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 
 
   function renderDetail(d) {
   if (!d) return renderEmptyDetail();
-  const statusClass = getStatusClass(d.situacao);
-  const tipoOrgao = d.tipo_orgao ? getTipoOrgao(d) : 'Escola';
+  
+  const registrosMunicipio = currentData.filter(item => item.municipio === d.municipio);
+  
+  const registrosOrdenados = registrosMunicipio.sort((a, b) => {
+    const parseDate = (str) => {
+      const parts = str.split(' - ');
+      const first = parts[0].split('/');
+      return new Date(2026, parseInt(first[1])-1, parseInt(first[0]));
+    };
+    return parseDate(b.data) - parseDate(a.data);
+  });
+  
+  const maisRecente = registrosOrdenados[0] || d;
+  
+  const statusClass = getStatusClass(maisRecente.situacao);
+  const tipoOrgao = maisRecente.tipo_orgao ? getTipoOrgao(maisRecente) : 'Escola';
+  
   detailContent.innerHTML = `
     <div class="detail-item">
-      <div class="detail-municipio">${d.municipio}</div>
-      <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${d.mes}</span></div>
-      <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${d.data}</span></div>
-      <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${d.participantes}</span></div>
-      <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${d.agentes}</span></div>
-      ${d.tipo_orgao ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
-      <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${d.alunos.toLocaleString()}</span></div>
-      <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${d.professores.toLocaleString()}</span></div>
-      <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${d.escolas}</span></div>
-      <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${d.situacao}</span></span></div>
-      <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${d.proxima || '-'}</span></div>
+      <div class="detail-municipio">${maisRecente.municipio}</div>
+      <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${maisRecente.mes}</span></div>
+      <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${maisRecente.data}</span></div>
+      <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${maisRecente.participantes}</span></div>
+      <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${maisRecente.agentes}</span></div>
+      ${maisRecente.tipo_orgao ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
+      <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${maisRecente.alunos.toLocaleString()}</span></div>
+      <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${maisRecente.professores.toLocaleString()}</span></div>
+      <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${maisRecente.escolas}</span></div>
+      <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${maisRecente.situacao}</span></span></div>
+      <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${maisRecente.proxima || '-'}</span></div>
     </div>
   `;
 }
-
   function renderEmptyDetail() {
     detailContent.innerHTML = `
       <div class="empty-state">
