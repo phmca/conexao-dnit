@@ -59,11 +59,25 @@ const rawData = [
 { municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 { municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 
-  // ===== SETEMBRO =====
-  { municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Danielle Taumaturgo (SEDUC)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
-  { municipio: 'Fortaleza', mes: 'Setembro', data: '04/09/2026', participantes: 'DETRAN-CE', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação', tipo_orgao: 'Departamento'},
-  { municipio: 'Horizonte', mes: 'Setembro', data: '10/09/2026', participantes: 'Secretária Gezenira Rodrigues', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação'},
-  { municipio: 'Itapiúna', mes: 'Setembro', data: '11/09/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Implantado', proxima: 'Acompanhamento da implantação'}
+ // ===== SETEMBRO =====
+// SEDUC (Secretaria) - 03/09
+{ municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Danielle Taumaturgo (SEDUC)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
+// DETRAN-CE (Departamento) - 03/09
+{ municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Professor Jorge (DETRAN-CE)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação', tipo_orgao: 'Departamento' },
+// HORIZONTE - 10/09
+{ municipio: 'Horizonte', mes: 'Setembro', data: '10/09/2026', participantes: 'Secretária Gezenira Rodrigues', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação' },
+// ITAPIÚNA - 11/09
+{ municipio: 'Itapiúna', mes: 'Setembro', data: '11/09/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+// PACAJUS - 17/09
+{ municipio: 'Pacajus', mes: 'Setembro', data: '17/09/2026', participantes: 'Professora Lea', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+// CAUCAIA - 22/09
+{ municipio: 'Caucaia', mes: 'Setembro', data: '22/09/2026', participantes: 'Professora Lidiane', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+// SÃO GONÇALO DO AMARANTE - 22/09
+{ municipio: 'São Gonçalo do Amarante', mes: 'Setembro', data: '22/09/2026', participantes: 'Secretário José Oliveira da Silva Junior', agentes: 0, alunos: 11642, professores: 584, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+// CAUCAIA (AMT e Colégio Nair Guerra) - 25/09
+{ municipio: 'Caucaia', mes: 'Setembro', data: '25/09/2026', participantes: 'Coordenadora Marislândia e Dr Carlim (AMT e Colégio Nair Guerra)', agentes: 0, alunos: 350, professores: 16, escolas: 1, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
+// CAUCAIA - 30/09
+{ municipio: 'Caucaia', mes: 'Setembro', data: '30/09/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' }
  
 ];
   
