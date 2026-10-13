@@ -255,53 +255,62 @@ function render() {
   totalMunicipiosGeral.textContent = totalMun;
   mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
 
-  // ===== STATUS DO PROGRAMA - CONTAGEM DE MUNICÍPIOS ÚNICOS =====
-  let dataSemFiltro = [...currentData];
-  const month = monthSelect.value;
-  if (month !== 'Todos') {
-    dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
-  }
-  const search = searchInput.value.trim().toLowerCase();
-  if (search) {
-    dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
-  }
-  if (searchSelect && searchSelect.value) {
-    dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
-  }
+// ===== STATUS DO PROGRAMA =====
+// Regra: para cada município, considerar APENAS a visita mais recente (no período filtrado)
+// e classificá-la pelo status dela.
+let dataSemFiltro = [...currentData];
+const month = monthSelect.value;
+if (month !== 'Todos') {
+  dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
+}
+const search = searchInput.value.trim().toLowerCase();
+if (search) {
+  dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
+}
+if (searchSelect && searchSelect.value) {
+  dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
+}
 
-  // Para cada status, conta municípios únicos (considerando apenas o registro mais recente)
-  const statusMap = {
-    implantado: new Map(),
-    convenio: new Map(),
-    analise: new Map(),
-    apresentacao: new Map()
-  };
+// Agrupa por município e mantém apenas o registro mais recente
+const municipioMaisRecente = new Map();
 
-  dataSemFiltro.forEach(d => {
-    let key = null;
-    if (d.situacao === 'Implantado') key = 'implantado';
-    else if (d.situacao === 'Convênio assinado') key = 'convenio';
-    else if (d.situacao === 'Em análise jurídica') key = 'analise';
-    else if (d.situacao === 'Apresentação realizada') key = 'apresentacao';
-    
-    if (!key) return;
-    
-    const existing = statusMap[key].get(d.municipio);
-    if (!existing) {
-      statusMap[key].set(d.municipio, d);
-    } else {
-      const dataExistente = existing.data.split('/').reverse().join('-');
-      const dataNova = d.data.split('/').reverse().join('-');
-      if (dataNova > dataExistente) {
-        statusMap[key].set(d.municipio, d);
-      }
+const parseDate = (str) => {
+  const parts = str.split(' - ');
+  const first = parts[0].split('/');
+  return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
+};
+
+dataSemFiltro.forEach(d => {
+  const existing = municipioMaisRecente.get(d.municipio);
+  if (!existing) {
+    municipioMaisRecente.set(d.municipio, d);
+  } else {
+    if (parseDate(d.data) > parseDate(existing.data)) {
+      municipioMaisRecente.set(d.municipio, d);
     }
-  });
+  }
+});
 
-  statusImplantado.textContent = statusMap.implantado.size;
-  statusConvenio.textContent = statusMap.convenio.size;
-  statusAnalise.textContent = statusMap.analise.size;
-  statusApresentacao.textContent = statusMap.apresentacao.size;
+// Agora conta quantos municípios (únicos) têm cada status na sua visita mais recente
+const statusCounts = {
+  implantado: 0,
+  convenio: 0,
+  analise: 0,
+  apresentacao: 0
+};
+
+municipioMaisRecente.forEach(d => {
+  const situacao = d.situacao;
+  if (situacao === 'Implantado') statusCounts.implantado++;
+  else if (situacao === 'Convênio assinado') statusCounts.convenio++;
+  else if (situacao === 'Em análise jurídica') statusCounts.analise++;
+  else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
+});
+
+statusImplantado.textContent = statusCounts.implantado;
+statusConvenio.textContent = statusCounts.convenio;
+statusAnalise.textContent = statusCounts.analise;
+statusApresentacao.textContent = statusCounts.apresentacao;
 
   // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
   if (selectedMunicipio) {
