@@ -1194,6 +1194,68 @@ tbody tr.selected {
   border-color: #38bdf8;
 }
 
+/* ===== STATUS MULTISELECT ===== */
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border-radius: 8px;
+  margin: 2px 0;
+  user-select: none;
+}
+
+.status-item:hover {
+  background: var(--bg-secondary);
+}
+
+.status-item.active {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+}
+
+.status-item .status-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.status-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  margin: 0;
+}
+
+.clear-status-btn {
+  width: 100%;
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.clear-status-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
