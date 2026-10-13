@@ -256,8 +256,8 @@ function render() {
   mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
 
 // ===== STATUS DO PROGRAMA =====
-// Regra: para cada município, considerar APENAS a visita mais recente (no período filtrado)
-// e classificá-la pelo status dela.
+// Regra: para cada município, considerar APENAS a visita mais recente
+// (ignorando o filtro de status ativo), e classificar pelo status dessa visita.
 let dataSemFiltro = [...currentData];
 const month = monthSelect.value;
 if (month !== 'Todos') {
@@ -291,7 +291,7 @@ dataSemFiltro.forEach(d => {
   }
 });
 
-// Agora conta quantos municípios (únicos) têm cada status na sua visita mais recente
+// Conta quantos municípios únicos têm cada status na sua visita mais recente
 const statusCounts = {
   implantado: 0,
   convenio: 0,
@@ -311,7 +311,6 @@ statusImplantado.textContent = statusCounts.implantado;
 statusConvenio.textContent = statusCounts.convenio;
 statusAnalise.textContent = statusCounts.analise;
 statusApresentacao.textContent = statusCounts.apresentacao;
-
   // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
   if (selectedMunicipio) {
     const found = filtered.find(d => d.municipio === selectedMunicipio);
