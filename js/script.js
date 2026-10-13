@@ -529,10 +529,16 @@
 
     const totalAgentes = dadosFiltrados.reduce((sum, item) => sum + (item.agentes || 0), 0);
 
-    const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
-    const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
+  const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
+const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
 
-    const subtitle = `${tabDisplay} - ${monthDisplay}`;
+// Define o subtítulo conforme o filtro de status
+let subtitle;
+if (currentStatusFilters.size > 0) {
+  subtitle = `${tabDisplay} - Registro mais recente por município (${monthDisplay})`;
+} else {
+  subtitle = `${tabDisplay} - ${monthDisplay}`;
+}
 
     const title = `Conexão DNIT - Educação No Trânsito`;
 
