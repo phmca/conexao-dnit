@@ -85,7 +85,7 @@ const rawData = [
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
   let currentTab = 'escolas';
-  let currentStatusFilter = null;
+ let currentStatusFilters = new Set();
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
@@ -135,7 +135,7 @@ const rawData = [
   }
 
  function getFilteredData() {
-  // ===== 1. APLICA FILTROS BÁSICOS (mês, busca, dropdown) =====
+  // ===== 1. FILTROS BÁSICOS =====
   let base = [...currentData];
   
   const month = monthSelect.value;
@@ -152,10 +152,8 @@ const rawData = [
     base = base.filter(d => d.municipio === searchSelect.value);
   }
   
-  // ===== 2. SE HOUVER FILTRO DE STATUS ATIVO =====
-  // Agrupa por município, pega a visita mais recente de cada um,
-  // e retorna apenas os que têm o status selecionado na visita mais recente.
-  if (currentStatusFilter) {
+  // ===== 2. FILTRO MULTIPLO DE STATUS =====
+  if (currentStatusFilters.size > 0) {
     const parseDate = (str) => {
       const parts = str.split(' - ');
       const first = parts[0].split('/');
@@ -171,12 +169,11 @@ const rawData = [
       }
     });
     
-    // Filtra apenas os que têm o status selecionado na visita mais recente
+    // Filtra apenas os que têm um dos status selecionados
     return Array.from(municipioMaisRecente.values())
-      .filter(d => d.situacao === currentStatusFilter);
+      .filter(d => currentStatusFilters.has(d.situacao));
   }
   
-  // ===== 3. SEM FILTRO DE STATUS: retorna todas as visitas =====
   return base;
 }
 
@@ -284,6 +281,7 @@ function render() {
 // ===== STATUS DO PROGRAMA =====
 // Regra: para cada município, considerar APENAS a visita mais recente
 // (ignorando o filtro de status ativo), e classificar pelo status dessa visita.
+// ===== STATUS DO PROGRAMA =====
 let dataSemFiltro = [...currentData];
 const month = monthSelect.value;
 if (month !== 'Todos') {
@@ -297,34 +295,27 @@ if (searchSelect && searchSelect.value) {
   dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
 }
 
-// Agrupa por município e mantém apenas o registro mais recente
+// Agrupa por município, mantendo a visita mais recente
 const municipioMaisRecente = new Map();
-
 const parseDate = (str) => {
   const parts = str.split(' - ');
   const first = parts[0].split('/');
   return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
 };
-
 dataSemFiltro.forEach(d => {
   const existing = municipioMaisRecente.get(d.municipio);
-  if (!existing) {
+  if (!existing || parseDate(d.data) > parseDate(existing.data)) {
     municipioMaisRecente.set(d.municipio, d);
-  } else {
-    if (parseDate(d.data) > parseDate(existing.data)) {
-      municipioMaisRecente.set(d.municipio, d);
-    }
   }
 });
 
-// Conta quantos municípios únicos têm cada status na sua visita mais recente
+// Conta quantos municípios únicos têm cada status na visita mais recente
 const statusCounts = {
   implantado: 0,
   convenio: 0,
   analise: 0,
   apresentacao: 0
 };
-
 municipioMaisRecente.forEach(d => {
   const situacao = d.situacao;
   if (situacao === 'Implantado') statusCounts.implantado++;
@@ -565,7 +556,9 @@ function renderDetail(d) {
     if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
     if (searchInput.value.trim()) filtrosAtivos.push(`Busca: "${searchInput.value.trim()}"`);
     if (searchSelect && searchSelect.value) filtrosAtivos.push(`Município: ${searchSelect.value}`);
-    if (currentStatusFilter) filtrosAtivos.push(`Status: ${currentStatusFilter}`);
+  if (currentStatusFilters.size > 0) {
+  filtrosAtivos.push(`Status: ${Array.from(currentStatusFilters).join(', ')}`);
+}
     
     let subtitle = `${tabDisplay} - ${monthDisplay}`;
     if (filtrosAtivos.length > 0) {
@@ -770,9 +763,9 @@ function renderDetail(d) {
     if (searchSelect && searchSelect.value) {
       fileNameParts.push('municipio_' + searchSelect.value.replace(/\s+/g, '_'));
     }
-    if (currentStatusFilter) {
-      fileNameParts.push('status_' + currentStatusFilter.replace(/\s+/g, '_'));
-    }
+    if (currentStatusFilters.size > 0) {
+  fileNameParts.push('status_' + Array.from(currentStatusFilters).join('_').replace(/\s+/g, '_'));
+}
     fileNameParts.push(new Date().toISOString().slice(0,10));
     const fileName = fileNameParts.join('_') + '.pdf';
     
@@ -863,21 +856,50 @@ function renderDetail(d) {
     render();
   });
 
-  document.querySelectorAll('.status-item.clickable').forEach(item => {
-    item.addEventListener('click', function() {
-      const status = this.dataset.status;
-      if (currentStatusFilter === status) {
-        currentStatusFilter = null;
-        this.classList.remove('active');
-        showToast('Filtro de status removido');
-      } else {
-        currentStatusFilter = status;
-        document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-        showToast(`Filtrando por: ${status}`);
-      }
-      render();
-    });
+// ===== MULTISELECT DE STATUS =====
+document.querySelectorAll('.status-item.clickable').forEach(item => {
+  item.addEventListener('click', function(e) {
+    if (e.target.classList.contains('status-checkbox')) return;
+    
+    const checkbox = this.querySelector('.status-checkbox');
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+});
+
+document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+  checkbox.addEventListener('change', function() {
+    const status = this.dataset.status;
+    const parent = this.closest('.status-item');
+    
+    if (this.checked) {
+      currentStatusFilters.add(status);
+      parent.classList.add('active');
+    } else {
+      currentStatusFilters.delete(status);
+      parent.classList.remove('active');
+    }
+    
+    const clearBtn = document.getElementById('clearStatusBtn');
+    if (clearBtn) {
+      clearBtn.style.display = currentStatusFilters.size > 0 ? 'flex' : 'none';
+    }
+    
+    render();
+  });
+});
+
+// ===== BOTÃO LIMPAR FILTROS =====
+document.getElementById('clearStatusBtn').addEventListener('click', function() {
+  currentStatusFilters.clear();
+  document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+  this.style.display = 'none';
+  showToast('Filtros de status removidos');
+  render();
+});
   });
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -928,17 +950,20 @@ function renderDetail(d) {
     this.querySelector('i').classList.toggle('fa-sun');
   });
 
-  document.getElementById('refreshBtn').addEventListener('click', function() {
-    this.classList.add('spinning');
-    currentData = [...rawData];
-    selectedMunicipio = null;
-    currentStatusFilter = null;
-    if (searchSelect) searchSelect.value = '';
-    searchInput.value = '';
-    document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
-    render();
-    setTimeout(() => this.classList.remove('spinning'), 800);
-  });
+ document.getElementById('refreshBtn').addEventListener('click', function() {
+  this.classList.add('spinning');
+  currentData = [...rawData];
+  selectedMunicipio = null;
+  currentStatusFilters.clear();
+  document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+  const clearBtn = document.getElementById('clearStatusBtn');
+  if (clearBtn) clearBtn.style.display = 'none';
+  if (searchSelect) searchSelect.value = '';
+  searchInput.value = '';
+  render();
+  setTimeout(() => this.classList.remove('spinning'), 800);
+});
 
   window.addEventListener('resize', function() {
     render();
