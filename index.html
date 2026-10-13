@@ -169,45 +169,46 @@
           </div>
 
           <div class="card">
-            <div class="card-header">
-              <h3><i class="fas fa-chart-pie"></i> Status do programa</h3>
-<span class="status-hint">selecione um ou mais</span>
-            </div>
-          <div id="statusChart">
-  <div class="status-item clickable" data-status="Implantado">
-    <span class="status-label">
-      <input type="checkbox" class="status-checkbox" data-status="Implantado" />
-      <span class="status-dot" style="background:#2ecc71"></span> Implantado
-    </span>
-    <span class="status-count" id="statusImplantado">0</span>
+  <div class="card-header">
+    <h3><i class="fas fa-chart-pie"></i> Status do programa</h3>
+    <span class="status-hint">selecione um ou mais</span>
   </div>
-  <div class="status-item clickable" data-status="Convênio assinado">
-    <span class="status-label">
-      <input type="checkbox" class="status-checkbox" data-status="Convênio assinado" />
-      <span class="status-dot" style="background:#f39c12"></span> Convênio assinado
-    </span>
-    <span class="status-count" id="statusConvenio">0</span>
+  <div id="statusChart">
+    <div class="status-item clickable" data-status="Implantado">
+      <span class="status-label">
+        <input type="checkbox" class="status-checkbox" data-status="Implantado" />
+        <span class="status-dot" style="background:#2ecc71"></span> Implantado
+      </span>
+      <span class="status-count" id="statusImplantado">0</span>
+    </div>
+    <div class="status-item clickable" data-status="Convênio assinado">
+      <span class="status-label">
+        <input type="checkbox" class="status-checkbox" data-status="Convênio assinado" />
+        <span class="status-dot" style="background:#f39c12"></span> Convênio assinado
+      </span>
+      <span class="status-count" id="statusConvenio">0</span>
+    </div>
+    <div class="status-item clickable" data-status="Em análise jurídica">
+      <span class="status-label">
+        <input type="checkbox" class="status-checkbox" data-status="Em análise jurídica" />
+        <span class="status-dot" style="background:#3498db"></span> Em análise jurídica
+      </span>
+      <span class="status-count" id="statusAnalise">0</span>
+    </div>
+    <div class="status-item clickable" data-status="Apresentação realizada">
+      <span class="status-label">
+        <input type="checkbox" class="status-checkbox" data-status="Apresentação realizada" />
+        <span class="status-dot" style="background:#e74c3c"></span> Apresentação realizada
+      </span>
+      <span class="status-count" id="statusApresentacao">0</span>
+    </div>
+    <button class="clear-status-btn" id="clearStatusBtn" style="display:none;">
+      <i class="fas fa-times-circle"></i> Limpar filtros de status
+    </button>
   </div>
-  <div class="status-item clickable" data-status="Em análise jurídica">
-    <span class="status-label">
-      <input type="checkbox" class="status-checkbox" data-status="Em análise jurídica" />
-      <span class="status-dot" style="background:#3498db"></span> Em análise jurídica
-    </span>
-    <span class="status-count" id="statusAnalise">0</span>
-  </div>
-  <div class="status-item clickable" data-status="Apresentação realizada">
-    <span class="status-label">
-      <input type="checkbox" class="status-checkbox" data-status="Apresentação realizada" />
-      <span class="status-dot" style="background:#e74c3c"></span> Apresentação realizada
-    </span>
-    <span class="status-count" id="statusApresentacao">0</span>
-  </div>
-  <button class="clear-status-btn" id="clearStatusBtn" style="display:none;">
-    <i class="fas fa-times-circle"></i> Limpar filtros de status
-  </button>
 </div>
 
-        <div class="card info-card">
+<div class="card info-card">
   <div class="card-header">
     <h3><i class="fas fa-info-circle"></i> Sobre o programa</h3>
   </div>
@@ -232,7 +233,7 @@
     </div>
   </div>
 </div>
-
+         
       <footer class="footer-note">
         <span><i class="fas fa-database"></i> Conexão DNIT · Educação No Trânsito</span>
         <span><i class="fas fa-code-branch"></i> atualizado: <span id="footerUpdate">hoje</span></span>
