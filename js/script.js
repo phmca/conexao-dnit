@@ -4,10 +4,8 @@
     { municipio: 'Guaiúba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
     { municipio: 'Pacatuba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Pacajus', mes: 'Maio', data: '19/05/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-    // ACARAPE - DUAS VISITAS SEPARADAS
     { municipio: 'Acarape', mes: 'Maio', data: '20/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Acarape', mes: 'Maio', data: '28/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-    // BARREIRA - DUAS VISITAS SEPARADAS
     { municipio: 'Barreira', mes: 'Maio', data: '20/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Barreira', mes: 'Maio', data: '28/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
     { municipio: 'Chorozinho', mes: 'Maio', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
@@ -125,7 +123,6 @@
   }
 
   function getFilteredData() {
-    // ===== 1. FILTROS BÁSICOS =====
     let base = [...currentData];
 
     const month = monthSelect.value;
@@ -142,7 +139,6 @@
       base = base.filter(d => d.municipio === searchSelect.value);
     }
 
-    // ===== 2. FILTRO MULTIPLO DE STATUS =====
     if (currentStatusFilters.size > 0) {
       const parseDate = (str) => {
         const parts = str.split(' - ');
@@ -150,7 +146,6 @@
         return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
       };
 
-      // Agrupa por município, mantendo a visita mais recente
       const municipioMaisRecente = new Map();
       base.forEach(d => {
         const existing = municipioMaisRecente.get(d.municipio);
@@ -159,7 +154,6 @@
         }
       });
 
-      // Filtra apenas os que têm um dos status selecionados
       return Array.from(municipioMaisRecente.values())
         .filter(d => currentStatusFilters.has(d.situacao));
     }
@@ -283,7 +277,6 @@
       dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
     }
 
-    // Agrupa por município, mantendo a visita mais recente
     const municipioMaisRecente = new Map();
     const parseDate = (str) => {
       const parts = str.split(' - ');
@@ -297,7 +290,6 @@
       }
     });
 
-    // Conta quantos municípios únicos têm cada status na visita mais recente
     const statusCounts = {
       implantado: 0,
       convenio: 0,
@@ -540,21 +532,9 @@
     const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
     const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
 
-    let filtrosAtivos = [];
-    if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
-    if (searchInput.value.trim()) filtrosAtivos.push(`Busca: "${searchInput.value.trim()}"`);
-    if (searchSelect && searchSelect.value) filtrosAtivos.push(`Município: ${searchSelect.value}`);
-    if (currentStatusFilters.size > 0) {
-      filtrosAtivos.push(`Status: ${Array.from(currentStatusFilters).join(', ')}`);
-    }
-
-    let subtitle = `${tabDisplay} - ${monthDisplay}`;
-    if (filtrosAtivos.length > 0) {
-      subtitle += ` (Filtros: ${filtrosAtivos.join(' | ')})`;
-    }
+    const subtitle = `${tabDisplay} - ${monthDisplay}`;
 
     const title = `Conexão DNIT - Educação No Trânsito`;
-    const dateStr = new Date().toLocaleString('pt-BR');
 
     const pageWidth = doc.internal.pageSize.width;
     const marginLeft = 12;
@@ -579,10 +559,6 @@
       summaryText += `  |  Agentes: ${formatNumber(totalAgentes)}`;
     }
     doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
-
-    doc.setFontSize(7);
-    doc.setFont('helvetica', 'italic');
-    doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
 
     if (dadosFiltrados.length === 0) {
       doc.setFontSize(12);
@@ -614,7 +590,7 @@
       doc.autoTable({
         head: [headers],
         body: tableData,
-        startY: 34,
+        startY: 30,
         theme: 'striped',
         styles: {
           fontSize: 7,
@@ -687,7 +663,7 @@
       doc.autoTable({
         head: [headers],
         body: tableData,
-        startY: 34,
+        startY: 30,
         theme: 'striped',
         styles: {
           fontSize: 7,
@@ -819,7 +795,6 @@
     });
   });
 
-  // ===== EVENTO DO DROPDOWN DE MUNICÍPIOS =====
   if (searchSelect) {
     searchSelect.addEventListener('change', function() {
       if (this.value) {
@@ -956,7 +931,6 @@
     render();
   });
 
-  // ===== POPULA O DROPDOWN E INICIA =====
   populateSearchSelect();
   loadPDFLibraries();
   render();
