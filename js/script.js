@@ -217,89 +217,104 @@ function render() {
   renderTableEscolas(escolas);
   renderTableAutarquias(autarquias);
 
-
-
-const municipiosComDadosEscolares = new Map();
-filtered.forEach(d => {
-  const temDadosEscolares = (d.alunos > 0) || (d.professores > 0) || (d.escolas > 0);
-  if (!temDadosEscolares) return;
-  
-  const existing = municipiosComDadosEscolares.get(d.municipio);
-  if (!existing) {
-    municipiosComDadosEscolares.set(d.municipio, d);
-  } else {
-    const dataExistente = existing.data.split('/').reverse().join('-');
-    const dataNova = d.data.split('/').reverse().join('-');
-    if (dataNova > dataExistente) {
+  // ===== CARDS DE RESUMO =====
+  const municipiosComDadosEscolares = new Map();
+  filtered.forEach(d => {
+    const temDadosEscolares = (d.alunos > 0) || (d.professores > 0) || (d.escolas > 0);
+    if (!temDadosEscolares) return;
+    
+    const existing = municipiosComDadosEscolares.get(d.municipio);
+    if (!existing) {
       municipiosComDadosEscolares.set(d.municipio, d);
-    }
-  }
-});
-
-    const todosMunicipios = new Map();
-    filtered.forEach(d => {
-      if (!todosMunicipios.has(d.municipio)) {
-        todosMunicipios.set(d.municipio, d);
-      }
-    });
-
-   const municipiosUnicosEscolas = Array.from(municipiosComDadosEscolares.values());
-const totalMun = todosMunicipios.size;
-const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
-
-    totalMunicipios.textContent = totalMun;
-    totalAlunos.textContent = totalAlu.toLocaleString();
-    totalProfessores.textContent = totalProf.toLocaleString();
-    totalEscolas.textContent = totalEsc.toLocaleString();
-    totalMunicipiosGeral.textContent = totalMun;
-    mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
-
-    let dataSemFiltro = [...currentData];
-    const month = monthSelect.value;
-    if (month !== 'Todos') {
-      dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
-    }
-    const search = searchInput.value.trim().toLowerCase();
-    if (search) {
-      dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
-    }
-    if (searchSelect && searchSelect.value) {
-      dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
-    }
-
-    const statusCounts = {
-      implantado: 0,
-      convenio: 0,
-      analise: 0,
-      apresentacao: 0
-    };
-
-    dataSemFiltro.forEach(d => {
-      const situacao = d.situacao;
-      if (situacao === 'Implantado') statusCounts.implantado++;
-      else if (situacao === 'Convênio assinado') statusCounts.convenio++;
-      else if (situacao === 'Em análise jurídica') statusCounts.analise++;
-      else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
-    });
-
-    statusImplantado.textContent = statusCounts.implantado;
-    statusConvenio.textContent = statusCounts.convenio;
-    statusAnalise.textContent = statusCounts.analise;
-    statusApresentacao.textContent = statusCounts.apresentacao;
-
-    if (selectedMunicipio) {
-      const found = filtered.find(d => d.municipio === selectedMunicipio);
-      if (found) renderDetail(found);
-      else { selectedMunicipio = null; renderEmptyDetail(); }
     } else {
-      renderEmptyDetail();
+      const dataExistente = existing.data.split('/').reverse().join('-');
+      const dataNova = d.data.split('/').reverse().join('-');
+      if (dataNova > dataExistente) {
+        municipiosComDadosEscolares.set(d.municipio, d);
+      }
     }
+  });
 
-    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-    atualizarIndicadoresOrdenacao();
+  const todosMunicipios = new Map();
+  filtered.forEach(d => {
+    if (!todosMunicipios.has(d.municipio)) {
+      todosMunicipios.set(d.municipio, d);
+    }
+  });
+
+  const municipiosUnicosEscolas = Array.from(municipiosComDadosEscolares.values());
+  const totalMun = todosMunicipios.size;
+  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+
+  totalMunicipios.textContent = totalMun;
+  totalAlunos.textContent = totalAlu.toLocaleString();
+  totalProfessores.textContent = totalProf.toLocaleString();
+  totalEscolas.textContent = totalEsc.toLocaleString();
+  totalMunicipiosGeral.textContent = totalMun;
+  mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
+
+  // ===== STATUS DO PROGRAMA - CONTAGEM DE MUNICÍPIOS ÚNICOS =====
+  let dataSemFiltro = [...currentData];
+  const month = monthSelect.value;
+  if (month !== 'Todos') {
+    dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
   }
+  const search = searchInput.value.trim().toLowerCase();
+  if (search) {
+    dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
+  }
+  if (searchSelect && searchSelect.value) {
+    dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
+  }
+
+  // Para cada status, conta municípios únicos (considerando apenas o registro mais recente)
+  const statusMap = {
+    implantado: new Map(),
+    convenio: new Map(),
+    analise: new Map(),
+    apresentacao: new Map()
+  };
+
+  dataSemFiltro.forEach(d => {
+    let key = null;
+    if (d.situacao === 'Implantado') key = 'implantado';
+    else if (d.situacao === 'Convênio assinado') key = 'convenio';
+    else if (d.situacao === 'Em análise jurídica') key = 'analise';
+    else if (d.situacao === 'Apresentação realizada') key = 'apresentacao';
+    
+    if (!key) return;
+    
+    const existing = statusMap[key].get(d.municipio);
+    if (!existing) {
+      statusMap[key].set(d.municipio, d);
+    } else {
+      const dataExistente = existing.data.split('/').reverse().join('-');
+      const dataNova = d.data.split('/').reverse().join('-');
+      if (dataNova > dataExistente) {
+        statusMap[key].set(d.municipio, d);
+      }
+    }
+  });
+
+  statusImplantado.textContent = statusMap.implantado.size;
+  statusConvenio.textContent = statusMap.convenio.size;
+  statusAnalise.textContent = statusMap.analise.size;
+  statusApresentacao.textContent = statusMap.apresentacao.size;
+
+  // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
+  if (selectedMunicipio) {
+    const found = filtered.find(d => d.municipio === selectedMunicipio);
+    if (found) renderDetail(found);
+    else { selectedMunicipio = null; renderEmptyDetail(); }
+  } else {
+    renderEmptyDetail();
+  }
+
+  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+  atualizarIndicadoresOrdenacao();
+}
 
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
