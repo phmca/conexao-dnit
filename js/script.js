@@ -135,62 +135,49 @@ const rawData = [
   }
 
  function getFilteredData() {
-  let filtered = [...currentData];
+  // ===== 1. APLICA FILTROS BÁSICOS (mês, busca, dropdown) =====
+  let base = [...currentData];
+  
   const month = monthSelect.value;
   if (month !== 'Todos') {
-    filtered = filtered.filter(d => d.mes === month);
-  }
-  const search = searchInput.value.trim().toLowerCase();
-  if (search) {
-    filtered = filtered.filter(d => d.municipio.toLowerCase().includes(search));
-  }
-  if (searchSelect && searchSelect.value) {
-    filtered = filtered.filter(d => d.municipio === searchSelect.value);
+    base = base.filter(d => d.mes === month);
   }
   
-  // ===== FILTRO DE STATUS =====
-  // Quando um status está selecionado, mostra apenas a VISITA MAIS RECENTE
-  // de cada município cuja situação mais recente seja igual ao status filtrado.
+  const search = searchInput.value.trim().toLowerCase();
+  if (search) {
+    base = base.filter(d => d.municipio.toLowerCase().includes(search));
+  }
+  
+  if (searchSelect && searchSelect.value) {
+    base = base.filter(d => d.municipio === searchSelect.value);
+  }
+  
+  // ===== 2. SE HOUVER FILTRO DE STATUS ATIVO =====
+  // Agrupa por município, pega a visita mais recente de cada um,
+  // e retorna apenas os que têm o status selecionado na visita mais recente.
   if (currentStatusFilter) {
-    // 1. Para cada município, encontra a visita mais recente
-    const municipioMaisRecente = new Map();
     const parseDate = (str) => {
       const parts = str.split(' - ');
       const first = parts[0].split('/');
       return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
     };
     
-    // Aplica os mesmos filtros de mês/busca/município antes de agrupar
-    let base = [...currentData];
-    const monthF = monthSelect.value;
-    if (monthF !== 'Todos') {
-      base = base.filter(d => d.mes === monthF);
-    }
-    const searchF = searchInput.value.trim().toLowerCase();
-    if (searchF) {
-      base = base.filter(d => d.municipio.toLowerCase().includes(searchF));
-    }
-    if (searchSelect && searchSelect.value) {
-      base = base.filter(d => d.municipio === searchSelect.value);
-    }
-    
+    // Agrupa por município, mantendo a visita mais recente
+    const municipioMaisRecente = new Map();
     base.forEach(d => {
       const existing = municipioMaisRecente.get(d.municipio);
-      if (!existing) {
+      if (!existing || parseDate(d.data) > parseDate(existing.data)) {
         municipioMaisRecente.set(d.municipio, d);
-      } else {
-        if (parseDate(d.data) > parseDate(existing.data)) {
-          municipioMaisRecente.set(d.municipio, d);
-        }
       }
     });
     
-    // 2. Filtra apenas os municípios cuja visita mais recente tem o status selecionado
-    filtered = Array.from(municipioMaisRecente.values())
+    // Filtra apenas os que têm o status selecionado na visita mais recente
+    return Array.from(municipioMaisRecente.values())
       .filter(d => d.situacao === currentStatusFilter);
   }
   
-  return filtered;
+  // ===== 3. SEM FILTRO DE STATUS: retorna todas as visitas =====
+  return base;
 }
 
   function applySort(data, sortKey, order) {
