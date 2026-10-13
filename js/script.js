@@ -1,91 +1,81 @@
 (function() {
-const rawData = [
-  // ===== MAIO =====
-  { municipio: 'Guaiúba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
-  { municipio: 'Pacatuba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Pacajus', mes: 'Maio', data: '19/05/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  // ACARAPE - DUAS VISITAS SEPARADAS
-  { municipio: 'Acarape', mes: 'Maio', data: '20/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Acarape', mes: 'Maio', data: '28/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  // BARREIRA - DUAS VISITAS SEPARADAS
-  { municipio: 'Barreira', mes: 'Maio', data: '20/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Barreira', mes: 'Maio', data: '28/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Chorozinho', mes: 'Maio', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Baturité', mes: 'Maio', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
-  { municipio: 'Mulungu', mes: 'Maio', data: '21/05/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
-  { municipio: 'Redenção', mes: 'Maio', data: '22/05/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+  const rawData = [
+    // ===== MAIO =====
+    { municipio: 'Guaiúba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Convênio assinado', proxima: 'Implantação do programa' },
+    { municipio: 'Pacatuba', mes: 'Maio', data: '18/05/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Pacajus', mes: 'Maio', data: '19/05/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    // ACARAPE - DUAS VISITAS SEPARADAS
+    { municipio: 'Acarape', mes: 'Maio', data: '20/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Acarape', mes: 'Maio', data: '28/05/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    // BARREIRA - DUAS VISITAS SEPARADAS
+    { municipio: 'Barreira', mes: 'Maio', data: '20/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Barreira', mes: 'Maio', data: '28/05/2026', participantes: 'Prof. Glória Maria e equipe pedagógica', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Chorozinho', mes: 'Maio', data: '21/05/2026', participantes: 'Prefeita Célia Marinho, Prof. Lourdes e Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Baturité', mes: 'Maio', data: '21/05/2026', participantes: 'Prof. Lindomar Soares', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+    { municipio: 'Mulungu', mes: 'Maio', data: '21/05/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Convênio assinado', proxima: 'Implantação agendada para jun/26' },
+    { municipio: 'Redenção', mes: 'Maio', data: '22/05/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
 
-  // ===== JUNHO =====
-  { municipio: 'Aratuba', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-  { municipio: 'Mulungu', mes: 'Junho', data: '11/06/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Capistrano', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Capistrano', mes: 'Junho', data: '17/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Itapiúna', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Itapiúna', mes: 'Junho', data: '18/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Pacajus', mes: 'Junho', data: '12/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Barreira', mes: 'Junho', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Guaiúba', mes: 'Junho', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Redenção', mes: 'Junho', data: '24/06/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Pacatuba', mes: 'Junho', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Pacoti', mes: 'Junho', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+    // ===== JUNHO =====
+    { municipio: 'Aratuba', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 4499, professores: 207, escolas: 13, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+    { municipio: 'Mulungu', mes: 'Junho', data: '11/06/2026', participantes: 'Michel Platini', agentes: 0, alunos: 1635, professores: 93, escolas: 8, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Capistrano', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Capistrano', mes: 'Junho', data: '17/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2848, professores: 207, escolas: 14, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Itapiúna', mes: 'Junho', data: '11/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Itapiúna', mes: 'Junho', data: '18/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Pacajus', mes: 'Junho', data: '12/06/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Barreira', mes: 'Junho', data: '19/06/2026', participantes: 'Prof. Alan Lucas de Oliveira', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Apresentação realizada', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Guaiúba', mes: 'Junho', data: '19/06/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Redenção', mes: 'Junho', data: '24/06/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Pacatuba', mes: 'Junho', data: '24/06/2026', participantes: 'Prof. Elizânio Umbelino', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Pacoti', mes: 'Junho', data: '29/06/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
 
-  // ===== JULHO =====
-  { municipio: 'Caucaia', mes: 'Julho', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Pacajus', mes: 'Julho', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
-  { municipio: 'Chorozinho', mes: 'Julho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Autarquia' },
-  { municipio: 'Chorozinho', mes: 'Julho', data: '22/07/2026', participantes: 'Prof. Lourdes', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Guaiúba', mes: 'Julho', data: '29/07/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Barreira', mes: 'Julho', data: '29/07/2026', participantes: 'Bruno Jacó', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
-  { municipio: 'Acarape', mes: 'Julho', data: '29/07/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
-  { municipio: 'Redenção', mes: 'Julho', data: '30/07/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-  { municipio: 'Caucaia', mes: 'Julho', data: '31/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    // ===== JULHO =====
+    { municipio: 'Caucaia', mes: 'Julho', data: '06/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Pacajus', mes: 'Julho', data: '16/07/2026', participantes: 'Equipe da SME', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Chorozinho', mes: 'Julho', data: '20/07/2026', participantes: 'Nilo Vieira', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Caucaia', mes: 'Julho', data: '21/07/2026', participantes: 'Carlos Costa', agentes: 100, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Autarquia' },
+    { municipio: 'Chorozinho', mes: 'Julho', data: '22/07/2026', participantes: 'Prof. Lourdes', agentes: 0, alunos: 3284, professores: 251, escolas: 19, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Guaiúba', mes: 'Julho', data: '29/07/2026', participantes: 'Prof. Carlos Paiva', agentes: 0, alunos: 3953, professores: 216, escolas: 21, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Barreira', mes: 'Julho', data: '29/07/2026', participantes: 'Bruno Jacó', agentes: 0, alunos: 3864, professores: 216, escolas: 12, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Acarape', mes: 'Julho', data: '29/07/2026', participantes: 'Jonas Campelo', agentes: 0, alunos: 2337, professores: 160, escolas: 12, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
+    { municipio: 'Redenção', mes: 'Julho', data: '30/07/2026', participantes: 'Jane Jacaúna', agentes: 0, alunos: 5609, professores: 359, escolas: 25, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Caucaia', mes: 'Julho', data: '31/07/2026', participantes: 'Secretário de Educação Daniel Costa', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Em análise jurídica', proxima: 'Aguardando parecer jurídico' },
 
- // ===== AGOSTO =====
-{ municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Paulo Henrique Ramos da Silva', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Departamento' },
-{ municipio: 'Fortaleza', mes: 'Agosto', data: '07/08/2026', participantes: 'Cristina Costa', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-{ municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-{ municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Ribamar Ferreira Junior', agentes: 0, alunos: 9223, professores: 607, escolas: 65, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Diones Souza de Lima (SETRAN)', agentes: 38, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Secretaria' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '13/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
-{ municipio: 'Pacoti', mes: 'Agosto', data: '25/08/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-{ municipio: 'Aracoiaba', mes: 'Agosto', data: '26/08/2026', participantes: 'Prof. Naiara', agentes: 0, alunos: 4320, professores: 355, escolas: 25, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Itapiúna', mes: 'Agosto', data: '26/08/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Horizonte', mes: 'Agosto', data: '27/08/2026', participantes: 'Professor Romulo', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
-{ municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    // ===== AGOSTO =====
+    { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Paulo Henrique Ramos da Silva', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Departamento' },
+    { municipio: 'Fortaleza', mes: 'Agosto', data: '07/08/2026', participantes: 'Cristina Costa', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+    { municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Ribamar Ferreira Junior', agentes: 0, alunos: 9223, professores: 607, escolas: 65, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Diones Souza de Lima (SETRAN)', agentes: 38, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Secretaria' },
+    { municipio: 'Caucaia', mes: 'Agosto', data: '13/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+    { municipio: 'Caucaia', mes: 'Agosto', data: '14/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+    { municipio: 'Caucaia', mes: 'Agosto', data: '19/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+    { municipio: 'Caucaia', mes: 'Agosto', data: '20/08/2026', participantes: 'AMT de Caucaia', agentes: 25, alunos: 0, professores: 0, escolas: 0, situacao: 'Implantado', proxima: 'Acompanhamento da implantação', tipo_orgao: 'Autarquia' },
+    { municipio: 'Pacoti', mes: 'Agosto', data: '25/08/2026', participantes: 'Prof. Maraline Rocha', agentes: 0, alunos: 1585, professores: 144, escolas: 13, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Aracoiaba', mes: 'Agosto', data: '26/08/2026', participantes: 'Prof. Naiara', agentes: 0, alunos: 4320, professores: 355, escolas: 25, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Itapiúna', mes: 'Agosto', data: '26/08/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Horizonte', mes: 'Agosto', data: '27/08/2026', participantes: 'Professor Romulo', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Ocara', mes: 'Agosto', data: '27/08/2026', participantes: 'Secretário Jonas Lopes', agentes: 0, alunos: 3973, professores: 324, escolas: 26, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+    { municipio: 'Pacatuba', mes: 'Agosto', data: '28/08/2026', participantes: 'Secretário Márcio Roque', agentes: 0, alunos: 11570, professores: 591, escolas: 37, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
 
- // ===== SETEMBRO =====
-// SEDUC (Secretaria) - 03/09
-{ municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Danielle Taumaturgo (SEDUC)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
-// DETRAN-CE (Departamento) - 03/09
-{ municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Professor Jorge (DETRAN-CE)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação', tipo_orgao: 'Departamento' },
-// HORIZONTE - 10/09
-{ municipio: 'Horizonte', mes: 'Setembro', data: '10/09/2026', participantes: 'Secretária Gezenira Rodrigues', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação' },
-// ITAPIÚNA - 11/09
-{ municipio: 'Itapiúna', mes: 'Setembro', data: '11/09/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-// PACAJUS - 17/09
-{ municipio: 'Pacajus', mes: 'Setembro', data: '17/09/2026', participantes: 'Professora Lea', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
-// CAUCAIA - 22/09
-{ municipio: 'Caucaia', mes: 'Setembro', data: '22/09/2026', participantes: 'Professora Lidiane', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-// SÃO GONÇALO DO AMARANTE - 22/09
-{ municipio: 'São Gonçalo do Amarante', mes: 'Setembro', data: '22/09/2026', participantes: 'Secretário José Oliveira da Silva Junior', agentes: 0, alunos: 11642, professores: 584, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-// CAUCAIA (AMT e Colégio Nair Guerra) - 25/09
-{ municipio: 'Caucaia', mes: 'Setembro', data: '25/09/2026', participantes: 'Coordenadora Marislândia e Dr Carlim (AMT e Colégio Nair Guerra)', agentes: 0, alunos: 350, professores: 16, escolas: 1, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
-// CAUCAIA - 30/09
-{ municipio: 'Caucaia', mes: 'Setembro', data: '30/09/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' }
- 
-];
-  
- let currentData = [...rawData];
+    // ===== SETEMBRO =====
+    { municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Danielle Taumaturgo (SEDUC)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
+    { municipio: 'Fortaleza', mes: 'Setembro', data: '03/09/2026', participantes: 'Professor Jorge (DETRAN-CE)', agentes: 0, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação', tipo_orgao: 'Departamento' },
+    { municipio: 'Horizonte', mes: 'Setembro', data: '10/09/2026', participantes: 'Secretária Gezenira Rodrigues', agentes: 0, alunos: 13932, professores: 595, escolas: 54, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação' },
+    { municipio: 'Itapiúna', mes: 'Setembro', data: '11/09/2026', participantes: 'Assessor Pedagógico Dr. Américo', agentes: 0, alunos: 2902, professores: 202, escolas: 15, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Pacajus', mes: 'Setembro', data: '17/09/2026', participantes: 'Professora Lea', agentes: 0, alunos: 11966, professores: 446, escolas: 44, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
+    { municipio: 'Caucaia', mes: 'Setembro', data: '22/09/2026', participantes: 'Professora Lidiane', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+    { municipio: 'São Gonçalo do Amarante', mes: 'Setembro', data: '22/09/2026', participantes: 'Secretário José Oliveira da Silva Junior', agentes: 0, alunos: 11642, professores: 584, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
+    { municipio: 'Caucaia', mes: 'Setembro', data: '25/09/2026', participantes: 'Coordenadora Marislândia e Dr Carlim (AMT e Colégio Nair Guerra)', agentes: 0, alunos: 350, professores: 16, escolas: 1, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
+    { municipio: 'Caucaia', mes: 'Setembro', data: '30/09/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' }
+  ];
+
+  let currentData = [...rawData];
   let currentFilter = { sort: 'data', order: 'asc' };
   let selectedMunicipio = null;
   let currentTab = 'escolas';
- let currentStatusFilters = new Set();
+  let currentStatusFilters = new Set();
 
   const tbodyEscolas = document.getElementById('tableBodyEscolas');
   const tbodyAutarquias = document.getElementById('tableBodyAutarquias');
@@ -134,48 +124,48 @@ const rawData = [
     }
   }
 
- function getFilteredData() {
-  // ===== 1. FILTROS BÁSICOS =====
-  let base = [...currentData];
-  
-  const month = monthSelect.value;
-  if (month !== 'Todos') {
-    base = base.filter(d => d.mes === month);
+  function getFilteredData() {
+    // ===== 1. FILTROS BÁSICOS =====
+    let base = [...currentData];
+
+    const month = monthSelect.value;
+    if (month !== 'Todos') {
+      base = base.filter(d => d.mes === month);
+    }
+
+    const search = searchInput.value.trim().toLowerCase();
+    if (search) {
+      base = base.filter(d => d.municipio.toLowerCase().includes(search));
+    }
+
+    if (searchSelect && searchSelect.value) {
+      base = base.filter(d => d.municipio === searchSelect.value);
+    }
+
+    // ===== 2. FILTRO MULTIPLO DE STATUS =====
+    if (currentStatusFilters.size > 0) {
+      const parseDate = (str) => {
+        const parts = str.split(' - ');
+        const first = parts[0].split('/');
+        return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
+      };
+
+      // Agrupa por município, mantendo a visita mais recente
+      const municipioMaisRecente = new Map();
+      base.forEach(d => {
+        const existing = municipioMaisRecente.get(d.municipio);
+        if (!existing || parseDate(d.data) > parseDate(existing.data)) {
+          municipioMaisRecente.set(d.municipio, d);
+        }
+      });
+
+      // Filtra apenas os que têm um dos status selecionados
+      return Array.from(municipioMaisRecente.values())
+        .filter(d => currentStatusFilters.has(d.situacao));
+    }
+
+    return base;
   }
-  
-  const search = searchInput.value.trim().toLowerCase();
-  if (search) {
-    base = base.filter(d => d.municipio.toLowerCase().includes(search));
-  }
-  
-  if (searchSelect && searchSelect.value) {
-    base = base.filter(d => d.municipio === searchSelect.value);
-  }
-  
-  // ===== 2. FILTRO MULTIPLO DE STATUS =====
-  if (currentStatusFilters.size > 0) {
-    const parseDate = (str) => {
-      const parts = str.split(' - ');
-      const first = parts[0].split('/');
-      return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
-    };
-    
-    // Agrupa por município, mantendo a visita mais recente
-    const municipioMaisRecente = new Map();
-    base.forEach(d => {
-      const existing = municipioMaisRecente.get(d.municipio);
-      if (!existing || parseDate(d.data) > parseDate(existing.data)) {
-        municipioMaisRecente.set(d.municipio, d);
-      }
-    });
-    
-    // Filtra apenas os que têm um dos status selecionados
-    return Array.from(municipioMaisRecente.values())
-      .filter(d => currentStatusFilters.has(d.situacao));
-  }
-  
-  return base;
-}
 
   function applySort(data, sortKey, order) {
     return data.sort((a, b) => {
@@ -185,7 +175,7 @@ const rawData = [
         const parseDate = (str) => {
           const parts = str.split(' - ');
           const first = parts[0].split('/');
-          return new Date(2026, parseInt(first[1])-1, parseInt(first[0]));
+          return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
         };
         va = parseDate(va);
         vb = parseDate(vb);
@@ -228,118 +218,117 @@ const rawData = [
     }
     return ['Município', 'Data', 'Participantes', 'Agentes', 'Tipo', 'Situação', 'Próxima Etapa'];
   }
-function render() {
-  const filtered = getFilteredData();
-  const sortKey = currentFilter.sort || 'data';
-  const order = currentFilter.order || 'asc';
-  const sorted = applySort([...filtered], sortKey, order);
 
-  const autarquias = sorted.filter(d => d.tipo_orgao);
-  const escolas = sorted.filter(d => !d.tipo_orgao);
+  function render() {
+    const filtered = getFilteredData();
+    const sortKey = currentFilter.sort || 'data';
+    const order = currentFilter.order || 'asc';
+    const sorted = applySort([...filtered], sortKey, order);
 
-  renderTableEscolas(escolas);
-  renderTableAutarquias(autarquias);
+    const autarquias = sorted.filter(d => d.tipo_orgao);
+    const escolas = sorted.filter(d => !d.tipo_orgao);
 
-  // ===== CARDS DE RESUMO =====
-  const municipiosComDadosEscolares = new Map();
-  filtered.forEach(d => {
-    const temDadosEscolares = (d.alunos > 0) || (d.professores > 0) || (d.escolas > 0);
-    if (!temDadosEscolares) return;
-    
-    const existing = municipiosComDadosEscolares.get(d.municipio);
-    if (!existing) {
-      municipiosComDadosEscolares.set(d.municipio, d);
-    } else {
-      const dataExistente = existing.data.split('/').reverse().join('-');
-      const dataNova = d.data.split('/').reverse().join('-');
-      if (dataNova > dataExistente) {
+    renderTableEscolas(escolas);
+    renderTableAutarquias(autarquias);
+
+    // ===== CARDS DE RESUMO =====
+    const municipiosComDadosEscolares = new Map();
+    filtered.forEach(d => {
+      const temDadosEscolares = (d.alunos > 0) || (d.professores > 0) || (d.escolas > 0);
+      if (!temDadosEscolares) return;
+
+      const existing = municipiosComDadosEscolares.get(d.municipio);
+      if (!existing) {
         municipiosComDadosEscolares.set(d.municipio, d);
+      } else {
+        const dataExistente = existing.data.split('/').reverse().join('-');
+        const dataNova = d.data.split('/').reverse().join('-');
+        if (dataNova > dataExistente) {
+          municipiosComDadosEscolares.set(d.municipio, d);
+        }
       }
+    });
+
+    const todosMunicipios = new Map();
+    filtered.forEach(d => {
+      if (!todosMunicipios.has(d.municipio)) {
+        todosMunicipios.set(d.municipio, d);
+      }
+    });
+
+    const municipiosUnicosEscolas = Array.from(municipiosComDadosEscolares.values());
+    const totalMun = todosMunicipios.size;
+    const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
+    const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
+    const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+
+    totalMunicipios.textContent = totalMun;
+    totalAlunos.textContent = totalAlu.toLocaleString();
+    totalProfessores.textContent = totalProf.toLocaleString();
+    totalEscolas.textContent = totalEsc.toLocaleString();
+    totalMunicipiosGeral.textContent = totalMun;
+    mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
+
+    // ===== STATUS DO PROGRAMA =====
+    let dataSemFiltro = [...currentData];
+    const month = monthSelect.value;
+    if (month !== 'Todos') {
+      dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
     }
-  });
-
-  const todosMunicipios = new Map();
-  filtered.forEach(d => {
-    if (!todosMunicipios.has(d.municipio)) {
-      todosMunicipios.set(d.municipio, d);
+    const search = searchInput.value.trim().toLowerCase();
+    if (search) {
+      dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
     }
-  });
+    if (searchSelect && searchSelect.value) {
+      dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
+    }
 
-  const municipiosUnicosEscolas = Array.from(municipiosComDadosEscolares.values());
-  const totalMun = todosMunicipios.size;
-  const totalAlu = municipiosUnicosEscolas.reduce((s, d) => s + (d.alunos || 0), 0);
-  const totalProf = municipiosUnicosEscolas.reduce((s, d) => s + (d.professores || 0), 0);
-  const totalEsc = municipiosUnicosEscolas.reduce((s, d) => s + (d.escolas || 0), 0);
+    // Agrupa por município, mantendo a visita mais recente
+    const municipioMaisRecente = new Map();
+    const parseDate = (str) => {
+      const parts = str.split(' - ');
+      const first = parts[0].split('/');
+      return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
+    };
+    dataSemFiltro.forEach(d => {
+      const existing = municipioMaisRecente.get(d.municipio);
+      if (!existing || parseDate(d.data) > parseDate(existing.data)) {
+        municipioMaisRecente.set(d.municipio, d);
+      }
+    });
 
-  totalMunicipios.textContent = totalMun;
-  totalAlunos.textContent = totalAlu.toLocaleString();
-  totalProfessores.textContent = totalProf.toLocaleString();
-  totalEscolas.textContent = totalEsc.toLocaleString();
-  totalMunicipiosGeral.textContent = totalMun;
-  mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
+    // Conta quantos municípios únicos têm cada status na visita mais recente
+    const statusCounts = {
+      implantado: 0,
+      convenio: 0,
+      analise: 0,
+      apresentacao: 0
+    };
+    municipioMaisRecente.forEach(d => {
+      const situacao = d.situacao;
+      if (situacao === 'Implantado') statusCounts.implantado++;
+      else if (situacao === 'Convênio assinado') statusCounts.convenio++;
+      else if (situacao === 'Em análise jurídica') statusCounts.analise++;
+      else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
+    });
 
-// ===== STATUS DO PROGRAMA =====
-// Regra: para cada município, considerar APENAS a visita mais recente
-// (ignorando o filtro de status ativo), e classificar pelo status dessa visita.
-// ===== STATUS DO PROGRAMA =====
-let dataSemFiltro = [...currentData];
-const month = monthSelect.value;
-if (month !== 'Todos') {
-  dataSemFiltro = dataSemFiltro.filter(d => d.mes === month);
-}
-const search = searchInput.value.trim().toLowerCase();
-if (search) {
-  dataSemFiltro = dataSemFiltro.filter(d => d.municipio.toLowerCase().includes(search));
-}
-if (searchSelect && searchSelect.value) {
-  dataSemFiltro = dataSemFiltro.filter(d => d.municipio === searchSelect.value);
-}
+    statusImplantado.textContent = statusCounts.implantado;
+    statusConvenio.textContent = statusCounts.convenio;
+    statusAnalise.textContent = statusCounts.analise;
+    statusApresentacao.textContent = statusCounts.apresentacao;
 
-// Agrupa por município, mantendo a visita mais recente
-const municipioMaisRecente = new Map();
-const parseDate = (str) => {
-  const parts = str.split(' - ');
-  const first = parts[0].split('/');
-  return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
-};
-dataSemFiltro.forEach(d => {
-  const existing = municipioMaisRecente.get(d.municipio);
-  if (!existing || parseDate(d.data) > parseDate(existing.data)) {
-    municipioMaisRecente.set(d.municipio, d);
+    // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
+    if (selectedMunicipio) {
+      const found = filtered.find(d => d.municipio === selectedMunicipio);
+      if (found) renderDetail(found);
+      else { selectedMunicipio = null; renderEmptyDetail(); }
+    } else {
+      renderEmptyDetail();
+    }
+
+    document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
+    atualizarIndicadoresOrdenacao();
   }
-});
-
-// Conta quantos municípios únicos têm cada status na visita mais recente
-const statusCounts = {
-  implantado: 0,
-  convenio: 0,
-  analise: 0,
-  apresentacao: 0
-};
-municipioMaisRecente.forEach(d => {
-  const situacao = d.situacao;
-  if (situacao === 'Implantado') statusCounts.implantado++;
-  else if (situacao === 'Convênio assinado') statusCounts.convenio++;
-  else if (situacao === 'Em análise jurídica') statusCounts.analise++;
-  else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
-});
-
-statusImplantado.textContent = statusCounts.implantado;
-statusConvenio.textContent = statusCounts.convenio;
-statusAnalise.textContent = statusCounts.analise;
-statusApresentacao.textContent = statusCounts.apresentacao;
-  // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
-  if (selectedMunicipio) {
-    const found = filtered.find(d => d.municipio === selectedMunicipio);
-    if (found) renderDetail(found);
-    else { selectedMunicipio = null; renderEmptyDetail(); }
-  } else {
-    renderEmptyDetail();
-  }
-
-  document.getElementById('footerUpdate').textContent = new Date().toLocaleDateString('pt-BR');
-  atualizarIndicadoresOrdenacao();
-}
 
   function atualizarIndicadoresOrdenacao() {
     document.querySelectorAll('th.sortable').forEach(th => {
@@ -421,53 +410,53 @@ statusApresentacao.textContent = statusCounts.apresentacao;
     });
   }
 
-function renderDetail(d) {
-  if (!d) return renderEmptyDetail();
-  
-  const registrosMunicipio = currentData.filter(item => item.municipio === d.municipio);
-  
-  const registrosEscolas = registrosMunicipio.filter(item => !item.tipo_orgao);
-  const registrosOrgaos = registrosMunicipio.filter(item => item.tipo_orgao);
-  
-  let registrosPrioritarios;
-  if (currentTab === 'escolas') {
-    registrosPrioritarios = registrosEscolas.length > 0 ? registrosEscolas : registrosOrgaos;
-  } else {
-    registrosPrioritarios = registrosOrgaos.length > 0 ? registrosOrgaos : registrosEscolas;
+  function renderDetail(d) {
+    if (!d) return renderEmptyDetail();
+
+    const registrosMunicipio = currentData.filter(item => item.municipio === d.municipio);
+
+    const registrosEscolas = registrosMunicipio.filter(item => !item.tipo_orgao);
+    const registrosOrgaos = registrosMunicipio.filter(item => item.tipo_orgao);
+
+    let registrosPrioritarios;
+    if (currentTab === 'escolas') {
+      registrosPrioritarios = registrosEscolas.length > 0 ? registrosEscolas : registrosOrgaos;
+    } else {
+      registrosPrioritarios = registrosOrgaos.length > 0 ? registrosOrgaos : registrosEscolas;
+    }
+
+    if (registrosPrioritarios.length === 0) registrosPrioritarios = [d];
+
+    const registrosOrdenados = [...registrosPrioritarios].sort((a, b) => {
+      const parseDate = (str) => {
+        const parts = str.split(' - ');
+        const first = parts[0].split('/');
+        return new Date(2026, parseInt(first[1]) - 1, parseInt(first[0]));
+      };
+      return parseDate(b.data) - parseDate(a.data);
+    });
+
+    const maisRecente = registrosOrdenados[0];
+
+    const statusClass = getStatusClass(maisRecente.situacao);
+    const tipoOrgao = maisRecente.tipo_orgao ? getTipoOrgao(maisRecente) : 'Escola';
+
+    detailContent.innerHTML = `
+      <div class="detail-item">
+        <div class="detail-municipio">${maisRecente.municipio}</div>
+        <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${maisRecente.mes}</span></div>
+        <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${maisRecente.data}</span></div>
+        <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${maisRecente.participantes}</span></div>
+        <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${maisRecente.agentes}</span></div>
+        ${maisRecente.tipo_orgao ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
+        <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${maisRecente.alunos.toLocaleString()}</span></div>
+        <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${maisRecente.professores.toLocaleString()}</span></div>
+        <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${maisRecente.escolas}</span></div>
+        <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${maisRecente.situacao}</span></span></div>
+        <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${maisRecente.proxima || '-'}</span></div>
+      </div>
+    `;
   }
-  
-  if (registrosPrioritarios.length === 0) registrosPrioritarios = [d];
-  
-  const registrosOrdenados = [...registrosPrioritarios].sort((a, b) => {
-    const parseDate = (str) => {
-      const parts = str.split(' - ');
-      const first = parts[0].split('/');
-      return new Date(2026, parseInt(first[1])-1, parseInt(first[0]));
-    };
-    return parseDate(b.data) - parseDate(a.data);
-  });
-  
-  const maisRecente = registrosOrdenados[0];
-  
-  const statusClass = getStatusClass(maisRecente.situacao);
-  const tipoOrgao = maisRecente.tipo_orgao ? getTipoOrgao(maisRecente) : 'Escola';
-  
-  detailContent.innerHTML = `
-    <div class="detail-item">
-      <div class="detail-municipio">${maisRecente.municipio}</div>
-      <div class="detail-row"><span class="detail-label">Mês</span><span class="detail-value">${maisRecente.mes}</span></div>
-      <div class="detail-row"><span class="detail-label">Data</span><span class="detail-value">${maisRecente.data}</span></div>
-      <div class="detail-row"><span class="detail-label">Participantes</span><span class="detail-value">${maisRecente.participantes}</span></div>
-      <div class="detail-row"><span class="detail-label">Agentes</span><span class="detail-value">${maisRecente.agentes}</span></div>
-      ${maisRecente.tipo_orgao ? `<div class="detail-row"><span class="detail-label">Tipo</span><span class="detail-value">${tipoOrgao}</span></div>` : ''}
-      <div class="detail-row"><span class="detail-label">Alunos</span><span class="detail-value">${maisRecente.alunos.toLocaleString()}</span></div>
-      <div class="detail-row"><span class="detail-label">Professores</span><span class="detail-value">${maisRecente.professores.toLocaleString()}</span></div>
-      <div class="detail-row"><span class="detail-label">Escolas</span><span class="detail-value">${maisRecente.escolas}</span></div>
-      <div class="detail-row"><span class="detail-label">Situação</span><span class="detail-value"><span class="status-badge ${statusClass}">${maisRecente.situacao}</span></span></div>
-      <div class="detail-row"><span class="detail-label">Próxima etapa</span><span class="detail-value">${maisRecente.proxima || '-'}</span></div>
-    </div>
-  `;
-}
 
   function renderEmptyDetail() {
     detailContent.innerHTML = `
@@ -497,24 +486,23 @@ function renderDetail(d) {
     generatePDF();
   }
 
- function generatePDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF('landscape', 'mm', 'a4');
-  
-  let filteredData = getFilteredData();
-  filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'mm', 'a4');
 
-  const tabAtiva = document.querySelector('.tab-btn.active');
-  const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
-  
-  let dadosFiltrados = filteredData;
-  if (tipo === 'escolas') {
-    dadosFiltrados = filteredData.filter(d => !d.tipo_orgao);
-  } else {
-    dadosFiltrados = filteredData.filter(d => d.tipo_orgao);
-  }
+    let filteredData = getFilteredData();
+    filteredData = applySort([...filteredData], currentFilter.sort || 'data', currentFilter.order || 'asc');
 
-  
+    const tabAtiva = document.querySelector('.tab-btn.active');
+    const tipo = tabAtiva ? tabAtiva.dataset.tab : 'escolas';
+
+    let dadosFiltrados = filteredData;
+    if (tipo === 'escolas') {
+      dadosFiltrados = filteredData.filter(d => !d.tipo_orgao);
+    } else {
+      dadosFiltrados = filteredData.filter(d => d.tipo_orgao);
+    }
+
     const municipiosUnicos = new Set();
     dadosFiltrados.forEach(d => municipiosUnicos.add(d.municipio));
     const totalMunicipiosUnicos = municipiosUnicos.size;
@@ -534,32 +522,32 @@ function renderDetail(d) {
     });
 
     const municipiosUnicosDados = Array.from(municipiosMap.values());
-    
-    const totalAlunos = tipo === 'escolas' 
+
+    const totalAlunos = tipo === 'escolas'
       ? municipiosUnicosDados.reduce((sum, item) => sum + (item.alunos || 0), 0)
       : dadosFiltrados.reduce((sum, item) => sum + (item.alunos || 0), 0);
-      
+
     const totalProfessores = tipo === 'escolas'
       ? municipiosUnicosDados.reduce((sum, item) => sum + (item.professores || 0), 0)
       : dadosFiltrados.reduce((sum, item) => sum + (item.professores || 0), 0);
-      
+
     const totalEscolas = tipo === 'escolas'
       ? municipiosUnicosDados.reduce((sum, item) => sum + (item.escolas || 0), 0)
       : dadosFiltrados.reduce((sum, item) => sum + (item.escolas || 0), 0);
-      
+
     const totalAgentes = dadosFiltrados.reduce((sum, item) => sum + (item.agentes || 0), 0);
 
     const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
     const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
-    
+
     let filtrosAtivos = [];
     if (monthSelect.value !== 'Todos') filtrosAtivos.push(`Mês: ${monthSelect.value}`);
     if (searchInput.value.trim()) filtrosAtivos.push(`Busca: "${searchInput.value.trim()}"`);
     if (searchSelect && searchSelect.value) filtrosAtivos.push(`Município: ${searchSelect.value}`);
-  if (currentStatusFilters.size > 0) {
-  filtrosAtivos.push(`Status: ${Array.from(currentStatusFilters).join(', ')}`);
-}
-    
+    if (currentStatusFilters.size > 0) {
+      filtrosAtivos.push(`Status: ${Array.from(currentStatusFilters).join(', ')}`);
+    }
+
     let subtitle = `${tabDisplay} - ${monthDisplay}`;
     if (filtrosAtivos.length > 0) {
       subtitle += ` (Filtros: ${filtrosAtivos.join(' | ')})`;
@@ -576,14 +564,14 @@ function renderDetail(d) {
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(title, pageWidth / 2, 12, { align: 'center' });
-    
+
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.text(subtitle, pageWidth / 2, 19, { align: 'center' });
-    
+
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    
+
     let summaryText = `Municípios: ${totalMunicipiosUnicos}`;
     if (tipo === 'escolas') {
       summaryText += `  |  Alunos: ${formatNumber(totalAlunos)}  |  Professores: ${formatNumber(totalProfessores)}  |  Escolas: ${formatNumber(totalEscolas)}`;
@@ -591,7 +579,7 @@ function renderDetail(d) {
       summaryText += `  |  Agentes: ${formatNumber(totalAgentes)}`;
     }
     doc.text(summaryText, pageWidth / 2, 25, { align: 'center' });
-    
+
     doc.setFontSize(7);
     doc.setFont('helvetica', 'italic');
     doc.text(`Gerado em: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
@@ -600,7 +588,7 @@ function renderDetail(d) {
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('Nenhum dado encontrado com os filtros aplicados.', pageWidth / 2, 50, { align: 'center' });
-      doc.save(`conexao_dnit_sem_dados_${new Date().toISOString().slice(0,10)}.pdf`);
+      doc.save(`conexao_dnit_sem_dados_${new Date().toISOString().slice(0, 10)}.pdf`);
       showToast('Nenhum dado encontrado para exportar.');
       return;
     }
@@ -622,7 +610,7 @@ function renderDetail(d) {
       const totalWeight = colWeights.reduce((a, b) => a + b, 0);
       const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
       const adjustedWidths = colWidths.map(w => Math.max(w, 10));
-      
+
       doc.autoTable({
         head: [headers],
         body: tableData,
@@ -668,12 +656,12 @@ function renderDetail(d) {
         didDrawPage: function(data) {
           const pageCount = doc.internal.getNumberOfPages();
           const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-          
+
           const footerY = doc.internal.pageSize.height - 6;
           doc.setDrawColor(200, 200, 200);
           doc.setLineWidth(0.2);
           doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
-          
+
           doc.setFontSize(6.5);
           doc.setFont('helvetica', 'italic');
           doc.text(`Página ${currentPage} de ${pageCount}`, marginLeft, footerY + 4);
@@ -695,7 +683,7 @@ function renderDetail(d) {
       const totalWeight = colWeights.reduce((a, b) => a + b, 0);
       const colWidths = colWeights.map(w => (w / totalWeight) * usableWidth);
       const adjustedWidths = colWidths.map(w => Math.max(w, 10));
-      
+
       doc.autoTable({
         head: [headers],
         body: tableData,
@@ -740,12 +728,12 @@ function renderDetail(d) {
         didDrawPage: function(data) {
           const pageCount = doc.internal.getNumberOfPages();
           const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
-          
+
           const footerY = doc.internal.pageSize.height - 6;
           doc.setDrawColor(200, 200, 200);
           doc.setLineWidth(0.2);
           doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
-          
+
           doc.setFontSize(6.5);
           doc.setFont('helvetica', 'italic');
           doc.text(`Página ${currentPage} de ${pageCount}`, marginLeft, footerY + 4);
@@ -764,11 +752,11 @@ function renderDetail(d) {
       fileNameParts.push('municipio_' + searchSelect.value.replace(/\s+/g, '_'));
     }
     if (currentStatusFilters.size > 0) {
-  fileNameParts.push('status_' + Array.from(currentStatusFilters).join('_').replace(/\s+/g, '_'));
-}
-    fileNameParts.push(new Date().toISOString().slice(0,10));
+      fileNameParts.push('status_' + Array.from(currentStatusFilters).join('_').replace(/\s+/g, '_'));
+    }
+    fileNameParts.push(new Date().toISOString().slice(0, 10));
     const fileName = fileNameParts.join('_') + '.pdf';
-    
+
     doc.save(fileName);
     showToast('PDF exportado com sucesso!');
   }
@@ -787,7 +775,7 @@ function renderDetail(d) {
     toast.className = 'toast-notification';
     toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
     document.body.appendChild(toast);
-    
+
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateY(20px)';
@@ -809,14 +797,14 @@ function renderDetail(d) {
         currentFilter.sort = sortKey;
         currentFilter.order = 'asc';
       }
-      
+
       document.querySelectorAll('.filter-option').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.sort === sortKey && btn.dataset.order === currentFilter.order) {
           btn.classList.add('active');
         }
       });
-      
+
       render();
     });
   });
@@ -856,50 +844,49 @@ function renderDetail(d) {
     render();
   });
 
-// ===== MULTISELECT DE STATUS =====
-document.querySelectorAll('.status-item.clickable').forEach(item => {
-  item.addEventListener('click', function(e) {
-    if (e.target.classList.contains('status-checkbox')) return;
-    
-    const checkbox = this.querySelector('.status-checkbox');
-    if (checkbox) {
-      checkbox.checked = !checkbox.checked;
-      checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  });
-});
+  // ===== MULTISELECT DE STATUS =====
+  document.querySelectorAll('.status-item.clickable').forEach(item => {
+    item.addEventListener('click', function(e) {
+      if (e.target.classList.contains('status-checkbox')) return;
 
-document.querySelectorAll('.status-checkbox').forEach(checkbox => {
-  checkbox.addEventListener('change', function() {
-    const status = this.dataset.status;
-    const parent = this.closest('.status-item');
-    
-    if (this.checked) {
-      currentStatusFilters.add(status);
-      parent.classList.add('active');
-    } else {
-      currentStatusFilters.delete(status);
-      parent.classList.remove('active');
-    }
-    
-    const clearBtn = document.getElementById('clearStatusBtn');
-    if (clearBtn) {
-      clearBtn.style.display = currentStatusFilters.size > 0 ? 'flex' : 'none';
-    }
-    
+      const checkbox = this.querySelector('.status-checkbox');
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+
+  document.querySelectorAll('.status-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const status = this.dataset.status;
+      const parent = this.closest('.status-item');
+
+      if (this.checked) {
+        currentStatusFilters.add(status);
+        parent.classList.add('active');
+      } else {
+        currentStatusFilters.delete(status);
+        parent.classList.remove('active');
+      }
+
+      const clearBtn = document.getElementById('clearStatusBtn');
+      if (clearBtn) {
+        clearBtn.style.display = currentStatusFilters.size > 0 ? 'flex' : 'none';
+      }
+
+      render();
+    });
+  });
+
+  // ===== BOTÃO LIMPAR FILTROS =====
+  document.getElementById('clearStatusBtn').addEventListener('click', function() {
+    currentStatusFilters.clear();
+    document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+    this.style.display = 'none';
+    showToast('Filtros de status removidos');
     render();
-  });
-});
-
-// ===== BOTÃO LIMPAR FILTROS =====
-document.getElementById('clearStatusBtn').addEventListener('click', function() {
-  currentStatusFilters.clear();
-  document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
-  document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
-  this.style.display = 'none';
-  showToast('Filtros de status removidos');
-  render();
-});
   });
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -924,7 +911,7 @@ document.getElementById('clearStatusBtn').addEventListener('click', function() {
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PDF';
     btn.disabled = true;
-    
+
     if (typeof window.jspdf === 'undefined') {
       loadPDFLibraries();
       setTimeout(() => {
@@ -950,20 +937,20 @@ document.getElementById('clearStatusBtn').addEventListener('click', function() {
     this.querySelector('i').classList.toggle('fa-sun');
   });
 
- document.getElementById('refreshBtn').addEventListener('click', function() {
-  this.classList.add('spinning');
-  currentData = [...rawData];
-  selectedMunicipio = null;
-  currentStatusFilters.clear();
-  document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
-  document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
-  const clearBtn = document.getElementById('clearStatusBtn');
-  if (clearBtn) clearBtn.style.display = 'none';
-  if (searchSelect) searchSelect.value = '';
-  searchInput.value = '';
-  render();
-  setTimeout(() => this.classList.remove('spinning'), 800);
-});
+  document.getElementById('refreshBtn').addEventListener('click', function() {
+    this.classList.add('spinning');
+    currentData = [...rawData];
+    selectedMunicipio = null;
+    currentStatusFilters.clear();
+    document.querySelectorAll('.status-checkbox').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.status-item').forEach(el => el.classList.remove('active'));
+    const clearBtn = document.getElementById('clearStatusBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    if (searchSelect) searchSelect.value = '';
+    searchInput.value = '';
+    render();
+    setTimeout(() => this.classList.remove('spinning'), 800);
+  });
 
   window.addEventListener('resize', function() {
     render();
