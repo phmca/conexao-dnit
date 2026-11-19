@@ -267,7 +267,7 @@ const statusAguardando = document.getElementById('statusAguardando');
     totalMunicipiosGeral.textContent = totalMun;
     mediaAlunos.textContent = totalMun ? totalAlu.toLocaleString() : '0';
 
-    // ===== STATUS DO PROGRAMA =====
+        // ===== STATUS DO PROGRAMA =====
     let dataSemFiltro = [...currentData];
     const month = monthSelect.value;
     if (month !== 'Todos') {
@@ -294,7 +294,7 @@ const statusAguardando = document.getElementById('statusAguardando');
       }
     });
 
-        const statusCounts = {
+    const statusCounts = {
       implantado: 0,
       acompanhamento: 0,
       convenio: 0,
