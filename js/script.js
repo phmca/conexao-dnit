@@ -42,8 +42,7 @@
     // ===== AGOSTO =====
     { municipio: 'Redenção', mes: 'Agosto', data: '05/08/2026', participantes: 'Paulo Henrique Ramos da Silva', agentes: 15, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Departamento' },
     { municipio: 'Fortaleza', mes: 'Agosto', data: '07/08/2026', participantes: 'Cristina Costa', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-     // --- Registro de Itaitinga ignorado (Colégio Particular) ---
-    // { municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
+  // { municipio: 'Itaitinga', mes: 'Agosto', data: '11/08/2026', participantes: 'Prof. Virgílio Oliveira', agentes: 0, alunos: 10100, professores: 424, escolas: 34, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação do programa' },
     { municipio: 'Baturité', mes: 'Agosto', data: '12/08/2026', participantes: 'Profª. Eliziana Duarte', agentes: 0, alunos: 6421, professores: 361, escolas: 30, situacao: 'Implantado', proxima: 'Acompanhamento da implantação' },
     { municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Ribamar Ferreira Junior', agentes: 0, alunos: 9223, professores: 607, escolas: 65, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa' },
     { municipio: 'Cascavel', mes: 'Agosto', data: '18/08/2026', participantes: 'Diones Souza de Lima (SETRAN)', agentes: 38, alunos: 0, professores: 0, escolas: 0, situacao: 'Convênio assinado', proxima: 'Aguardando agenda para implantação do programa', tipo_orgao: 'Secretaria' },
@@ -67,27 +66,7 @@
     { municipio: 'Caucaia', mes: 'Setembro', data: '22/09/2026', participantes: 'Professora Lidiane', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
     { municipio: 'São Gonçalo do Amarante', mes: 'Setembro', data: '22/09/2026', participantes: 'Secretário José Oliveira da Silva Junior', agentes: 0, alunos: 11642, professores: 584, escolas: 54, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
     { municipio: 'Caucaia', mes: 'Setembro', data: '25/09/2026', participantes: 'Coordenadora Marislândia e Dr Carlim (AMT e Colégio Nair Guerra)', agentes: 0, alunos: 350, professores: 16, escolas: 1, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio', tipo_orgao: 'Secretaria' },
-    { municipio: 'Caucaia', mes: 'Setembro', data: '30/09/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-        // ===== OUTUBRO =====
-    { municipio: 'Paracuru', mes: 'Outubro', data: '20/10/2026', participantes: 'Secretário Executivo Adriano Barbosa', agentes: 0, alunos: 6957, professores: 333, escolas: 28, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' },
-    { municipio: 'São Gonçalo do Amarante', mes: 'Outubro', data: '20/10/2026', participantes: 'Secretário José Oliveira da Silva Junior', agentes: 0, alunos: 11642, professores: 584, escolas: 54, situacao: 'Aguardando agenda para implantação', proxima: 'Implantação' },
-    { municipio: 'Paraipaba', mes: 'Outubro', data: '20/10/2026', participantes: 'Secretária Ana Patrícia Feitoza', agentes: 0, alunos: 5675, professores: 262, escolas: 25, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Beberibe', mes: 'Outubro', data: '22/10/2026', participantes: 'Professora Nívia Maria da Silva', agentes: 0, alunos: 8628, professores: 482, escolas: 45, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Fortim', mes: 'Outubro', data: '22/10/2026', participantes: 'Professora Cidra Mara e Professor Mateus', agentes: 0, alunos: 2546, professores: 159, escolas: 12, situacao: 'Aguardando agenda para implantação', proxima: 'Implantação' },
-    { municipio: 'Caucaia', mes: 'Outubro', data: '27/10/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Acompanhamento da implantação', proxima: 'N/A' },
-    { municipio: 'Cascavel', mes: 'Outubro', data: '28/10/2026', participantes: 'Ribamar Ferreira Junior', agentes: 0, alunos: 9223, professores: 607, escolas: 65, situacao: 'Aguardando agenda para implantação', proxima: 'Implantação' },
-    { municipio: 'Fortaleza', mes: 'Outubro', data: '29/10/2026', participantes: 'Secretário Ciro Mesquita', agentes: 0, alunos: 245000, professores: 14000, escolas: 673, situacao: 'Aguardando agenda para implantação', proxima: 'Implantação' },
-
-    // ===== NOVEMBRO =====
-    { municipio: 'Caridade', mes: 'Novembro', data: '06/11/2026', participantes: 'Secretário Edilberto Dias', agentes: 0, alunos: 3025, professores: 216, escolas: 22, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Paramoti', mes: 'Novembro', data: '06/11/2026', participantes: 'Secretário Aureno Madeiros', agentes: 0, alunos: 1563, professores: 140, escolas: 18, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Canindé', mes: 'Novembro', data: '10/11/2026', participantes: 'Secretário Pedro Marcelo Oliveira', agentes: 0, alunos: 11606, professores: 628, escolas: 82, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Madalena', mes: 'Novembro', data: '10/11/2026', participantes: 'Professora Kilvia /Roberta /Francisco de Assis/Vanderlucia', agentes: 0, alunos: 2726, professores: 197, escolas: 24, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Pentecoste', mes: 'Novembro', data: '11/11/2026', participantes: 'Secretário Márcio Gardel', agentes: 0, alunos: 8544, professores: 475, escolas: 35, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Apuiarés', mes: 'Novembro', data: '11/11/2026', participantes: 'Secretária Francisca Vanuzia da Silva', agentes: 0, alunos: 2986, professores: 148, escolas: 18, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Pindoretama', mes: 'Novembro', data: '12/11/2026', participantes: 'Secretário Paulo César Nogueira', agentes: 0, alunos: 3711, professores: 155, escolas: 21, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' },
-    { municipio: 'Aquiraz', mes: 'Novembro', data: '12/11/2026', participantes: 'Secretário Executivo Prof. Pedro Lioba', agentes: 0, alunos: 19750, professores: 639, escolas: 63, situacao: 'Apresentação realizada', proxima: 'Aguardando agenda para implantação' }
-    
+    { municipio: 'Caucaia', mes: 'Setembro', data: '30/09/2026', participantes: 'Professor Francisco Fábio', agentes: 0, alunos: 51000, professores: 5000, escolas: 186, situacao: 'Apresentação realizada', proxima: 'Aguardando assinatura do convênio' }
   ];
 
   let currentData = [...rawData];
@@ -115,6 +94,8 @@
   const statusConvenio = document.getElementById('statusConvenio');
   const statusAnalise = document.getElementById('statusAnalise');
   const statusApresentacao = document.getElementById('statusApresentacao');
+  const statusAcompanhamento = document.getElementById('statusAcompanhamento');
+const statusAguardando = document.getElementById('statusAguardando');
 
   // ===== POPULAR DROPDOWN DE MUNICÍPIOS =====
   function populateSearchSelect() {
@@ -205,11 +186,13 @@
   }
 
   function getStatusClass(situacao) {
-    if (situacao === 'Implantado') return 'status-implantado';
-    if (situacao === 'Convênio assinado') return 'status-convenio';
-    if (situacao === 'Em análise jurídica') return 'status-analise';
-    return 'status-apresentacao';
-  }
+  if (situacao === 'Implantado') return 'status-implantado';
+  if (situacao === 'Acompanhamento da implantação') return 'status-acompanhamento';
+  if (situacao === 'Convênio assinado') return 'status-convenio';
+  if (situacao === 'Aguardando agenda para implantação') return 'status-aguardando';
+  if (situacao === 'Em análise jurídica') return 'status-analise';
+  return 'status-apresentacao';
+}
 
   function getTipoOrgao(item) {
     if (item.tipo_orgao) return item.tipo_orgao;
@@ -311,25 +294,31 @@
       }
     });
 
-    const statusCounts = {
+        const statusCounts = {
       implantado: 0,
+      acompanhamento: 0,
       convenio: 0,
+      aguardando: 0,
       analise: 0,
       apresentacao: 0
     };
+    
     municipioMaisRecente.forEach(d => {
       const situacao = d.situacao;
       if (situacao === 'Implantado') statusCounts.implantado++;
+      else if (situacao === 'Acompanhamento da implantação') statusCounts.acompanhamento++;
       else if (situacao === 'Convênio assinado') statusCounts.convenio++;
+      else if (situacao === 'Aguardando agenda para implantação') statusCounts.aguardando++;
       else if (situacao === 'Em análise jurídica') statusCounts.analise++;
       else if (situacao === 'Apresentação realizada') statusCounts.apresentacao++;
     });
 
     statusImplantado.textContent = statusCounts.implantado;
+    statusAcompanhamento.textContent = statusCounts.acompanhamento;
     statusConvenio.textContent = statusCounts.convenio;
+    statusAguardando.textContent = statusCounts.aguardando;
     statusAnalise.textContent = statusCounts.analise;
     statusApresentacao.textContent = statusCounts.apresentacao;
-
     // ===== DETALHE DO MUNICÍPIO SELECIONADO =====
     if (selectedMunicipio) {
       const found = filtered.find(d => d.municipio === selectedMunicipio);
@@ -550,16 +539,10 @@
 
     const totalAgentes = dadosFiltrados.reduce((sum, item) => sum + (item.agentes || 0), 0);
 
-  const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
-const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
+    const monthDisplay = monthSelect.value === 'Todos' ? 'Todos os Meses' : monthSelect.value;
+    const tabDisplay = tipo === 'escolas' ? 'Escolas' : 'Departamentos/Autarquias de Trânsito';
 
-// Define o subtítulo conforme o filtro de status
-let subtitle;
-if (currentStatusFilters.size > 0) {
-  subtitle = `${tabDisplay} - Registro mais recente por município (${monthDisplay})`;
-} else {
-  subtitle = `${tabDisplay} - ${monthDisplay}`;
-}
+    const subtitle = `${tabDisplay} - ${monthDisplay}`;
 
     const title = `Conexão DNIT - Educação No Trânsito`;
 
